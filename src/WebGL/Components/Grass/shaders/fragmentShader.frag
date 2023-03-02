@@ -7,7 +7,7 @@
   vec3 green = vec3(0.2, 0.6, 0.3);
 
   void main() {
-    vec3 color = mix(green * 0.7, green, vPosition.y);
+    vec3 color = mix(green * 0.8, green, vPosition.y);
     color = mix(color, texture2D(uCloud, vUv).rgb, 0.4);
 
     float lighting = normalize(dot(vNormal, vec3(10)));

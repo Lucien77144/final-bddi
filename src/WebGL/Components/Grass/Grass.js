@@ -3,12 +3,9 @@ import vertexShader from './shaders/vertexShader.vert'
 import fragmentShader from './shaders/fragmentShader.frag'
 import Experience from "../../Experience";
 
-
-console.log(vertexShader);
-
 const BLADE_WIDTH = 0.1
-const BLADE_HEIGHT = 0.4
-const BLADE_HEIGHT_VARIATION = 0.6
+const BLADE_HEIGHT = 0.2
+const BLADE_HEIGHT_VARIATION = 0.8
 const BLADE_VERTEX_COUNT = 5
 const BLADE_TIP_OFFSET = 0.1
 
@@ -102,6 +99,7 @@ class Grass extends THREE.Mesh {
   constructor(size, count) {
 
     const geometry = new GrassGeometry(size, count)
+    console.log(geometry);
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uCloud: { value: cloudTexture },

@@ -20,8 +20,8 @@ export default class Floor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 0,
-      size: 30,
+      count: 1000,
+      size: 0,
     };
 
     // Debug
@@ -43,7 +43,6 @@ export default class Floor {
   }
 
   setGrass() {
-    console.log('floor mesh : ', this.mesh);
     // Debug
 
     if (this.debug.active) {
@@ -59,7 +58,6 @@ export default class Floor {
       ;
       
     }
-
     this.grass = new Grass(this.grassParameters.size, this.grassParameters.count);
     this.scene.add(this.grass);
   }

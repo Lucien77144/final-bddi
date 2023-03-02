@@ -1,4 +1,5 @@
 import Experience from "../Experience.js";
+import Grass from "./Grass/Grass.js";
 import {
   CircleGeometry,
   Mesh,
@@ -9,18 +10,67 @@ import {
 
 export default class Floor {
   constructor() {
+
+    
+
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
+    this.time = this.experience.time;
+    this.debug = this.experience.debug;
+
+    this.grassParameters = {
+      count: 0,
+      size: 30,
+    };
+
+    // Debug
+
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
+
+    }
 
     this.setGeometry();
     this.setTextures();
     this.setMaterial();
     this.setMesh();
+    this.setGrass();
+
+    this.time.on("tick", () => {
+      this.update();
+    });
+  }
+
+  setGrass() {
+    console.log('floor mesh : ', this.mesh);
+    // Debug
+
+    if (this.debug.active) {
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 100000, step : 1 })
+        .on("change", () => {
+          this.grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+        })
+      ;
+      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 100, step : 1 })
+        .on("change", () => {
+          this.grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+        })
+      ;
+      
+    }
+
+    this.grass = new Grass(this.grassParameters.size, this.grassParameters.count);
+    this.scene.add(this.grass);
+  }
+
+  update() {
+    this.grass.update(this.time.elapsed);
   }
 
   setGeometry() {
     this.geometry = new CircleGeometry(5, 64);
+    this.grassParameters.size = this.geometry.parameters.radius * 2
   }
 
   setTextures() {

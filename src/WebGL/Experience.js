@@ -29,7 +29,7 @@ export default class Experience {
     this.time = new Time();
     this.scene = new Scene();
     this.debug = new Debug();
-    this.resources = new Resources(sources);
+    this.resources = new Resources(sources[0]);
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.activeScene = new SceneManager();
@@ -43,6 +43,23 @@ export default class Experience {
     this.time.on("tick", () => {
       this.update();
     });
+  }
+
+  switchScene(nextScene) {
+    // console.log(this.activeScene);
+    // console.log(nextScene);
+    // console.log(nextScene.scene);
+
+    // this.resources = null;
+    console.log(this);
+    // this.resources = new Resources(sources[0]);
+    // console.log('-----');
+    // console.log(new SceneManager('main'));
+    // console.log('-----');
+
+    this.scene = nextScene.scene;
+    this.renderer = new Renderer();
+    this.update();
   }
 
   resize() {

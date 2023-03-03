@@ -30,7 +30,7 @@ export default class SceneManager {
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: "Scene Manager",
-      expanded: false,
+      expanded: true,
     });
     this.debugFolder
       .addBlade({
@@ -42,7 +42,7 @@ export default class SceneManager {
         value: this.sceneName,
       })
       .on("change", ({ value }) => {
-        window.location.href = `?scene=${value}#debug`;
+        this.experience.switchScene(new this.scenes[value]());
       });
   }
 }

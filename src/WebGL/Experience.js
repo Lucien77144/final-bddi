@@ -45,20 +45,11 @@ export default class Experience {
     });
   }
 
-  switchScene(nextScene) {
-    // console.log(this.activeScene);
-    // console.log(nextScene);
-    // console.log(nextScene.scene);
-
-    // this.resources = null;
-    console.log(this);
-    // this.resources = new Resources(sources[0]);
-    // console.log('-----');
-    // console.log(new SceneManager('main'));
-    // console.log('-----');
-
-    this.scene = nextScene.scene;
+  switchScene(nextName) {
+    this.debug = new Debug();
+    this.scene = new SceneManager(nextName).scene;
     this.renderer = new Renderer();
+
     this.update();
   }
 

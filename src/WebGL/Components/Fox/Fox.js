@@ -11,7 +11,6 @@ export default class Fox {
     this.time = this.experience.time;
 
     // Debug
-    console.log(this.debug);
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
         title: "fox",

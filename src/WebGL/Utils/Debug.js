@@ -230,9 +230,9 @@ export default class Debug {
     };
   }
   unsetStats() {
-    this.experience.debug.statsJsPanel.domElement.remove();
-    this.experience.debug.monitoringSection.remove();
-    this.experience.debug.ui.containerElem_.remove();
+    this.experience.debug.statsJsPanel?.domElement.remove();
+    this.experience.debug.monitoringSection?.remove();
+    this.experience.debug.ui?.containerElem_.remove();
     this.experience.debug.ui.containerElem_ = null;
   }
 

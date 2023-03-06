@@ -16,7 +16,11 @@ export default class SceneManager {
 
     // get url params
     this.urlParams = new URLSearchParams(window.location.search);
-    this.sceneName = this.urlParams.get("scene") ? this.urlParams.get("scene") : _sceneName;
+    if(this.urlParams.get("scene")) {
+      return this.switchScene(this.urlParams.get("scene"));
+    } else {
+      this.sceneName = _sceneName;
+    }
 
     if (this.debug.active) this.setDebug();
 
@@ -25,7 +29,6 @@ export default class SceneManager {
   }
 
   setDebug() {
-    console.log("passed here !!");
     this.debugFolder = this.debug.ui.addFolder({
       title: "Scene Manager",
       expanded: true,

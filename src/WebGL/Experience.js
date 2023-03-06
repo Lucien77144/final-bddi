@@ -8,6 +8,7 @@ import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
 import sources from "./sources.js";
 import config from "./Scenes/config.js";
+import Transition from "./Components/Transition/Transition.js";
 
 let instance = null;
 
@@ -49,7 +50,9 @@ export default class Experience {
   switchScene(nextName) {
     this.debug = new Debug();
     this.resources = this.loadSources(Object.keys(config).indexOf(nextName) + 1);
+    this.oldScene = this.scene;
     this.scene = new SceneManager(nextName).scene;
+    this.transition = new Transition(this.oldScene, this.scene);
     this.renderer = new Renderer();
 
     this.update();
@@ -66,7 +69,7 @@ export default class Experience {
   }
 
   update() {
-    this.camera.update();
+    this.camera.instance && this.camera.update();
     this.activeScene.update();
     this.renderer.update();
     this.debug.update();

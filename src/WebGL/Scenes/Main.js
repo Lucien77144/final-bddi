@@ -15,7 +15,7 @@ export default class Main {
       // Setup
       this.floor = new Floor();
       this.fox = new Fox();
-      this.cube = new Cube();
+      // this.cube = new Cube();
       this.environment = new Environment();
     });
   }

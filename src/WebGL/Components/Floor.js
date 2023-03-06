@@ -1,5 +1,6 @@
 import Experience from "../Experience.js";
 import Grass from "./Grass/Grass.js";
+import * as THREE from "three";
 import {
   CircleGeometry,
   Mesh,
@@ -20,9 +21,11 @@ export default class Floor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 1000,
-      size: 0,
+      count: 500,
+      size: 5,
     };
+
+    this.grassGroup = new THREE.Group();
 
     // Debug
 
@@ -35,7 +38,10 @@ export default class Floor {
     this.setTextures();
     this.setMaterial();
     this.setMesh();
-    this.setGrass();
+    // this.setGrass();
+
+    // Set ground Model
+    this.setGround();
 
     this.time.on("tick", () => {
       this.update();
@@ -58,17 +64,64 @@ export default class Floor {
       ;
       
     }
-    this.grass = new Grass(this.grassParameters.size, this.grassParameters.count);
-    this.scene.add(this.grass);
+    // for (let i = 0; i < this.ground.children[1].geometry.attributes.position.array.length; i++) {
+    //   let zOffset = this.ground.children[1].geometry.attributes.position.array[i];
+    //     this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, zOffset, i * 0.03);
+    //     this.scene.add(this.grass);
+    // }
+
+    // Put grass on ground mesh
+    var mesh = this.ground.children[1]; // Votre mesh
+    var positions = mesh.geometry.attributes.position.array;
+    var normals = mesh.geometry.attributes.normal.array;
+
+    for (var i = 0; i < positions.length; i += 3) {
+        var x = positions[i];
+        var y = positions[i + 1];
+        var z = positions[i + 2];
+        // Faites quelque chose avec les coordonnées (x, y, z)
+
+        this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, x, y, z);
+        // this.grass = new Grass(x, y, z);
+
+        var nx = normals[i];
+        var ny = normals[i + 1];
+        var nz = normals[i + 2];
+        
+        var normal = new THREE.Vector3(nx, ny, nz); // Créer un vecteur normal à partir des coordonnées
+        this.grass.lookAt(normal); // Faire tourner le plan en direction du vecteur normal
+    
+        this.grassGroup.add(this.grass);
+    }
+    this.grassGroup.position.set(2, 2.3, 8);
+    console.log(this.grassGroup);
+    this.scene.add(this.grassGroup);
+
+    // this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, this.ground.children[1].geometry.attributes);
+    // this.scene.add(this.grass);
   }
 
   update() {
-    this.grass.update(this.time.elapsed);
+    this.grassGroup.children.forEach(element => {
+      element.update(this.time.elapsed);
+    });
   }
 
   setGeometry() {
-    this.geometry = new CircleGeometry(5, 64);
-    this.grassParameters.size = this.geometry.parameters.radius * 2
+    // this.geometry = new CircleGeometry(5, 64);
+    // this.grassParameters.size = this.geometry.parameters.radius * 2
+    // Import ground model gltf with draco
+    console.log(this.resources.items);
+
+  }
+
+  setGround() {
+    this.ground = this.resources.items.groundModel.scene;
+    // this.ground.scale.set(0.5, 0.5, 0.5);
+    this.ground.position.set(0, 0, 0);
+    this.scene.add(this.ground);
+    console.log(this.ground.children[1].geometry.attributes);
+    this.setGrass();
   }
 
   setTextures() {

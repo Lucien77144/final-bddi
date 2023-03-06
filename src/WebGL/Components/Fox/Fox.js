@@ -29,7 +29,7 @@ export default class Fox {
     this.model = this.resource.scene;
     this.model.scale.set(0.02, 0.02, 0.02);
     this.model.name = "fox";
-    this.scene.add(this.model);
+    // this.scene.add(this.model);
 
     this.model.traverse((child) => {
       if (child instanceof Mesh) {

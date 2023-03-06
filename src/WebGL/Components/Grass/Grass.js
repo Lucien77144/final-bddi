@@ -4,7 +4,7 @@ import fragmentShader from './shaders/fragmentShader.frag'
 import Experience from "../../Experience";
 
 const BLADE_WIDTH = 0.1
-const BLADE_HEIGHT = 0.2
+const BLADE_HEIGHT = 0.5
 const BLADE_HEIGHT_VARIATION = 0.8
 const BLADE_VERTEX_COUNT = 5
 const BLADE_TIP_OFFSET = 0.1
@@ -14,7 +14,7 @@ function interpolate(val, oldMin, oldMax, newMin, newMax) {
 }
 
 export class GrassGeometry extends THREE.BufferGeometry {
-  constructor(size, count) {
+  constructor(size, count, x, y, z) {
     super()
 
     const positions = []
@@ -44,11 +44,12 @@ export class GrassGeometry extends THREE.BufferGeometry {
 
     this.setAttribute(
       'position',
-      new THREE.BufferAttribute(new Float32Array(positions), 3)
+      new THREE.BufferAttribute(new Float32Array(new Float32Array(positions)), 3)
     )
     this.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2))
     this.setIndex(indices)
     this.computeVertexNormals()
+
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
@@ -96,9 +97,9 @@ const cloudTexture = new THREE.TextureLoader().load('/img/cloud.jpg')
 cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 
 class Grass extends THREE.Mesh {
-  constructor(size, count) {
+  constructor(size, count, x, y, z) {
 
-    const geometry = new GrassGeometry(size, count)
+    const geometry = new GrassGeometry(size, count, x, y, z)
     console.log(geometry);
     const material = new THREE.ShaderMaterial({
       uniforms: {
@@ -110,7 +111,7 @@ class Grass extends THREE.Mesh {
       fragmentShader
     })
     super(geometry, material)
-
+    this.position.set(x * 3, y * 11, z * 4);
     // const floor = new THREE.Mesh(
     //   new THREE.CircleGeometry(15, 8).rotateX(Math.PI / 2),
     //   material
@@ -124,10 +125,10 @@ class Grass extends THREE.Mesh {
     this.material.uniforms.uTime.value = time
   }
 
-  updateGrass(size, count) {
+  updateGrass(x, y, z) {
     this.material.uniforms.uTime.value = 0
     this.geometry.dispose()
-    this.geometry = new GrassGeometry(size, count)
+    this.geometry = new GrassGeometry(x, y, z)
     this.material.dispose()
     this.material = new THREE.ShaderMaterial({
         uniforms: {
@@ -143,3 +144,15 @@ class Grass extends THREE.Mesh {
 }
 
 export default Grass
+
+// class Grass extends THREE.Mesh {
+//   constructor(x, y, z) {
+//     const geometry = new THREE.PlaneGeometry(0.2, 1, 1, 1);
+//     const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, side: THREE.DoubleSide }); 
+//     super(geometry, material);
+//     this.position.set(x * 3, y * 11, z * 4);
+
+//   }
+// }
+
+// export default Grass

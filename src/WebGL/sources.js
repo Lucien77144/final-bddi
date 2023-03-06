@@ -26,4 +26,9 @@ export default [
     type: "gltf",
     path: "models/Fox/glTF/Fox.gltf",
   },
+  {
+    name: "groundModel",
+    type: "gltf",
+    path: "models/Ground/Ground_V01.gltf",
+  }
 ];

@@ -67,6 +67,7 @@ export default class Experience {
     this.camera.instance && this.camera.update();
     this.renderer.update();
     this.debug.update();
+    if (this.transition?.scene.children.filter((child) => child.name === "transition")[0]) this.transition.render();
   }
 
   destroy() {

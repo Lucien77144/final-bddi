@@ -30,5 +30,15 @@ export default [
     name: "groundModel",
     type: "gltf",
     path: "models/Ground/Ground_V01.gltf",
+  },
+  {
+    name: "grassDisplacementTexture",
+    type: "texture",
+    path: "textures/grass/Map.png",
+  },
+  {
+    name: "cloudTexture",
+    type: "texture",
+    path: "img/cloud.jpg",
   }
 ];

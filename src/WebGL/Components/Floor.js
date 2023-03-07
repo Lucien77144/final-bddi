@@ -1,11 +1,16 @@
 import Experience from "../Experience.js";
 import Grass from "./Grass/Grass.js";
 import * as THREE from "three";
+import grassVertexShader from "./Grass/shaders/vertexShader.vert"
+import grassFragmentShader from "./Grass/shaders/fragmentShader.frag"
+
+
 import {
   CircleGeometry,
   Mesh,
   MeshStandardMaterial,
   RepeatWrapping,
+  ShaderMaterial,
   sRGBEncoding,
 } from "three";
 
@@ -13,7 +18,7 @@ export default class Floor {
   constructor() {
 
     
-
+    this.grassVertexShader = grassVertexShader;
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
@@ -21,8 +26,8 @@ export default class Floor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 500,
-      size: 5,
+      count: 1000,
+      size: 3,
     };
 
     this.grassGroup = new THREE.Group();
@@ -54,12 +59,16 @@ export default class Floor {
     if (this.debug.active) {
       this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 100000, step : 1 })
         .on("change", () => {
-          this.grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+          this.grassGroup.children.forEach((grass) => {
+            grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+          })
         })
       ;
       this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 100, step : 1 })
         .on("change", () => {
-          this.grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+          this.grassGroup.children.forEach((grass) => {
+            grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
+          })
         })
       ;
       
@@ -71,7 +80,10 @@ export default class Floor {
     // }
 
     // Put grass on ground mesh
-    var mesh = this.ground.children[1]; // Votre mesh
+    var mesh = this.ground.children[2]; // Votre mesh
+    // Displacement map on mesh
+    // this.ground.children[2].material.displacementMap = this.resources.items.grassDisplacementTexture;
+    console.log(mesh.material);
     var positions = mesh.geometry.attributes.position.array;
     var normals = mesh.geometry.attributes.normal.array;
 
@@ -84,21 +96,31 @@ export default class Floor {
         this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, x, y, z);
         // this.grass = new Grass(x, y, z);
 
-        var nx = normals[i];
-        var ny = normals[i + 1];
-        var nz = normals[i + 2];
+        // var nx = normals[i];
+        // var ny = normals[i + 1];
+        // var nz = normals[i + 2];
         
-        var normal = new THREE.Vector3(nx, ny, nz); // Créer un vecteur normal à partir des coordonnées
-        this.grass.lookAt(normal); // Faire tourner le plan en direction du vecteur normal
+        // var normal = new THREE.Vector3(nx, ny, nz); // Créer un vecteur normal à partir des coordonnées
+        // this.grass.lookAt(normal); // Faire tourner le plan en direction du vecteur normal
     
         this.grassGroup.add(this.grass);
     }
-    this.grassGroup.position.set(2, 2.3, 8);
+    this.grassGroup.position.set(0, 0.5, 2.5);
     console.log(this.grassGroup);
     this.scene.add(this.grassGroup);
 
-    // this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, this.ground.children[1].geometry.attributes);
-    // this.scene.add(this.grass);
+    // var mesh = this.ground.children[2]; // Votre mesh
+    // // Put ShaderMaterial on ground mesh
+    // mesh.material = this.material;
+    // mesh.material = new THREE.ShaderMaterial({
+    //   uniforms: {
+    //     uTime: { value: 0 },
+    //   }, 
+    //   vertexShader: grassVertexShader,
+    //   fragmentShader: grassFragmentShader,
+    //   side: THREE.DoubleSide,
+    // })
+    // console.log(mesh);
   }
 
   update() {
@@ -119,9 +141,10 @@ export default class Floor {
     this.ground = this.resources.items.groundModel.scene;
     // this.ground.scale.set(0.5, 0.5, 0.5);
     this.ground.position.set(0, 0, 0);
-    this.scene.add(this.ground);
-    console.log(this.ground.children[1].geometry.attributes);
     this.setGrass();
+    // this.ground.children[2].material = this.material;
+    this.scene.add(this.ground);
+    console.log(this.ground);
   }
 
   setTextures() {
@@ -140,10 +163,8 @@ export default class Floor {
   }
 
   setMaterial() {
-    this.material = new MeshStandardMaterial({
-      map: this.textures.color,
-      normalMap: this.textures.normal,
-    });
+    
+
   }
 
   setMesh() {

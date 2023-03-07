@@ -4,7 +4,7 @@ import fragmentShader from './shaders/fragmentShader.frag'
 import Experience from "../../Experience";
 
 const BLADE_WIDTH = 0.1
-const BLADE_HEIGHT = 0.5
+const BLADE_HEIGHT = 0.01
 const BLADE_HEIGHT_VARIATION = 0.8
 const BLADE_VERTEX_COUNT = 5
 const BLADE_TIP_OFFSET = 0.1
@@ -14,7 +14,7 @@ function interpolate(val, oldMin, oldMax, newMin, newMax) {
 }
 
 export class GrassGeometry extends THREE.BufferGeometry {
-  constructor(size, count, x, y, z) {
+  constructor(size, count) {
     super()
 
     const positions = []
@@ -99,19 +99,20 @@ cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 class Grass extends THREE.Mesh {
   constructor(size, count, x, y, z) {
 
-    const geometry = new GrassGeometry(size, count, x, y, z)
-    console.log(geometry);
+    const geometry = new GrassGeometry(size, count)
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uCloud: { value: cloudTexture },
-        uTime: { value: 0 }
+        uTime: { value: 0 },
+        tDisplacement : { value: new THREE.TextureLoader().load('/textures/grass/Map.png') }
       },
       side: THREE.DoubleSide,
+
       vertexShader,
       fragmentShader
     })
     super(geometry, material)
-    this.position.set(x * 3, y * 11, z * 4);
+    this.position.set(x * 6, y * 5, z * 5.2);
     // const floor = new THREE.Mesh(
     //   new THREE.CircleGeometry(15, 8).rotateX(Math.PI / 2),
     //   material
@@ -125,20 +126,20 @@ class Grass extends THREE.Mesh {
     this.material.uniforms.uTime.value = time
   }
 
-  updateGrass(x, y, z) {
+  updateGrass(size, count) {
     this.material.uniforms.uTime.value = 0
     this.geometry.dispose()
-    this.geometry = new GrassGeometry(x, y, z)
-    this.material.dispose()
-    this.material = new THREE.ShaderMaterial({
-        uniforms: {
-            uCloud: { value: cloudTexture },
-            uTime: { value: 0 }
-        },
-        side: THREE.DoubleSide,
-        vertexShader,
-        fragmentShader
-        })
+    this.geometry = new GrassGeometry(size, count)
+  //   this.material.dispose()
+  //   this.material = new THREE.ShaderMaterial({
+  //       uniforms: {
+  //           uCloud: { value: cloudTexture },
+  //           uTime: { value: 0 }
+  //       },
+  //       side: THREE.DoubleSide,
+  //       vertexShader,
+  //       fragmentShader
+  //       })
     
   }
 }

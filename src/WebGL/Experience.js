@@ -47,10 +47,12 @@ export default class Experience {
   }
 
   switchScene(nextName) {
+    const oldScene = this.activeScene;
+    this.scene = new Scene();
     this.debug = new Debug();
-    this.oldScene = this.scene;
-    this.scene = new SceneManager(nextName).scene;
-    this.transition = new Transition(this.oldScene, this.scene);
+    this.activeScene = new SceneManager(nextName);
+    console.log(this.activeScene)
+    // this.transition = new Transition(oldScene, this.activeScene);
     this.renderer = new Renderer();
 
     this.update();
@@ -63,7 +65,6 @@ export default class Experience {
 
   update() {
     this.camera.instance && this.camera.update();
-    this.activeScene.update();
     this.renderer.update();
     this.debug.update();
   }

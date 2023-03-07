@@ -1,6 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter.js";
-import { CubeTextureLoader, TextureLoader } from "three";
+import { Cache, CubeTextureLoader, TextureLoader } from "three";
 import Experience from "webgl/Experience.js";
 
 export default class Resources extends EventEmitter {
@@ -53,6 +53,7 @@ export default class Resources extends EventEmitter {
 
   setLoaders() {
     this.loaders = {};
+    Cache.enabled = false;
     this.loaders.gltfLoader = new GLTFLoader();
     this.loaders.textureLoader = new TextureLoader();
     this.loaders.cubeTextureLoader = new CubeTextureLoader();

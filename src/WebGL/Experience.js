@@ -7,7 +7,6 @@ import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
 import sources from "./sources.js";
-import config from "./Scenes/config.js";
 import Transition from "./Components/Transition/Transition.js";
 
 let instance = null;
@@ -31,7 +30,7 @@ export default class Experience {
     this.time = new Time();
     this.scene = new Scene();
     this.debug = new Debug();
-    this.resources = this.loadSources(1);
+    this.resources = new Resources(sources);
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.activeScene = new SceneManager();
@@ -49,18 +48,12 @@ export default class Experience {
 
   switchScene(nextName) {
     this.debug = new Debug();
-    this.resources = this.loadSources(Object.keys(config).indexOf(nextName) + 1);
     this.oldScene = this.scene;
     this.scene = new SceneManager(nextName).scene;
     this.transition = new Transition(this.oldScene, this.scene);
     this.renderer = new Renderer();
 
     this.update();
-  }
-
-  loadSources(index) {
-    const filteredSources = sources[index].concat(sources[0]).filter((e, i, self) => i === self.findIndex((t) => t.name === e.name));
-    return new Resources(filteredSources);
   }
 
   resize() {

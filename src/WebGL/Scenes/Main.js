@@ -3,7 +3,6 @@ import Environment from "components/Environment.js";
 import Floor from "components/Floor.js";
 import Fox from "components/Fox/Fox.js";
 import { Scene } from "three";
-import Transition from "../Components/Transition/Transition.js";
 
 export default class Main {
   constructor() {
@@ -12,12 +11,20 @@ export default class Main {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    this.resources.on("ready", () => {
-      // Setup
-      this.floor = new Floor();
-      this.fox = new Fox();
-      this.environment = new Environment();
-    });
+    if(this.resources.loaded == this.resources.toLoad) {
+      this.buildScene();
+    } else {
+      this.resources.on("ready", () => {
+        this.buildScene();
+      });
+    }
+  }
+
+  buildScene() {
+    // Setup
+    this.floor = new Floor();
+    this.fox = new Fox();
+    this.environment = new Environment();
   }
 
   update() {

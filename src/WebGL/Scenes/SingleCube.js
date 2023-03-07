@@ -3,7 +3,6 @@ import Cube from "components/Cube/Cube.js";
 import { Scene } from "three";
 import Floor from "../Components/Floor.js";
 import Environment from "../Components/Environment.js";
-import Transition from "../Components/Transition/Transition.js";
 
 export default class SingleCube {
   constructor() {
@@ -12,12 +11,20 @@ export default class SingleCube {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    this.resources.on("ready", () => {
-      // Setup
-      this.floor = new Floor();
-      this.cube = new Cube();
-      this.environment = new Environment();
-    });
+    if(this.resources.loaded == this.resources.toLoad) {
+      this.buildScene();
+    } else {
+      this.resources.on("ready", () => {
+        this.buildScene();
+      });
+    }
+  }
+
+  buildScene() {
+    // Setup
+    this.floor = new Floor();
+    this.cube = new Cube();
+    this.environment = new Environment();
   }
 
   update() {}

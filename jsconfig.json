@@ -16,7 +16,7 @@
       ],
       "scenes/*": [
         "./src/WebGL/Scenes/*"
-      ],
+      ]
     }
   },
   "exclude": [

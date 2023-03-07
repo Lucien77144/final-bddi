@@ -51,9 +51,9 @@ export default class Experience {
     this.scene = new Scene();
     this.debug = new Debug();
     this.activeScene = new SceneManager(nextName);
-    console.log(this.activeScene)
-    // this.transition = new Transition(oldScene, this.activeScene);
-    this.renderer = new Renderer();
+    this.renderer.scene = this.scene;
+    this.renderer.update();
+    this.transition = new Transition(oldScene, this.activeScene);
 
     this.update();
   }

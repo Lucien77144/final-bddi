@@ -7,6 +7,8 @@ export default class Transition {
   constructor(_sceneA, _sceneB) {
     this.experience = new Experience();
     this.resources = this.experience.resources;
+    this.renderer = this.experience.renderer;
+
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
 
@@ -52,14 +54,14 @@ export default class Transition {
         0,
     );
     this.mesh.name = "transition";
-    // this.scene.add(this.mesh);
+    this.scene.add(this.mesh);
   }
 
   changeCamera() {
-    const oldCamera = this.experience.camera.instance;
-    console.log('change camera');
+    const oldCamera = this.renderer.camera.instance;
 
-    this.experience.camera.instance = new OrthographicCamera(
+    console.log(this.renderer);
+    this.renderer.camera.instance = new OrthographicCamera(
         this.sizes.width / -2,
         this.sizes.width / 2,
         this.sizes.height / 2,
@@ -67,11 +69,10 @@ export default class Transition {
         -10,
         10
     );
-    this.experience.camera.instance.position.copy(oldCamera.position);
-    this.experience.camera.instance.rotation.copy(oldCamera.rotation);
-    
+
     setTimeout(() => {
-      this.experience.camera.instance = oldCamera;
+      // this.experience.camera.instance = oldCamera;
+      // this.scene.remove(this.mesh);
     }, 2000);
   }
 }

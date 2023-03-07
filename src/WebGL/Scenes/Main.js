@@ -23,13 +23,10 @@ export default class Main {
   buildScene() {
     // Setup
     this.floor = new Floor();
-    this.fox1 = new Fox(new Vector3(.1, 0, 0));
-    this.fox2 = new Fox(new Vector3(.2, 0, 0));
-    this.fox3 = new Fox(new Vector3(.3, 0, 0));
-    this.fox4 = new Fox(new Vector3(.4, 0, 0));
-    this.fox5 = new Fox(new Vector3(.5, 0, 0));
+    this.fox1 = new Fox(new Vector3(-1, 0, 0));
+    this.fox1 = new Fox();
+    this.fox5 = new Fox(new Vector3(1, 0, 0));
     this.environment = new Environment();
-    console.log(this);
   }
 
   update() {

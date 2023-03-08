@@ -11,6 +11,22 @@
     <noscript>
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
-    <canvas id="webgl"></canvas>
+    <div id="landingPage">
+      <div class="title">
+        Bienvenue !
+      </div>
+      <div class="create-room">
+        <button id="create">Créez une partie</button>
+        <div class="showRoomId"></div>
+      </div>
+      <div class="join-room">
+        <input type="text" id="roomInput" placeholder="Entrez le code de la partie" />
+        <button id="join">Rejoignez la partie</button>
+      </div>
+    </div>
+    <div class="hidden" id="scene">
+      <div class="room-info text-white" id="roomInfo"></div>
+      <canvas id="webgl"></canvas>
+    </div>
   </body>
 </html>

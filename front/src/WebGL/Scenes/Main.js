@@ -24,8 +24,8 @@ export default class Main {
     // Setup
     this.floor = new Floor();
     this.fox1 = new Fox(new Vector3(-1, 0, 0));
-    this.fox1 = new Fox();
-    this.fox5 = new Fox(new Vector3(1, 0, 0));
+    this.fox2 = new Fox();
+    this.fox3 = new Fox(new Vector3(1, 0, 0));
     this.environment = new Environment();
   }
 

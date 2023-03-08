@@ -32,7 +32,7 @@ export default class Experience {
     this.debug = new Debug();
     this.resources = new Resources(sources);
     this.camera = new Camera();
-    this.renderer = new Renderer();
+    this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
 
     // Resize event

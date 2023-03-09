@@ -84,6 +84,7 @@ export default class Camera {
         JSON.stringify(this.controls.target)
       );
     });
+    this.controls.enabled = false;
   }
   resetControls() {
     sessionStorage.removeItem("cameraPosition");

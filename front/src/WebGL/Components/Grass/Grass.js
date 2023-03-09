@@ -98,13 +98,10 @@ cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 class Grass extends THREE.Mesh {
   constructor(size, count, x, y, z) {
     const geometry = new GrassGeometry(size, count);
-    const randomFactor = Math.floor(Math.random()*10)/10;
-    console.log(randomFactor);
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uSecondarySpread: { value: Math.random() },
-        uColorScale: { value: randomFactor },
+        uColorScale: { value: Math.floor(Math.random()*10)/10 },
         uColor1: { value: new THREE.Color(0x96d96f) },
         uColor2: { value: new THREE.Color(0x73b247) },
         uColor3: { value: new THREE.Color(0x3c9464) },
@@ -112,7 +109,7 @@ class Grass extends THREE.Mesh {
         uColor5: { value: new THREE.Color(0x0a353b) },
       },
       side: THREE.DoubleSide,
-
+      encoding: THREE.sRGBEncoding,
       vertexShader,
       fragmentShader
     });

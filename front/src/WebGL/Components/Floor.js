@@ -18,7 +18,7 @@ export default class Floor {
 
     this.grassParameters = {
       count: 750,
-      size: 4,
+      size: 3,
     };
 
     this.grassGroup = new THREE.Group();
@@ -29,7 +29,6 @@ export default class Floor {
 
     this.setGeometry();
     this.setTextures();
-    this.setMaterial();
     this.setMesh();
 
     this.setGround();
@@ -111,8 +110,6 @@ export default class Floor {
     this.textures.normal.wrapS = RepeatWrapping;
     this.textures.normal.wrapT = RepeatWrapping;
   }
-
-  setMaterial() { }
 
   setMesh() {
     this.mesh = new Mesh(this.geometry, this.material);

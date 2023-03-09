@@ -1,5 +1,4 @@
 uniform float uTime;
-uniform float uSecondarySpread;
 uniform float uColorScale;
 
 varying vec3 vPosition;
@@ -33,7 +32,7 @@ void main() {
   vec3 secondaryColor = getColor(uColorScale);
 
   vec3 color = mix(primaryColor * 0.8, primaryColor, random);
-  color = mix(color, mix(secondaryColor, color, (vPosition.x + vPosition.z) / 2.), vPosition.y * uSecondarySpread);
+  color = mix(color, mix(secondaryColor, color, (vPosition.x + vPosition.z) / 2.), vPosition.y * uColorScale);
   color = mix(color, uColorScale > .5 ? uColor4 : uColor5, vPosition.y * 0.5);
   color = shadowSource(color);
 

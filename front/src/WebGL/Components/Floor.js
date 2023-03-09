@@ -1,24 +1,15 @@
 import Experience from "../Experience.js";
 import Grass from "./Grass/Grass.js";
 import * as THREE from "three";
-import grassVertexShader from "./Grass/shaders/vertexShader.vert"
-import grassFragmentShader from "./Grass/shaders/fragmentShader.frag"
-
 
 import {
-  CircleGeometry,
   Mesh,
-  MeshStandardMaterial,
   RepeatWrapping,
-  ShaderMaterial,
   sRGBEncoding,
 } from "three";
 
 export default class Floor {
   constructor() {
-
-    
-    this.grassVertexShader = grassVertexShader;
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
@@ -26,26 +17,21 @@ export default class Floor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 1000,
-      size: 3,
+      count: 750,
+      size: 4,
     };
 
     this.grassGroup = new THREE.Group();
 
-    // Debug
-
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
-
     }
 
     this.setGeometry();
     this.setTextures();
     this.setMaterial();
     this.setMesh();
-    // this.setGrass();
 
-    // Set ground Model
     this.setGround();
 
     this.time.on("tick", () => {
@@ -54,8 +40,6 @@ export default class Floor {
   }
 
   setGrass() {
-    // Debug
-
     if (this.debug.active) {
       this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 100000, step : 1 })
         .on("change", () => {
@@ -73,54 +57,29 @@ export default class Floor {
       ;
       
     }
-    // for (let i = 0; i < this.ground.children[1].geometry.attributes.position.array.length; i++) {
-    //   let zOffset = this.ground.children[1].geometry.attributes.position.array[i];
-    //     this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, zOffset, i * 0.03);
-    //     this.scene.add(this.grass);
-    // }
 
-    // Put grass on ground mesh
     var mesh = this.ground.children[2]; // Votre mesh
-    // Displacement map on mesh
-    // this.ground.children[2].material.displacementMap = this.resources.items.grassDisplacementTexture;
     console.log(mesh.material);
     var positions = mesh.geometry.attributes.position.array;
     var normals = mesh.geometry.attributes.normal.array;
 
     for (var i = 0; i < positions.length; i += 3) {
-        var x = positions[i];
-        var y = positions[i + 1];
-        var z = positions[i + 2];
-        // Faites quelque chose avec les coordonnées (x, y, z)
+      const x = positions[i];
+      const y = positions[i + 1];
+      const z = positions[i + 2];
 
-        this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, x, y, z);
-        // this.grass = new Grass(x, y, z);
+      const normal = new THREE.Vector3(normals[i], normals[i+1], normals[i+2]);
+      const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
+      const angleZ = -Math.atan2(normal.x, normal.y);
 
-        // var nx = normals[i];
-        // var ny = normals[i + 1];
-        // var nz = normals[i + 2];
-        
-        // var normal = new THREE.Vector3(nx, ny, nz); // Créer un vecteur normal à partir des coordonnées
-        // this.grass.lookAt(normal); // Faire tourner le plan en direction du vecteur normal
-    
-        this.grassGroup.add(this.grass);
+      this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, x, y, z).clone();
+      this.grass.rotation.x = angleX * .75;
+      this.grass.rotation.z = angleZ * .75;
+  
+      this.grassGroup.add(this.grass);
     }
     this.grassGroup.position.set(0, 0.5, 2.5);
-    console.log(this.grassGroup);
     this.scene.add(this.grassGroup);
-
-    // var mesh = this.ground.children[2]; // Votre mesh
-    // // Put ShaderMaterial on ground mesh
-    // mesh.material = this.material;
-    // mesh.material = new THREE.ShaderMaterial({
-    //   uniforms: {
-    //     uTime: { value: 0 },
-    //   }, 
-    //   vertexShader: grassVertexShader,
-    //   fragmentShader: grassFragmentShader,
-    //   side: THREE.DoubleSide,
-    // })
-    // console.log(mesh);
   }
 
   update() {
@@ -129,22 +88,13 @@ export default class Floor {
     });
   }
 
-  setGeometry() {
-    // this.geometry = new CircleGeometry(5, 64);
-    // this.grassParameters.size = this.geometry.parameters.radius * 2
-    // Import ground model gltf with draco
-    console.log(this.resources.items);
-
-  }
+  setGeometry() {}
 
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
-    // this.ground.scale.set(0.5, 0.5, 0.5);
     this.ground.position.set(0, 0, 0);
     this.setGrass();
-    // this.ground.children[2].material = this.material;
     this.scene.add(this.ground);
-    console.log(this.ground);
   }
 
   setTextures() {
@@ -162,10 +112,7 @@ export default class Floor {
     this.textures.normal.wrapT = RepeatWrapping;
   }
 
-  setMaterial() {
-    
-
-  }
+  setMaterial() { }
 
   setMesh() {
     this.mesh = new Mesh(this.geometry, this.material);

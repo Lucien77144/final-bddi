@@ -11,7 +11,7 @@
     <noscript>
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
-    <div id="landingPage">
+    <section id="landingPage">
       <div class="title">
         Bienvenue !
       </div>
@@ -23,10 +23,19 @@
         <input type="text" id="roomInput" placeholder="Entrez le code de la partie" />
         <button id="join">Rejoignez la partie</button>
       </div>
-    </div>
-    <div class="hidden" id="scene">
+    </section>
+    <section class="hidden" id="roleSelection">
+      <div class="title">
+        Choisissez votre rôle
+      </div>
+      <div class="roles">
+        <button id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
+        <button id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
+      </div>
+    </section>
+    <section class="hidden" id="scene">
       <div class="room-info text-white" id="roomInfo"></div>
       <canvas id="webgl"></canvas>
-    </div>
+    </section>
   </body>
 </html>

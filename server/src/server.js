@@ -10,6 +10,8 @@ const io = new Server(http, {
 });
 
 const rooms = [];
+let player1Id = null;
+let player2Id = null;
 
 app.get('/', (req, res) => {
   // Envoyer une réponse à la requête GET
@@ -30,7 +32,20 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     console.log('Join room', roomId);
     joinRoom(socket.id, roomId);
-    })
+  })
+
+  /**
+   * Role Selection
+   * @data {roomId : id, role : urma || heda}
+   * @specs - Le rôle envoyé est celui du joueur 1, le rôle du joueur 2 est à attribuer par défaut
+   */
+
+  socket.on('roleSelect', (data) => {
+    console.log('Role select', data);
+    _player1Role = data.role;
+    _player2Role = data.role === 'urma' ? 'heda' : 'urma';
+    attributeRoles(rooms.find(room => room.id === data.roomId), _player1Role, _player2Role);
+  })
 });
 
 function generateRandomId() {
@@ -48,31 +63,31 @@ function createRoom(clientSocket) {
 
   let newRoom = {
     id: roomId,
-    player1: clientSocket,
+    player1: {
+      id : clientSocket,
+      role: null
+    },
     player2: null,
   }
+
+  // Attribute player 1 id
+  player1Id = clientSocket;
 
   while (rooms.includes(roomId)) {
     roomId = generateRandomId();
   }
 
   rooms.push(newRoom);
-  console.log(rooms);
+  // console.log(rooms);
 
   io.emit('createRoom', roomId);
 }
 
 function joinRoom(clientSocket, roomId) {
-  // TODO
-  // Check if room exists : DONE
-  // Check if room is full : DONE
-  // Add player to room
-  // Emit to both players
-  // Check if player1 != player2
-  console.log(rooms);
+  // console.log(rooms);
   // Check if room exists
   let room = rooms.find(room => room.id === roomId);
-  console.log(room);
+  // console.log(room);
   if (room) {
     // Check if room is full
     if (room.player2 === null) {
@@ -83,12 +98,19 @@ function joinRoom(clientSocket, roomId) {
         return;
       }
       // Add player to room
-      room.player2 = clientSocket;
-      console.log(rooms);
+      room.player2 = {
+        id: clientSocket,
+        role: null
+      };
+      player2Id = clientSocket;
+      // console.log(rooms);
 
       // Emit to both players
-      io.to(room.player1).emit('joinRoom', {success : room});
-      io.to(room.player2).emit('joinRoom', {success : room});
+      io.to(player1Id).emit('joinRoom', {success : room});
+      io.to(player2Id).emit('joinRoom', {success : room});
+
+      // Emit role selection to player 1
+      io.to(player1Id).emit('selectRole');
     } else {
       console.log('Room is full');
       io.emit('joinRoom', { error: 'Room is full' })
@@ -96,7 +118,19 @@ function joinRoom(clientSocket, roomId) {
   } else {
     console.log('Room does not exist');
   }
+}
 
+function attributeRoles(room, player1Role, player2Role) {
+  // Attribute roles to players
+
+  room.player1.role = player1Role;
+  room.player2.role = player2Role;
+  console.log('Roles attributed');
+  console.log(room);
+
+  // Emit roles to players
+  io.to(player1Id).emit('role', room.player1.role);
+  io.to(player2Id).emit('role', room.player2.role);
 }
 
 http.listen(3000, () => {

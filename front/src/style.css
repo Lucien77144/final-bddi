@@ -15,3 +15,16 @@ body {
   left: 0;
   outline: none;
 }
+
+.hidden {
+  display: none;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.room-info {
+  position : relative;
+  z-index: 1;
+}

@@ -7,7 +7,6 @@ import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
 import sources from "./sources.js";
 import { Mesh, Scene } from "three";
-import Grass from "./Components/Grass/Grass.js";
 
 let instance = null;
 
@@ -34,7 +33,6 @@ export default class Experience {
     this.camera = new Camera();
     this.renderer = new Renderer();
     this.activeScene = new SceneManager();
-
 
     // Resize event
     this.sizes.on("resize", () => {

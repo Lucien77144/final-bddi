@@ -58,26 +58,29 @@ export default class Floor {
     }
 
     var mesh = this.ground.children[2]; // Votre mesh
-    console.log(mesh.material);
     var positions = mesh.geometry.attributes.position.array;
     var normals = mesh.geometry.attributes.normal.array;
+    var size = mesh.geometry.boundingBox.getSize(new THREE.Vector3());
+    var scale = mesh.scale;
+    console.log(size, scale);
 
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
       const y = positions[i + 1];
       const z = positions[i + 2];
 
+      const anglePower = 0.75;
       const normal = new THREE.Vector3(normals[i], normals[i+1], normals[i+2]);
       const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
       const angleZ = -Math.atan2(normal.x, normal.y);
 
-      this.grass = new Grass(this.grassParameters.size, this.grassParameters.count, x, y, z).clone();
-      this.grass.rotation.x = angleX * .75;
-      this.grass.rotation.z = angleZ * .75;
+      this.grass = new Grass(scale, this.grassParameters.size, this.grassParameters.count, x, y, z);
+      this.grass.rotation.x = angleX * anglePower;
+      this.grass.rotation.z = angleZ * anglePower;
   
       this.grassGroup.add(this.grass);
     }
-    this.grassGroup.position.set(0, 0.5, 2.5);
+    this.grassGroup.position.copy(mesh.position);
     this.scene.add(this.grassGroup);
   }
 

@@ -25,14 +25,22 @@ vec3 getColor(float random) {
   }
 }
 
+vec3 getSecondaryColor(float random) {
+  if (random < .5 ) {
+    return uColor4;
+  } else {
+    return uColor5;
+  }
+}
+
 void main() {
   float random = fract(sin(dot(vec3(uTime, 0.0, 0.0), vec3(12.9898, 78.233, 98.422)) * 43758.5453));
 
   vec3 primaryColor = getColor(uColorScale);
-  vec3 secondaryColor = getColor(uColorScale);
+  vec3 secondaryColor = getSecondaryColor(uColorScale);
 
   vec3 color = mix(primaryColor * 0.8, primaryColor, random);
-  color = mix(color, mix(secondaryColor, color, (vPosition.x + vPosition.z) / 2.), vPosition.y * uColorScale);
+  color = mix(color, mix(color, secondaryColor, (vPosition.x + vPosition.z) / 2.), vPosition.y * uColorScale);
   color = mix(color, uColorScale > .5 ? uColor4 : uColor5, vPosition.y * 0.5);
   color = shadowSource(color);
 

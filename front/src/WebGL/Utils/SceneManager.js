@@ -3,7 +3,7 @@ import Experience from "webgl/Experience.js";
 
 export default class SceneManager {
   constructor(
-    _sceneName = "main",
+    _sceneName
   ) {
     this.experience = new Experience();
     this.debug = this.experience.debug;
@@ -16,10 +16,10 @@ export default class SceneManager {
 
     // get url params
     this.urlParams = new URLSearchParams(window.location.search);
-    if(this.urlParams.get("scene")) {
+    if(this.urlParams.get("scene") && !_sceneName) {
       this.sceneName = this.urlParams.get("scene").toLowerCase();
     } else {
-      this.sceneName = _sceneName;
+      this.sceneName = _sceneName || "main";
     }
 
     if (this.debug.active) this.setDebug();

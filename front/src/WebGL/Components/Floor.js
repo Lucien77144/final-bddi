@@ -20,8 +20,7 @@ export default class Floor {
       count: 750,
       size: 3,
     };
-
-    this.grassGroup = new THREE.Group();
+    this.grassGroups = [];
 
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
@@ -38,32 +37,27 @@ export default class Floor {
     });
   }
 
-  setGrass() {
+  setGrass(mesh) {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 100000, step : 1 })
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
         .on("change", () => {
           this.grassGroup.children.forEach((grass) => {
             grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
           })
         })
       ;
-      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 100, step : 1 })
+      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
         .on("change", () => {
           this.grassGroup.children.forEach((grass) => {
             grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
           })
         })
       ;
-      
     }
 
-    var mesh = this.ground.children[2]; // Votre mesh
-    var positions = mesh.geometry.attributes.position.array;
-    var normals = mesh.geometry.attributes.normal.array;
-    var size = mesh.geometry.boundingBox.getSize(new THREE.Vector3());
-    var scale = mesh.scale;
-    console.log(size, scale);
-
+    const group = new THREE.Group();
+    const positions = mesh.geometry.attributes.position.array;
+    const normals = mesh.geometry.attributes.normal.array;
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
       const y = positions[i + 1];
@@ -74,20 +68,23 @@ export default class Floor {
       const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
       const angleZ = -Math.atan2(normal.x, normal.y);
 
-      this.grass = new Grass(scale, this.grassParameters.size, this.grassParameters.count, x, y, z);
+      this.grass = new Grass(mesh.scale, this.grassParameters.size, this.grassParameters.count, x, y, z);
       this.grass.rotation.x = angleX * anglePower;
       this.grass.rotation.z = angleZ * anglePower;
   
-      this.grassGroup.add(this.grass);
+      group.add(this.grass);
     }
-    this.grassGroup.position.copy(mesh.position);
-    this.scene.add(this.grassGroup);
+    group.position.copy(mesh.position);
+    this.grassGroups.push(group);
+    this.scene.add(group);
   }
 
   update() {
-    this.grassGroup.children.forEach(element => {
-      element.update(this.time.elapsed);
-    });
+    this.grassGroups.forEach((group) => {
+      group.children.forEach((e) => {
+        e.update(this.time.elapsed);
+      });
+    })
   }
 
   setGeometry() {}
@@ -95,8 +92,10 @@ export default class Floor {
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
     this.ground.position.set(0, 0, 0);
-    this.setGrass();
     this.scene.add(this.ground);
+    
+    this.setGrass(this.ground.children[2]);
+    this.setGrass(this.ground.children[3]);
   }
 
   setTextures() {

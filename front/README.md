@@ -1,5 +1,12 @@
-# Threejs vite starter
-This is a starter template for threejs with vite based on Bruno Simon's starter.
+# Urma Project
+This is our final project for our Bachelor degree (BDDI 3 - Gobelin)
+
+## Team
+- [Antoine] : Developper
+- [Amandine] : Developper
+- [Lucie] : Designer
+- [Lucien] : Developper
+- [Stan] : Designer
 
 ## Usage
 ```bash
@@ -15,5 +22,5 @@ npm run dev
 
 
 ## Features
-- `Scene management` : You can add multiple scenes and switch between them by adding `?scene=scene-name` to the url
+- `Scene management` : You can switch between scenes by adding `?scene=scene-name` to the url
 - `Debug mode` : You can enable debug mode by adding `#debug` to the url

@@ -1,6 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "./EventEmitter.js";
-import { CubeTextureLoader, TextureLoader } from "three";
+import { Cache, CubeTextureLoader, TextureLoader } from "three";
 import Experience from "webgl/Experience.js";
 
 export default class Resources extends EventEmitter {
@@ -53,13 +53,14 @@ export default class Resources extends EventEmitter {
 
   setLoaders() {
     this.loaders = {};
+    Cache.enabled = false;
     this.loaders.gltfLoader = new GLTFLoader();
     this.loaders.textureLoader = new TextureLoader();
     this.loaders.cubeTextureLoader = new CubeTextureLoader();
   }
 
   startLoading() {
-    if (this.debug.active) console.debug("⏳ Loading resources...");
+    // if (this.debug.active) console.debug("⏳ Loading resources...");
     // Load each source
     for (const source of this.sources) {
       switch (source.type) {
@@ -90,9 +91,9 @@ export default class Resources extends EventEmitter {
     this.loaded++;
 
     if (this.debug.active)
-      console.debug(
-        `🖼️ ${source.name} loaded. (${this.loaded}/${this.toLoad})`
-      );
+      // console.debug(
+      //   `🖼️ ${source.name} loaded. (${this.loaded}/${this.toLoad})`
+      // );
 
     if (this.debug.debugParams?.LoadingScreen) {
       this.loadingBarElement.style.transform = `scaleX(${
@@ -101,7 +102,7 @@ export default class Resources extends EventEmitter {
     }
 
     if (this.loaded === this.toLoad) {
-      if (this.debug.active) console.debug("✅ Resources loaded!");
+      // if (this.debug.active) console.debug("✅ Resources loaded!");
       if (this.debug.debugParams?.LoadingScreen)
         this.loadingScreenElement.remove();
       this.trigger("ready");

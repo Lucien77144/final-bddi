@@ -44,52 +44,24 @@ export default class Camera {
   }
 
   applySavedSettings() {
-    const cameraPosition = JSON.parse(sessionStorage.getItem("cameraPosition"));
-    const cameraTarget = JSON.parse(sessionStorage.getItem("cameraTarget"));
 
-    if (cameraPosition) {
-      this.instance.position.set(
-        cameraPosition.x,
-        cameraPosition.y,
-        cameraPosition.z
-      );
-    } else {
-      this.instance.position.set(
-        this.options.position.x,
-        this.options.position.y,
-        this.options.position.z
-      );
-    }
+    this.instance.position.set(
+      this.options.position.x,
+      this.options.position.y,
+      this.options.position.z
+    );
 
-    if (cameraTarget) {
-      this.controls.target.set(cameraTarget.x, cameraTarget.y, cameraTarget.z);
-    } else {
-      this.controls.target.set(
-        this.options.target.x,
-        this.options.target.y,
-        this.options.target.z
-      );
-    }
+    this.controls.target.set(
+      this.options.target.x,
+      this.options.target.y,
+      this.options.target.z
+    );
   }
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    this.controls.addEventListener("change", () => {
-      sessionStorage.setItem(
-        "cameraPosition",
-        JSON.stringify(this.instance.position)
-      );
-      sessionStorage.setItem(
-        "cameraTarget",
-        JSON.stringify(this.controls.target)
-      );
-    });
-    this.controls.enabled = false;
   }
   resetControls() {
-    sessionStorage.removeItem("cameraPosition");
-    sessionStorage.removeItem("cameraTarget");
-
     this.controls.reset();
     this.instance.position.set(
       this.options.position.x,

@@ -11,6 +11,31 @@
     <noscript>
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
-    <canvas id="webgl"></canvas>
+    <section class="hidden" id="landingPage">
+      <div class="title">
+        Bienvenue !
+      </div>
+      <div class="create-room">
+        <button id="create">Créez une partie</button>
+        <div class="showRoomId"></div>
+      </div>
+      <div class="join-room">
+        <input type="text" id="roomInput" placeholder="Entrez le code de la partie" />
+        <button id="join">Rejoignez la partie</button>
+      </div>
+    </section>
+    <section class="hidden" id="roleSelection">
+      <div class="title">
+        Choisissez votre rôle
+      </div>
+      <div class="roles">
+        <button id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
+        <button id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
+      </div>
+    </section>
+    <section id="scene">
+      <div class="room-info text-white" id="roomInfo"></div>
+      <canvas id="webgl"></canvas>
+    </section>
   </body>
 </html>

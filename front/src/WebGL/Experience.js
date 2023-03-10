@@ -5,8 +5,8 @@ import Camera from "./Camera.js";
 import Renderer from "./Renderer.js";
 import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
-import sources from "./sources.js";
 import { Mesh, Scene } from "three";
+import sources from "./sources.js";
 
 let instance = null;
 
@@ -31,7 +31,7 @@ export default class Experience {
     this.debug = new Debug();
     this.resources = new Resources(sources);
     this.camera = new Camera();
-    this.renderer = new Renderer();
+    this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
 
     // Resize event
@@ -45,15 +45,23 @@ export default class Experience {
     });
   }
 
+  switchScene(nextName) {
+    this.scene = new Scene();
+    this.debug = new Debug();
+    this.activeScene = new SceneManager(nextName);
+    this.renderer.scene = this.scene;
+    this.update();
+  }
+
   resize() {
     this.camera.resize();
     this.renderer.resize();
   }
 
   update() {
-    this.camera.update();
-    this.activeScene.update();
+    this.camera.instance && this.camera.update();
     this.renderer.update();
+    this.activeScene.update();
     this.debug.update();
   }
 

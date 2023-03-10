@@ -8,6 +8,7 @@ export default class Debug {
     this.experience = new Experience();
     this.active = window.location.hash === "#debug";
 
+    this.experience.debug?.unsetStats();
     if (this.active) {
       this.ui = new Pane({ title: "⚙️ Debug" });
 
@@ -115,8 +116,7 @@ export default class Debug {
       Stats: true,
       LoadingScreen: true,
     };
-    this.debugParams =
-      JSON.parse(sessionStorage.getItem("debugParams")) || this.debugParams;
+    this.debugParams = JSON.parse(sessionStorage.getItem("debugParams")) || this.debugParams;
 
     const debugManager = this.ui.addFolder({
       title: "Debug Feature Manager",
@@ -150,12 +150,12 @@ export default class Debug {
     // debug message when something is added to the scene
     this.experience.scene.add = (function (original) {
       return function (object) {
-        console.debug(
-          `📦 ${
-            object.name ? object.name : `unnamed ${object.type}`
-          } added to the scene`,
-          object
-        );
+        // console.debug(
+        //   `📦 ${
+        //     object.name ? object.name : `unnamed ${object.type}`
+        //   } added to the scene`,
+        //   object
+        // );
         return original.apply(this, arguments);
       };
     })(this.experience.scene.add);
@@ -230,8 +230,10 @@ export default class Debug {
     };
   }
   unsetStats() {
-    this.statsJsPanel.domElement.remove();
-    this.monitoringSection.remove();
+    this.experience.debug.statsJsPanel?.domElement.remove();
+    this.experience.debug.monitoringSection?.remove();
+    this.experience.debug.ui?.containerElem_.remove();
+    this.experience.debug.ui.containerElem_ = null;
   }
 
   update() {

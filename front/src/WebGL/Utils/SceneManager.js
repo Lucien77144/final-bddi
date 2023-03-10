@@ -2,7 +2,9 @@ import config from "scenes/config";
 import Experience from "webgl/Experience.js";
 
 export default class SceneManager {
-  constructor() {
+  constructor(
+    _sceneName
+  ) {
     this.experience = new Experience();
     this.debug = this.experience.debug;
     this.scenes = config;
@@ -14,11 +16,10 @@ export default class SceneManager {
 
     // get url params
     this.urlParams = new URLSearchParams(window.location.search);
-    this.sceneName = this.urlParams.get("scene");
-
-    // if scene name is not in the list, set it to main
-    if (!this.scenes[this.sceneName]) {
-      this.sceneName = "main";
+    if(this.urlParams.get("scene") && !_sceneName) {
+      this.sceneName = this.urlParams.get("scene").toLowerCase();
+    } else {
+      this.sceneName = _sceneName || "main";
     }
 
     if (this.debug.active) this.setDebug();
@@ -30,7 +31,7 @@ export default class SceneManager {
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: "Scene Manager",
-      expanded: false,
+      expanded: true,
     });
     this.debugFolder
       .addBlade({
@@ -42,7 +43,7 @@ export default class SceneManager {
         value: this.sceneName,
       })
       .on("change", ({ value }) => {
-        window.location.href = `?scene=${value}#debug`;
+        this.experience.switchScene(value);
       });
   }
 }

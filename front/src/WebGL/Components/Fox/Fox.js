@@ -1,19 +1,23 @@
 import Experience from "webgl/Experience.js";
-import { AnimationMixer, Mesh } from "three";
+import { AnimationMixer, Mesh, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
+import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class Fox {
-  constructor() {
+  constructor(_position = new Vector3(0, 0, 0)) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
     this.time = this.experience.time;
 
+    this.position = _position;
+
     // Debug
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
         title: "fox",
+        expanded: false,
       });
     }
 
@@ -26,11 +30,14 @@ export default class Fox {
   }
 
   setModel() {
-    this.model = this.resource.scene;
-    this.model.scale.set(0.02, 0.02, 0.02);
-    this.model.name = "fox";
-    this.scene.add(this.model);
+    this.model = SkeletonUtils.clone(this.resource.scene);
 
+    this.model.scale.set(0.02, 0.02, 0.02);
+    this.model.position.copy(this.position);
+    this.model.name = "fox";
+
+    this.scene.add(this.model);
+    
     this.model.traverse((child) => {
       if (child instanceof Mesh) {
         child.castShadow = true;

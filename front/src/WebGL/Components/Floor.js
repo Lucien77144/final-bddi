@@ -26,7 +26,6 @@ export default class Floor {
       this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
     }
 
-    this.setGeometry();
     this.setTextures();
     this.setMesh();
 
@@ -38,26 +37,10 @@ export default class Floor {
   }
 
   setGrass(mesh) {
-    if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
-        .on("change", () => {
-          this.grassGroup.children.forEach((grass) => {
-            grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
-          })
-        })
-      ;
-      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
-        .on("change", () => {
-          this.grassGroup.children.forEach((grass) => {
-            grass.updateGrass(this.grassParameters.size, this.grassParameters.count)
-          })
-        })
-      ;
-    }
-
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
+
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
       const y = positions[i + 1];
@@ -79,6 +62,29 @@ export default class Floor {
     this.scene.add(group);
   }
 
+  setGrassDebug() {
+    if (this.debug.active) {
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
+        .on("change", () => {
+          this.grassGroups.forEach((group) => {
+            group.children.forEach((e) => {
+              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+            });
+          })
+        })
+      ;
+      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
+        .on("change", () => {
+          this.grassGroups.forEach((group) => {
+            group.children.forEach((e) => {
+              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+            });
+          })
+        })
+      ;
+    }
+  }
+
   update() {
     this.grassGroups.forEach((group) => {
       group.children.forEach((e) => {
@@ -87,15 +93,14 @@ export default class Floor {
     })
   }
 
-  setGeometry() {}
-
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
     this.ground.position.set(0, 0, 0);
     this.scene.add(this.ground);
-    
+
     this.setGrass(this.ground.children[2]);
     this.setGrass(this.ground.children[3]);
+    this.setGrassDebug();
   }
 
   setTextures() {

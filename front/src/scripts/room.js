@@ -1,32 +1,36 @@
 import { socket } from './socket.js';
 
 /**
- * TODO
- * - Create room
- * - Join room
- * - Leave room and destroy on last user
+ * @todo 
+ * - [✅] Créer une room
+ * - [✅] Rejoindre une room
+ * - [✅] Choisir son rôle
+ * - [ ] Waiting screen pour le joueur 2 en attendant que le joueur 1 choisisse son rôle
+ * - [✅] Lancer la partie
  */
 
+export let room;
+let currentPlayer;
 
-const createRoomButton = document.querySelector('#create');
-const joinRoomButton = document.querySelector('#join');
-const roomInput = document.querySelector('#roomInput');
+/**
+ * Page Sections
+ */
 
-
-const showRoomId = document.querySelector('.showRoomId');
 
 const landingPage = document.querySelector('#landingPage');
 const roleSelection = document.querySelector('#roleSelection');
 const scene = document.querySelector('#scene');
 const roomInfo = document.querySelector('#roomInfo');
 
-let room;
-let currentPlayer;
-
 /**
  * Room Selection
  * @description Partie du code où les joueurs créent ou rejoignent une room
  */
+
+const createRoomButton = document.querySelector('#create');
+const joinRoomButton = document.querySelector('#join');
+const roomInput = document.querySelector('#roomInput');
+const showRoomId = document.querySelector('.showRoomId');
 
 createRoomButton.addEventListener('click', () => {
     console.log('Create room');
@@ -52,15 +56,7 @@ socket.on('joinRoom', (data) => {
     } else {
         room = data.success;
         currentPlayer = room.player1.id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
-        roomInfo.innerHTML = `
-        <p>Room ID : ${room.id}</p>
-        <p>Player 1 : ${room.player1.id}</p>
-        <p>Player 2 : ${room.player2.id}</p>
-        <p>Vous incarnez : ${currentPlayer.role}</p>
-        `
         landingPage.classList.add('hidden');
-        // scene.classList.remove('hidden');
-
     }
 })
 

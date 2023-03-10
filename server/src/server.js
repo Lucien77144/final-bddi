@@ -46,6 +46,27 @@ io.on('connection', (socket) => {
     _player2Role = data.role === 'urma' ? 'heda' : 'urma';
     attributeRoles(rooms.find(room => room.id === data.roomId), _player1Role, _player2Role);
   })
+
+  /**
+   * Handle movement
+   * @description - Gère les mouvements des joueurs, envoie les nouvelles positions aux joueurs
+   * @data {roomId : id, position : {x: x, y: y}}
+   */
+
+  socket.on('move', (data) => {
+    console.log('Move', data);
+    let room = rooms.find(room => room.id === data.roomId);
+    console.log(room);
+    if (room.player1.id === socket.id) {
+      room.player1.position = data.position;
+    } else if (room.player2.id === socket.id) {
+      room.player2.position = data.position;
+    }
+    // Send to both player
+    io.to(room.player1.id).emit('sendPositions', room);
+    io.to(room.player2.id).emit('sendPositions', room);
+  });
+
 });
 
 function generateRandomId() {
@@ -65,7 +86,11 @@ function createRoom(clientSocket) {
     id: roomId,
     player1: {
       id : clientSocket,
-      role: null
+      role: null,
+      position: {
+        x: 0,
+        y: 0,
+      }
     },
     player2: null,
   }
@@ -100,7 +125,11 @@ function joinRoom(clientSocket, roomId) {
       // Add player to room
       room.player2 = {
         id: clientSocket,
-        role: null
+        role: null,
+        position: {
+          x: 0,
+          y: 0,
+        }
       };
       player2Id = clientSocket;
       // console.log(rooms);
@@ -131,8 +160,16 @@ function attributeRoles(room, player1Role, player2Role) {
   // Emit roles to players
   io.to(player1Id).emit('role', room.player1.role);
   io.to(player2Id).emit('role', room.player2.role);
+
+  // Emit start movement to players
+  io.to(player1Id).emit('startMovement');
+  io.to(player2Id).emit('startMovement');
 }
 
 http.listen(3000, () => {
   console.log('Le serveur écoute sur le port 3000');
 });
+
+/**
+ * Users Movements
+ */

@@ -61,6 +61,7 @@ export default class Experience {
   update() {
     this.camera.instance && this.camera.update();
     this.renderer.update();
+    this.activeScene.update();
     this.debug.update();
   }
 

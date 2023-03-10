@@ -17,7 +17,7 @@ export default class SceneManager {
     // get url params
     this.urlParams = new URLSearchParams(window.location.search);
     if(this.urlParams.get("scene")) {
-      return this.switchScene(this.urlParams.get("scene"));
+      this.sceneName = this.urlParams.get("scene").toLowerCase();
     } else {
       this.sceneName = _sceneName;
     }

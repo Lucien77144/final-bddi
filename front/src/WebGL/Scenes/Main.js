@@ -30,6 +30,8 @@ export default class Main {
   }
 
   update() {
-    if (this.fox) this.fox.update();
+    if (this.fox1) this.fox1.update();
+    if (this.fox2) this.fox2.update();
+    if (this.fox3) this.fox3.update();
   }
 }

@@ -15,20 +15,19 @@ export default class Camera {
       near: 1,
       far: 100,
       position: {
-        x: 6,
+        x: 16,
         y: 4,
-        z: 8,
+        z: 0,
       },
-      target: {
+      rotate: {
         x: 0,
-        y: 0,
+        y: Math.PI/2,
         z: 0,
       },
     };
 
     this.setInstance();
-    this.setControls();
-    this.applySavedSettings();
+    // this.setControls();
     if (this.debug.active) this.setDebug();
   }
 
@@ -40,10 +39,6 @@ export default class Camera {
       this.options.far
     );
     this.instance.name = "camera";
-    this.scene.add(this.instance);
-  }
-
-  applySavedSettings() {
 
     this.instance.position.set(
       this.options.position.x,
@@ -51,15 +46,18 @@ export default class Camera {
       this.options.position.z
     );
 
-    this.controls.target.set(
-      this.options.target.x,
-      this.options.target.y,
-      this.options.target.z
-    );
+    this.instance.rotation.set(
+      this.options.rotate.x,
+      this.options.rotate.y,
+      this.options.rotate.z
+    )
+
+    this.scene.add(this.instance);
   }
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
+    // this.controls.enabled = false;
   }
   resetControls() {
     this.controls.reset();
@@ -67,11 +65,6 @@ export default class Camera {
       this.options.position.x,
       this.options.position.y,
       this.options.position.z
-    );
-    this.controls.target.set(
-      this.options.target.x,
-      this.options.target.y,
-      this.options.target.z
     );
   }
 
@@ -92,14 +85,23 @@ export default class Camera {
       })
       .on("click", this.resetControls.bind(this));
 
-    this.debugFolder
-      .addInput(this.controls, "enabled", {
-        label: "Orbit Controls",
-      })
-      .on("change", this.resetControls.bind(this));
+    if(this.controls) {
+      this.debugFolder
+        .addInput(this.controls, "enabled", {
+          label: "Orbit Controls",
+        });
+    }
+  }
+
+  updatePosition() {
+    this.instance.position.z = this.urma.position.z;
   }
 
   update() {
-    this.controls.update();
-  }
+    if (!this.urma && this.experience.activeScene) {
+      this.urma = this.experience.activeScene.urma;
+    }
+    if(this.controls) this.controls.update();
+    if(this.instance && this.urma) this.updatePosition();
+  } 
 }

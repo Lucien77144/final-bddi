@@ -3,7 +3,6 @@ import Grass from "./Grass.js";
 import * as THREE from "three";
 
 import {
-  Material,
   RepeatWrapping,
   sRGBEncoding,
 } from "three";
@@ -23,7 +22,7 @@ export default class GrassFloor {
     this.grassGroups = [];
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
+      this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
     }
 
     this.setTextures();
@@ -78,14 +77,6 @@ export default class GrassFloor {
     }
   }
 
-  update() {
-    this.grassGroups.forEach((group) => {
-      group.children.forEach((e) => {
-        e.update(this.time.elapsed);
-      });
-    })
-  }
-
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
     this.ground.position.set(0, 0, 0);
@@ -115,6 +106,13 @@ export default class GrassFloor {
     this.material = new THREE.MeshStandardMaterial({
       color: new THREE.Color("#2e6b15"),
     });
-    console.log(this.material);
+  }
+
+  update() {
+    this.grassGroups.forEach((group) => {
+      group.children.forEach((e) => {
+        e.update(this.time.elapsed);
+      });
+    })
   }
 }

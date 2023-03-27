@@ -21,6 +21,11 @@ export default [
     type: "glb",
     path: "models/Rock/Stone.glb",
   },
+  {
+    name: "columnModel",
+    type: "glb",
+    path: "models/Column/Column.glb",
+  },
   
   // --------------------
   // Textures : 

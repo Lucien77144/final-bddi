@@ -7,13 +7,9 @@ import Cube from "components/Cube/Cube.js";
 export default class FairyPosition {
   constructor() {
     this.fairy = new Cube();
-
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
-
     this.mouseMove = new MouseMove();
-
     this.nbPoints = 500;
-
     this.positions = this.setPosition(new Float32Array(this.nbPoints * 3));
   }
 

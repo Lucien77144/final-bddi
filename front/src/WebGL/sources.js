@@ -1,9 +1,59 @@
 export default [
+  // --------------------
+  // Models : 
+  // --------------------
+
+  // gltf :
+  {
+    name: "foxModel",
+    type: "gltf",
+    path: "models/Fox/glTF/Fox.gltf",
+  },
+
+  // glb :
+  {
+    name: "groundModel",
+    type: "glb",
+    path: "models/Ground/Ground_V02.glb",
+  },
+  {
+    name: "stoneModel",
+    type: "glb",
+    path: "models/Rock/Stone.glb",
+  },
+  
+  // --------------------
+  // Textures : 
+  // --------------------
+
+  // png :
   {
     name: "transition",
     type: "texture",
     path: "textures/transitions/transition.png",
   },
+  {
+    name: "grassDisplacementTexture",
+    type: "texture",
+    path: "textures/grass/Map.png",
+  },
+  {
+    name: "stoneMaterial1",
+    type: "texture",
+    path: "textures/rock/Rock_V01.png",
+  },
+  {
+    name: "stoneMaterial2",
+    type: "texture",
+    path: "textures/rock/Rock_V02.png",
+  },
+  {
+    name: "stoneMaterial3",
+    type: "texture",
+    path: "textures/rock/Rock_V03.png",
+  },
+
+  // jpg :
   {
     name: "grassColorTexture",
     type: "texture",
@@ -14,6 +64,15 @@ export default [
     type: "texture",
     path: "textures/dirt/normal.jpg",
   },
+  {
+    name: "cloudTexture",
+    type: "texture",
+    path: "img/cloud.jpg",
+  },
+  
+  // --------------------
+  // Cube Textures : 
+  // --------------------
   {
     name: "environmentMapTexture",
     type: "cubeTexture",
@@ -26,24 +85,4 @@ export default [
       "textures/environmentMap/nz.jpg",
     ],
   },
-  {
-    name: "foxModel",
-    type: "gltf",
-    path: "models/Fox/glTF/Fox.gltf",
-  },
-  {
-    name: "groundModel",
-    type: "gltf",
-    path: "models/Ground/Ground_V01.gltf",
-  },
-  {
-    name: "grassDisplacementTexture",
-    type: "texture",
-    path: "textures/grass/Map.png",
-  },
-  {
-    name: "cloudTexture",
-    type: "texture",
-    path: "img/cloud.jpg",
-  }
 ];

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import vertexShader from './shaders/vertexShader.vert';
 import fragmentShader from './shaders/fragmentShader.frag';
+import { Vector4 } from 'three';
 
 const BLADE_WIDTH = 0.1
 const BLADE_HEIGHT = 0.01
@@ -119,7 +120,7 @@ class Grass extends THREE.Mesh {
 
   update(time) {
     this.material.uniforms.uTime.value = time;
-  }
+  };
 
   updateGrass(size, count) {
     this.material.uniforms.uTime.value = 0;

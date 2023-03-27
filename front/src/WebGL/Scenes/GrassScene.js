@@ -1,6 +1,8 @@
 import Experience from "../Experience.js";
 import Environment from "components/Environment.js";
 import GrassFloor from "../Components/GrassFloor.js";
+import Rock from "../Components/Rock/Rock.js";
+import { Vector3 } from "three";
 
 export default class GrassScene {
   constructor() {
@@ -9,11 +11,22 @@ export default class GrassScene {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    this.resources.on("ready", () => {
-      // Setup
-      this.floor = new GrassFloor();
-      this.environment = new Environment();
-    });
+    if(this.resources.loaded == this.resources.toLoad) {
+      this.buildScene();
+    } else {
+      this.resources.on("ready", () => {
+        this.buildScene();
+      });
+    }
+  }
+
+  buildScene() {
+    // Setup
+    this.floor = new GrassFloor();
+    this.rock1 = new Rock(new Vector3(0, 3, 0))
+    this.rock2 = new Rock(new Vector3(3, 3, 3))
+    this.rock3 = new Rock(new Vector3(6, 3, 6))
+    this.environment = new Environment();
   }
 
   update() {

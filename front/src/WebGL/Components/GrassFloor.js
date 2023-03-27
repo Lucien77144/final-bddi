@@ -95,8 +95,7 @@ export default class GrassFloor {
     this.ground.position.set(0, 0, 0);
     this.scene.add(this.ground);
 
-    this.setGrass(this.ground.children[2]);
-    this.setGrass(this.ground.children[3]);
+    this.setGrass(this.ground.children[0]);
     this.setGrassDebug();
   }
 

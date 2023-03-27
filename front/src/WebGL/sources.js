@@ -37,21 +37,6 @@ export default [
     type: "texture",
     path: "textures/grass/Map.png",
   },
-  {
-    name: "stoneMaterial1",
-    type: "texture",
-    path: "textures/rock/Rock_V01.png",
-  },
-  {
-    name: "stoneMaterial2",
-    type: "texture",
-    path: "textures/rock/Rock_V02.png",
-  },
-  {
-    name: "stoneMaterial3",
-    type: "texture",
-    path: "textures/rock/Rock_V03.png",
-  },
 
   // jpg :
   {

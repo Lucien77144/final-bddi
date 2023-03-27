@@ -33,22 +33,14 @@ export default class Rock {
 
     this.model.position.copy(this.position);
     this.model.name = this.name;
+    if (this.debug.active) {
+      this.debugFolder.addInput(this.model.children[0].material, "wireframe");
+    }
 
     this.scene.add(this.model);
-    
-    this.model.traverse((child) => {
-      if (child instanceof Mesh) {
-        child.castShadow = true;
-      }
-    });
-    this.model.children[0].material = this.material;
   }
 
-  setMaterial() {
-    this.material = new MeshBasicMaterial({
-      map: this.resources.items.stoneMaterial1,
-    });
-  }
+  setMaterial() { }
 
   update() { }
 }

@@ -29,5 +29,7 @@ export default class GrassScene {
     this.environment = new Environment();
   }
 
-  update() { }
+  update() {
+    if(this.floor) this.floor.update();
+  }
 }

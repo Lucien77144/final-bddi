@@ -116,7 +116,7 @@ export default class Urma {
     const rdm = isMoving.left || isMoving.right ? Math.cos(this.time.current/200) / 8 : 0;
 
     this.camera.position.z = this.mesh.position.z + (velocity / 2);
-    this.camera.position.y = 4 - (velocity / 4) + (rdm * velocity);
+    this.camera.position.y = 4 - (velocity / 6) + (rdm * velocity);
 
     this.camera.rotation.z = isMoving.left ? velocity/75 : -velocity/75;
   }

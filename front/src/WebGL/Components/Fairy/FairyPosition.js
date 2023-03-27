@@ -4,6 +4,8 @@ import MouseMove from "../../Utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
 
+import { currentRoom } from "../../../scripts/movement.js"
+
 export default class FairyPosition {
   constructor() {
     this.fairy = new Cube();
@@ -84,6 +86,7 @@ export default class FairyPosition {
   }
 
   update() {
+    console.log(currentRoom);
     if (this.positions) {
       this.updatePosition();
       this.moveFairy()

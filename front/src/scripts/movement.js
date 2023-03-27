@@ -12,7 +12,7 @@ import { socket } from "./socket";
  * Start Movement Event
  */
 
-let currentRoom = room;
+export let currentRoom = room;
 
 socket.on('startMovement', () => {
     console.log('Start movement');

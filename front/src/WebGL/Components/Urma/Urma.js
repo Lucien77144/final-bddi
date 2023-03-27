@@ -24,6 +24,7 @@ export default class Urma {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.time = this.experience.time;
+    this.camera = this.experience.camera.instance;
 
     this.position = _position;
 
@@ -96,7 +97,7 @@ export default class Urma {
       velocity = (this.time.current - startTime) / speedDelay;
       velocity = velocity > 1 ? 1 : velocity;
 
-      endVelocity = (this.time.current - endTime) / speedDelay;
+      endVelocity = (this.time.current - endTime) / speedDelay *2;
       endVelocity = endVelocity > 1 ? 1 : endVelocity;
 
       velocity -= (isEnding.left || isEnding.right) ? endVelocity : 0;
@@ -111,5 +112,12 @@ export default class Urma {
   updatePosition() {
     this.mesh.position.z = isMoving.left ? this.mesh.position.z + (velocity / 10) : this.mesh.position.z;
     this.mesh.position.z = isMoving.right ? this.mesh.position.z - (velocity / 10) : this.mesh.position.z;
+
+    const rdm = isMoving.left || isMoving.right ? Math.cos(this.time.current/200) / 8 : 0;
+
+    this.camera.position.z = this.mesh.position.z + (velocity / 2);
+    this.camera.position.y = 4 - (velocity / 4) + (rdm * velocity);
+
+    this.camera.rotation.z = isMoving.left ? velocity/75 : -velocity/75;
   }
 }

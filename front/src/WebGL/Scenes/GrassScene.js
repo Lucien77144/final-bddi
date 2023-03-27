@@ -9,11 +9,19 @@ export default class GrassScene {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    this.resources.on("ready", () => {
-      // Setup
+    if(this.resources.loaded == this.resources.toLoad) {
+      this.buildScene();
+    } else {
+      this.resources.on("ready", () => {
+        this.buildScene();
+      });
+    }
+  }
+
+  buildScene() {
+    // Setup
       this.floor = new GrassFloor();
       this.environment = new Environment();
-    });
   }
 
   update() {

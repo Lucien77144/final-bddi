@@ -1,6 +1,6 @@
 import Experience from "../Experience.js";
 import Cube from "../Components/Cube/Cube.js";
-import Floor from "../Components/Floor.js";
+import Floor from "../Components/Floor/Floor.js";
 import Environment from "../Components/Environment.js";
 
 export default class CubeScene {

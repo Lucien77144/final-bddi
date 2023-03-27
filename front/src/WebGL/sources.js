@@ -21,6 +21,11 @@ export default [
     type: "glb",
     path: "models/Rock/Stone.glb",
   },
+  {
+    name: "testModel",
+    type: "glb",
+    path: "models/Tests/Test.glb",
+  },
   
   // --------------------
   // Textures : 

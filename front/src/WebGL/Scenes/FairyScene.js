@@ -1,13 +1,15 @@
-import Experience from "../Experience.js";
-import Cube from "components/Cube/Cube.js";
-import { Scene } from "three";
-import Floor from "../Components/Floor.js";
 import Environment from "../Components/Environment.js";
+import FairyDust from "../Components/Fairy/FairyDust.js";
+import Experience from "../Experience.js";
+import Sizes from "../Utils/Sizes.js";
 
-export default class SingleCube {
+export default class FairyScene {
   constructor() {
     this.experience = new Experience();
-    this.scene = new Scene();
+    this.sizes = new Sizes();
+    this.time = this.experience.time;
+    this.camera = this.experience.camera.instance;
+    this.scene = this.experience.scene;
     this.resources = this.experience.resources;
 
     // Wait for resources
@@ -21,11 +23,11 @@ export default class SingleCube {
   }
 
   buildScene() {
-    // Setup
-    this.floor = new Floor();
-    this.cube = new Cube();
+    this.fairyDust = new FairyDust();
     this.environment = new Environment();
   }
 
-  update() {}
+  update() {
+    if (this.fairyDust) this.fairyDust.update();
+  }
 }

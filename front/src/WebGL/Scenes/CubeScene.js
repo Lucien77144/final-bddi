@@ -1,10 +1,9 @@
 import Experience from "../Experience.js";
-import Environment from "components/Environment.js";
-import Rock from "../Components/Rock/Rock.js";
-import { Vector3 } from "three";
-import GrassFloor from "../Components/Grass/GrassFloor.js";
+import Cube from "../Components/Cube/Cube.js";
+import Floor from "../Components/Floor.js";
+import Environment from "../Components/Environment.js";
 
-export default class GrassScene {
+export default class CubeScene {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -21,11 +20,8 @@ export default class GrassScene {
   }
 
   buildScene() {
-    // Setup
-    this.floor = new GrassFloor();
-    this.rock1 = new Rock(new Vector3(0, 3, 0))
-    this.rock2 = new Rock(new Vector3(3, 3, 3))
-    this.rock3 = new Rock(new Vector3(6, 3, 6))
+    this.cube = new Cube();
+    this.floor = new Floor();
     this.environment = new Environment();
   }
 

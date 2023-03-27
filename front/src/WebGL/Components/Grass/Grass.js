@@ -1,7 +1,6 @@
 import * as THREE from 'three';
-import vertexShader from './shaders/vertexShader.vert';
-import fragmentShader from './shaders/fragmentShader.frag';
-import { Vector4 } from 'three';
+import vertexShader from './shaders/vertexShader.glsl';
+import fragmentShader from './shaders/fragmentShader.glsl';
 
 const BLADE_WIDTH = 0.1
 const BLADE_HEIGHT = 0.01
@@ -111,7 +110,7 @@ class Grass extends THREE.Mesh {
       },
       side: THREE.DoubleSide,
       vertexShader,
-      fragmentShader
+      fragmentShader,
     });
     super(geometry, material);
 

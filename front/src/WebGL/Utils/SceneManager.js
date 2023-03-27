@@ -1,6 +1,8 @@
 import config from "scenes/config";
 import Experience from "webgl/Experience.js";
 
+const BASE_SCENE = "main";
+
 export default class SceneManager {
   constructor(
     _sceneName
@@ -19,8 +21,10 @@ export default class SceneManager {
     if(this.urlParams.get("scene") && !_sceneName) {
       this.sceneName = this.urlParams.get("scene").toLowerCase();
     } else {
-      this.sceneName = _sceneName || "main";
+      this.sceneName = _sceneName || BASE_SCENE;
     }
+
+    this.sceneName = this.scenes[this.sceneName] ? this.sceneName : BASE_SCENE;
 
     if (this.debug.active) this.setDebug();
 

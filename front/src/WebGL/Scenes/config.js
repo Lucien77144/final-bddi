@@ -1,9 +1,11 @@
+import FairyScene from "./FairyScene.js";
 import GrassScene from "./GrassScene.js";
 import Main from "./Main.js";
-import SingleCube from "./SingleCube.js";
+import CubeScene from "./CubeScene";
 
 export default {
   main: Main,
-  "single-cube": SingleCube,
+  "cube": CubeScene,
+  "fairy": FairyScene,
   "grass": GrassScene,
 };

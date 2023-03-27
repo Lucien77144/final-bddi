@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
-import fragmentShader from "./fragmentShader.frag";
-import vertexShader from "./vertexShader.vert";
+import fragmentShader from "./shaders/fragmentShader.glsl";
+import vertexShader from "./shaders/vertexShader.glsl";
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 
 export default class Cube {

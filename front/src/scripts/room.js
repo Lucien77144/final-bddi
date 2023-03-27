@@ -10,7 +10,7 @@ import { socket } from './socket.js';
  */
 
 export let room;
-let currentPlayer;
+export let currentPlayer;
 
 /**
  * Page Sections
@@ -55,7 +55,7 @@ socket.on('joinRoom', (data) => {
         console.log(data.error);
     } else {
         room = data.success;
-        currentPlayer = room.player1.id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
+        currentPlayer = room.players[0].id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
         landingPage.classList.add('hidden');
     }
 })
@@ -90,8 +90,8 @@ socket.on('role', (playerRole) => {
     roleSelection.classList.add('hidden');
     roomInfo.innerHTML = `
         <p>Room ID : ${room.id}</p>
-        <p>Player 1 : ${room.player1.id}</p>
-        <p>Player 2 : ${room.player2.id}</p>
+        <p>Player 1 : ${room.players[0].id}</p>
+        <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
     scene.classList.remove('hidden');

@@ -57,14 +57,17 @@ io.on('connection', (socket) => {
     console.log('Move', data);
     let room = rooms.find(room => room.id === data.roomId);
     console.log(room);
-    if (room.player1.id === socket.id) {
-      room.player1.position = data.position;
-    } else if (room.player2.id === socket.id) {
-      room.player2.position = data.position;
+    if (room.players[0].id === socket.id) {
+      room.players[0].position = data.position;
+    } else if (room.players[1].id === socket.id) {
+      room.players[1].position = data.position;
     }
     // Send to both player
-    io.to(room.player1.id).emit('sendPositions', room);
-    io.to(room.player2.id).emit('sendPositions', room);
+    // io.to(room.players[0].id).emit('sendPositions', room);
+    // io.to(room.players[1].id).emit('sendPositions', room);
+    room.players.forEach(player => {
+      io.to(player.id).emit('sendPositions', room);
+    });
   });
 
 });
@@ -84,15 +87,16 @@ function createRoom(clientSocket) {
 
   let newRoom = {
     id: roomId,
-    player1: {
-      id : clientSocket,
-      role: null,
-      position: {
-        x: 0,
-        y: 0,
-      }
-    },
-    player2: null,
+    players : [
+      {
+        id : clientSocket,
+        role: null,
+        position: {
+          x: 0,
+          y: 0,
+        }
+      },
+    ]
   }
 
   // Attribute player 1 id
@@ -115,21 +119,26 @@ function joinRoom(clientSocket, roomId) {
   // console.log(room);
   if (room) {
     // Check if room is full
-    if (room.player2 === null) {
+    if (room.players.length < 2) {
       // Check if player1 != player2
-      if (room.player1 === clientSocket) {
+      if (room.players[0] === clientSocket) {
         console.log('Player 1 cannot join his own room');
         io.emit('joinRoom', { error: 'Player 1 cannot join his own room' })
         return;
       }
       // Add player to room
-      room.player2 = {
-        id: clientSocket,
-        role: null,
-        position: {
-          x: 0,
-          y: 0,
+      room.players =
+      [...room.players, 
+        {
+          id: clientSocket,
+          role: null,
+          position: {
+            x: 0,
+            y: 0,
+          }
         }
+      ]
+      {
       };
       player2Id = clientSocket;
       // console.log(rooms);
@@ -152,14 +161,14 @@ function joinRoom(clientSocket, roomId) {
 function attributeRoles(room, player1Role, player2Role) {
   // Attribute roles to players
 
-  room.player1.role = player1Role;
-  room.player2.role = player2Role;
+  room.players[0].role = player1Role;
+  room.players[1].role = player2Role;
   console.log('Roles attributed');
   console.log(room);
 
   // Emit roles to players
-  io.to(player1Id).emit('role', room.player1.role);
-  io.to(player2Id).emit('role', room.player2.role);
+  io.to(player1Id).emit('role', room.players[0].role);
+  io.to(player2Id).emit('role', room.players[1].role);
 
   // Emit start movement to players
   io.to(player1Id).emit('startMovement');

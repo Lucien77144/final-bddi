@@ -32,8 +32,9 @@ socket.on('startMovement', () => {
     });
 
     socket.on('sendPositions', (data) => {
-        console.log('Position joueur 1', data.player1.position);
-        console.log('Position joueur 2', data.player2.position);
+        // console.log('Position joueur 1', data.player1.position);
+        // console.log('Position joueur 2', data.player2.position);
         currentRoom = data;
+        // console.log('Current room', currentRoom);
     });
 });

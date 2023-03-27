@@ -1,5 +1,6 @@
 import Experience from "../Experience.js";
 import {
+  AmbientLight,
   DirectionalLight,
   Mesh,
   MeshStandardMaterial,
@@ -23,7 +24,7 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.sunLight = new DirectionalLight("#ffffff", 4);
+    this.sunLight = new DirectionalLight("#ffffff", 1);
     this.sunLight.castShadow = true;
     this.sunLight.shadow.camera.far = 15;
     this.sunLight.shadow.mapSize.set(1024, 1024);

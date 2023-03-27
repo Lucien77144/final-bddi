@@ -119,7 +119,7 @@ class Grass extends THREE.Mesh {
 
   update(time) {
     this.material.uniforms.uTime.value = time;
-  }
+  };
 
   updateGrass(size, count) {
     this.material.uniforms.uTime.value = 0;

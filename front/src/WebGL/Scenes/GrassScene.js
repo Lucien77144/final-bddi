@@ -1,6 +1,6 @@
 import Experience from "../Experience.js";
 import Environment from "components/Environment.js";
-import GrassFloor from "../Components/GrassFloor.js";
+import GrassFloor from "../Components/Grass/GrassFloor.js";
 
 export default class GrassScene {
   constructor() {

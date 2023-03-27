@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-import MouseMove from "../Utils/MouseMove.js";
+import MouseMove from "../../Utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
 

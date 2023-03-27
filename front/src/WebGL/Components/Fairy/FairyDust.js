@@ -1,19 +1,14 @@
 import * as THREE from "three";
-
-import Experience from "../Experience.js";
-
+import Experience from "../../Experience.js";
+import vertexShader from "./shaders/vertexShader.glsl";
+import fragmentShader from "./shaders/fragmentShader.glsl";
 import FairyPosition from "./FairyPosition.js";
-
-import fairyDustVertexShader from "../Shaders/fairyDust/vertex.glsl";
-import fairyDustFragmentShader from "../Shaders/fairyDust/fragment.glsl";
 
 export default class FairyDust {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
-    this.camera = this.experience.camera.instance;
     this.scene = this.experience.scene;
-
     this.fairyPosition = new FairyPosition();
 
     this.particles = new THREE.Group();
@@ -28,8 +23,8 @@ export default class FairyDust {
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
       },
-      vertexShader: fairyDustVertexShader,
-      fragmentShader: fairyDustFragmentShader,
+      vertexShader,
+      fragmentShader,
     });
   }
 
@@ -86,13 +81,11 @@ export default class FairyDust {
     );
 
     particlesMesh.life = 0;
-
     this.particles.add(particlesMesh);
   }
 
   updateParticles() {
     this.particles.children.forEach((el, cur) => {
-      //console.log(el.geometry.attributes);
       if (el.life > 50) {
         const object = this.particles.children[cur];
 

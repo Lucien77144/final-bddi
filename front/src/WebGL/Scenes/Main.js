@@ -1,6 +1,6 @@
 import Experience from "../Experience.js";
 import Environment from "components/Environment.js";
-import Floor from "components/Floor.js";
+import Floor from "@/WebGL/Components/Floor/Floor.js";
 import Fox from "components/Fox/Fox.js";
 import { Scene, Vector3 } from "three";
 

@@ -1,5 +1,5 @@
-import Experience from "../Experience.js";
-import Grass from "./Grass/Grass.js";
+import Experience from "../../Experience.js";
+import Grass from "./Grass.js";
 import * as THREE from "three";
 
 import {

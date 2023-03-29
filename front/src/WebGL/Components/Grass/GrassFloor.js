@@ -104,7 +104,7 @@ export default class GrassFloor {
 
   setMaterials() {
     this.material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#148538"),
+      color: new THREE.Color("#0b471b"),
     });
   }
 

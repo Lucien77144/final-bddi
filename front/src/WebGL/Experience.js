@@ -1,12 +1,12 @@
 import Debug from "utils/Debug.js";
 import Sizes from "utils/Sizes.js";
 import Time from "utils/Time.js";
-import Camera from "./Camera.js";
-import Renderer from "./Renderer.js";
+import Camera from "webgl/Camera.js";
+import Renderer from "webgl/Renderer.js";
 import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
-import sources from "./sources.js";
+import sources from "webgl/sources.js";
 
 let instance = null;
 

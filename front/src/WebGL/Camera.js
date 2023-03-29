@@ -1,4 +1,4 @@
-import Experience from "./Experience.js";
+import Experience from "webgl/Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PerspectiveCamera } from "three";
 

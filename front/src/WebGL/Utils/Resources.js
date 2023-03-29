@@ -1,5 +1,5 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
-import EventEmitter from "./EventEmitter.js";
+import EventEmitter from "utils/EventEmitter.js";
 import { Cache, CubeTextureLoader, TextureLoader } from "three";
 import Experience from "webgl/Experience.js";
 

@@ -1,4 +1,4 @@
-import Experience from "./Experience.js";
+import Experience from "webgl/Experience.js";
 import {
   CineonToneMapping,
   LinearFilter,

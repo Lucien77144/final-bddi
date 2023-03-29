@@ -1,5 +1,5 @@
-import Experience from "../Experience.js";
-import Sizes from "./Sizes.js";
+import Experience from "webgl/Experience.js";
+import Sizes from "utils/Sizes.js";
 import * as THREE from "three";
 
 let instance = null;

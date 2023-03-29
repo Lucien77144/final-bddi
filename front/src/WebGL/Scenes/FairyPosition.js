@@ -1,18 +1,20 @@
 import * as THREE from "three";
 
-import MouseMove from "../Utils/MouseMove.js";
+import MouseMove from "utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
+import EventEmitter from "utils/EventEmitter.js";
 
-export default class FairyPosition {
+export default class FairyPosition extends EventEmitter {
   constructor() {
+    super();
     this.fairy = new Cube();
 
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
 
     this.mouseMove = new MouseMove();
 
-    this.nbPoints = 500;
+    this.nbPoints = 100;
 
     this.positions = this.setPosition(new Float32Array(this.nbPoints * 3));
   }
@@ -21,8 +23,14 @@ export default class FairyPosition {
     for (let i = 0; i < this.nbPoints; i++) {
       const i3 = i * 3;
 
-      const x = (i / (this.nbPoints - 1) - 0.5) * 3;
-      const y = Math.sin(i / 10.5) * 0.5;
+      const x =
+        this.mouseMove.cursor.x == 0
+          ? this.fairy.mesh.position.x
+          : (i / (this.nbPoints - 1) - 0.5) * 3;
+      const y =
+        this.mouseMove.cursor.y == 0
+          ? this.fairy.mesh.position.y
+          : Math.sin(i / 10.5) * 0.5;
 
       array[i3] = x;
       array[i3 + 1] = y;
@@ -53,7 +61,7 @@ export default class FairyPosition {
           this.positions[previous + 2]
         );
 
-        this.lerpPoint = currentPoint.lerp(previousPoint, 0.9);
+        this.lerpPoint = currentPoint.lerp(previousPoint, 0.8);
 
         this.positions[i3] = this.lerpPoint.x;
         this.positions[i3 + 1] = this.lerpPoint.y;
@@ -61,13 +69,14 @@ export default class FairyPosition {
       }
     }
   }
-  
+
   moveFairy() {
-    this.fairy.mesh.position.set(
-      this.positions[this.positions.length - 3],
-      this.positions[this.positions.length - 2],
-      this.positions[this.positions.length - 1]
-    );
+    const x = this.positions[this.positions.length - 3];
+    const y = this.positions[this.positions.length - 2];
+    const z = this.positions[this.positions.length - 1];
+    this.fairy.mesh.position.set(x, y, z);
+
+    this.trigger("moveFairy", [x, y]);
   }
 
   isFairyMoving() {
@@ -86,7 +95,7 @@ export default class FairyPosition {
   update() {
     if (this.positions) {
       this.updatePosition();
-      this.moveFairy()
+      this.moveFairy();
     }
   }
 }

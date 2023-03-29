@@ -1,21 +1,24 @@
 uniform float uPixelRatio;
 uniform float uSize;
-uniform float uTime;
 
 attribute float aScale;
 attribute float life;
 
 varying float vLife;
+
+varying vec2 vUv;
+uniform sampler2D positionTexture;
+attribute vec2 reference;
+
 void main()
 {
+    vUv = reference;
+
+	vec3 pos = texture(positionTexture, vUv).xyz;
+
     vLife = life;
     
-    vec4 modelPosition = modelMatrix * vec4(position, 1.0);
-
-    float spreadFactor = (0.0005 * (uTime / life));
-
-    modelPosition.y -= (uTime - life) * spreadFactor;
-    modelPosition.x -= (uTime - life) * aScale * spreadFactor;
+    vec4 modelPosition = modelMatrix * vec4(pos, 1.0);
 
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectionPosition = projectionMatrix * viewPosition;
@@ -25,3 +28,4 @@ void main()
     gl_PointSize = uSize * aScale * uPixelRatio;
     gl_PointSize *= (1.0 / - viewPosition.z);
 }
+

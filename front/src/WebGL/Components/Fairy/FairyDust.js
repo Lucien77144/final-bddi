@@ -7,7 +7,7 @@ import FairyPosition from "./FairyPosition.js";
 
 import fairyDustVertexShader from "./shaders/vertexShader.glsl";
 import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
-import fragmentSimulation from "./shaders/fragmentSimulation.frag";
+import fragmentSimulation from "./shaders/fragmentSimulation.glsl";
 
 export default class FairyDust {
   constructor() {

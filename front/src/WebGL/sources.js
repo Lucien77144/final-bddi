@@ -14,7 +14,7 @@ export default [
   {
     name: "groundModel",
     type: "glb",
-    path: "models/Ground/Ground_V02.glb",
+    path: "models/Ground/Ground.glb",
   },
   {
     name: "stoneModel",

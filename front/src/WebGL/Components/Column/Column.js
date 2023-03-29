@@ -2,7 +2,7 @@ import Experience from "webgl/Experience.js";
 import { Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
-export default class Rock {
+export default class Column {
   constructor(_position = new Vector3(0, 0, 0)) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -11,7 +11,7 @@ export default class Rock {
     this.time = this.experience.time;
 
     this.position = _position;
-    this.name = `rock-${this.experience.scene.children.filter((child) => child.name.includes("rock")).length}`;
+    this.name = `column-${this.experience.scene.children.filter((child) => child.name.includes("rock")).length}`;
 
     // Debug
     if (this.debug.active) {
@@ -22,7 +22,7 @@ export default class Rock {
     }
 
     // Resource
-    this.resource = this.resources.items.stoneModel;
+    this.resource = this.resources.items.columnModel;
 
     this.setMaterial();
     this.setModel();

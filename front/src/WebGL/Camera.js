@@ -11,11 +11,11 @@ export default class Camera {
     this.debug = this.experience.debug;
 
     this.options = {
-      fov: 35,
+      fov: 45,
       near: 1,
       far: 100,
       position: {
-        x: 16,
+        x: 8,
         y: 4,
         z: 0,
       },
@@ -58,7 +58,6 @@ export default class Camera {
 
   setControls() {
     this.controls = new OrbitControls(this.instance, this.canvas);
-    // this.controls.enabled = false;
   }
   resetControls() {
     this.controls.reset();
@@ -85,6 +84,22 @@ export default class Camera {
         title: "Reset Camera",
       })
       .on("click", this.resetControls.bind(this));
+
+    this.debugFolder
+      .addInput(this.instance.position, "x", {
+        label: "Position X",
+        min: -20,
+        max: 20,
+        step: 0.1,
+      })
+
+    this.debugFolder
+      .addInput(this.instance.position, "y", {
+        label: "Position Y",
+        min: -20,
+        max: 20,
+        step: 0.1,
+      })
 
     if(this.controls) {
       this.debugFolder

@@ -68,7 +68,6 @@ export default class Urma {
 
   setInputs() {
     InputManager.on("right", (value) => {
-      console.log(this.time.current, data.time.end);
       if (value && !data.status.right.move) {
         data.status.right.move = true;
         data.time.start = this.time.current;

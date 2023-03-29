@@ -1,4 +1,4 @@
-import Experience from "../../Experience.js";
+import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
 import * as THREE from "three";
 

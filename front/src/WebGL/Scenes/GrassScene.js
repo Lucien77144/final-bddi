@@ -1,4 +1,4 @@
-import Experience from "../Experience.js";
+import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Vector3 } from "three";
 import GrassFloor from "../Components/Grass/GrassFloor.js";
@@ -12,7 +12,7 @@ export default class GrassScene {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    if(this.resources.loaded == this.resources.toLoad) {
+    if (this.resources.loaded == this.resources.toLoad) {
       this.buildScene();
     } else {
       this.resources.on("ready", () => {

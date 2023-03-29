@@ -1,7 +1,7 @@
-import Environment from "../Components/Environment.js";
-import FairyDust from "../Components/Fairy/FairyDust.js";
-import Experience from "../Experience.js";
-import Sizes from "../Utils/Sizes.js";
+import Environment from "components/Environment.js";
+import FairyDust from "components/Fairy/FairyDust.js";
+import Experience from "webgl/Experience.js";
+import Sizes from "utils/Sizes.js";
 
 export default class FairyScene {
   constructor() {
@@ -13,7 +13,7 @@ export default class FairyScene {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    if(this.resources.loaded == this.resources.toLoad) {
+    if (this.resources.loaded == this.resources.toLoad) {
       this.buildScene();
     } else {
       this.resources.on("ready", () => {

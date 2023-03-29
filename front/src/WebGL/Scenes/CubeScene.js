@@ -1,7 +1,7 @@
-import Experience from "../Experience.js";
-import Cube from "../Components/Cube/Cube.js";
-import Floor from "../Components/Floor/Floor.js";
-import Environment from "../Components/Environment.js";
+import Experience from "webgl/Experience.js";
+import Cube from "components/Cube/Cube.js";
+import Floor from "components/Floor/Floor.js";
+import Environment from "components/Environment.js";
 
 export default class CubeScene {
   constructor() {
@@ -10,7 +10,7 @@ export default class CubeScene {
     this.resources = this.experience.resources;
 
     // Wait for resources
-    if(this.resources.loaded == this.resources.toLoad) {
+    if (this.resources.loaded == this.resources.toLoad) {
       this.buildScene();
     } else {
       this.resources.on("ready", () => {
@@ -25,5 +25,5 @@ export default class CubeScene {
     this.environment = new Environment();
   }
 
-  update() { }
+  update() {}
 }

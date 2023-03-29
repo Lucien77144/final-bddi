@@ -17,11 +17,11 @@ let data = {
   },
   status: {
     left: {
-      move: false,
+      start: false,
       end: false,
     },
     right: {
-      move: false,
+      start: false,
       end: false,
     },
   },
@@ -67,36 +67,32 @@ export default class Urma {
   }
 
   setInputs() {
-    InputManager.on("right", (value) => {
-      if (value && !data.status.right.move) {
-        data.status.right.move = true;
-        data.time.start = this.time.current;
-      } else if (!value && data.status.right.move && data.move.flag) {
-        data.move.flag = false;
-        data.status.right.end = true;
-        data.time.end = this.time.current;
-      }
-    });
-    InputManager.on("left", (value) => {
-      if (value && !data.status.left.move) {
-        data.status.left.move = true;
-        data.time.start = this.time.current;
-      } else if (!value && data.status.left.move && data.move.flag) {
-        data.move.flag = false;
-        data.status.left.end = true;
-        data.time.end = this.time.current;
-      }
-    });
+    ["right", 'left'].forEach((dir) => {
+      InputManager.on(dir, (val) => {
+        this.moveEvent(dir, val);
+      });
+    })
+  }
+
+  moveEvent(dir, value) {
+    if (value && !data.status[dir].start) {
+      data.status[dir].start = true;
+      data.time.start = this.time.current;
+    } else if (!value && data.status[dir].start && data.move.flag) {
+      data.move.flag = false;
+      data.status[dir].end = true;
+      data.time.end = this.time.current;
+    }
   }
 
   update() {
     if (data.move.velocity == 0) {
-      data.status.left.move && (data.status.left.move = false);
-      data.status.right.move && (data.status.right.move = false);
+      data.move.flag = true;
 
+      data.status.left.start && (data.status.left.start = false);
+      data.status.right.start && (data.status.right.start = false);
       data.status.right.end && (data.status.right.end = false);
       data.status.left.end && (data.status.left.end = false);
-      data.move.flag = true;
     }
 
     let endVelocity = (this.time.current - data.time.end) / options.speedEase * 2;
@@ -114,9 +110,9 @@ export default class Urma {
     const cameraPos = this.camera.position;
     const cameraRot = this.camera.rotation;
 
-    const isOneWay = (data.status.left.move && !data.status.right.move) || (!data.status.left.move && data.status.right.move);
+    const isOneWay = (data.status.left.start && !data.status.right.start) || (!data.status.left.start && data.status.right.start);
 
-    data.move.delta = isOneWay ? data.move.velocity * (options.speed / 1000) * (data.status.left.move ? 1 : -1): data.move.delta*.95;
+    data.move.delta = isOneWay ? data.move.velocity * (options.speed / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
     meshPos.z += data.move.delta;
     cameraPos.z = meshPos.z - data.move.delta*5;
 

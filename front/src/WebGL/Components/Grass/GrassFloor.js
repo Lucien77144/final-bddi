@@ -16,7 +16,7 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 500,
+      count: 300,
       size: 3,
     };
     this.grassGroups = [];

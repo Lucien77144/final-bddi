@@ -23,7 +23,7 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.sunLight = new AmbientLight("#96ffd6", 3);
+    this.sunLight = new AmbientLight("#96ffd6", 4);
     this.sunLight.position.set(3.5, 2, -1.25);
     this.sunLight.name = "sunLight";
     this.scene.add(this.sunLight);
@@ -35,27 +35,6 @@ export default class Environment {
         max: 10,
         step: 0.001,
         label: "sunLightIntensity",
-      });
-
-      this.debugFolder.addInput(this.sunLight.position, "x", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightX",
-      });
-
-      this.debugFolder.addInput(this.sunLight.position, "y", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightY",
-      });
-
-      this.debugFolder.addInput(this.sunLight.position, "z", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightZ",
       });
     }
   }

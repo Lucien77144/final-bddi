@@ -32,7 +32,7 @@ export default class Renderer {
     this.instance.shadowMap.enabled = true;
     this.instance.shadowMap.type = PCFSoftShadowMap;
     this.instance.antialias = true;  
-    this.instance.setClearColor("#211d20");
+    this.instance.setClearColor("#34d5eb");
     this.resize();
   }
 

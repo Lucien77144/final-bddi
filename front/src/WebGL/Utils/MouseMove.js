@@ -17,17 +17,26 @@ export default class MouseMove {
     this.camera = this.experience.camera.instance;
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
-
-    this.resources.on("ready", () => {
-      window.addEventListener("mousemove", (event) => {
-        this.handleMouseMove(event);
+    
+    // Wait for resources
+    if(this.resources.loaded == this.resources.toLoad) {
+      this.buildEvent();
+    } else {
+      this.resources.on("ready", () => {
+        this.buildEvent();
       });
-    });
+    }
 
     this.cursor = {};
     this.cursor.x = 0;
     this.cursor.y = 0;
     this.cursor.z = 0.8;
+  }
+
+  buildEvent() {
+    window.addEventListener("mousemove", (event) => {
+      this.handleMouseMove(event);
+    });
   }
 
   handleMouseMove(event) {

@@ -1,9 +1,9 @@
-import Experience from "../Experience.js";
-import Grass from "./Grass/Grass.js";
+import Experience from "../../Experience.js";
+import Grass from "./Grass.js";
 import * as THREE from "three";
 
 import {
-  Mesh,
+  Material,
   RepeatWrapping,
   sRGBEncoding,
 } from "three";
@@ -27,12 +27,8 @@ export default class GrassFloor {
     }
 
     this.setTextures();
-    this.setMesh();
+    this.setMaterials();
     this.setGround();
-
-    this.time.on("tick", () => {
-      this.update();
-    });
   }
 
   setGrass(mesh) {
@@ -93,10 +89,10 @@ export default class GrassFloor {
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
     this.ground.position.set(0, 0, 0);
+    this.ground.children[0].material = this.material;
     this.scene.add(this.ground);
 
-    this.setGrass(this.ground.children[2]);
-    this.setGrass(this.ground.children[3]);
+    this.setGrass(this.ground.children[0]);
     this.setGrassDebug();
   }
 
@@ -115,11 +111,10 @@ export default class GrassFloor {
     this.textures.normal.wrapT = RepeatWrapping;
   }
 
-  setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.mesh.rotation.x = -Math.PI * 0.5;
-    this.mesh.receiveShadow = true;
-    this.mesh.name = "floor";
-    this.scene.add(this.mesh);
+  setMaterials() {
+    this.material = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#2e6b15"),
+    });
+    console.log(this.material);
   }
 }

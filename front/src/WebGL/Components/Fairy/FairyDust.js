@@ -13,11 +13,9 @@ export default class FairyDust {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
-    this.camera = this.experience.camera.instance;
     this.scene = this.experience.scene;
     this.sizes = this.experience.sizes;
     this.renderer = this.experience.renderer.instance;
-
     this.fairyPosition = new FairyPosition();
 
     this.particles = new THREE.Group();
@@ -181,7 +179,6 @@ export default class FairyDust {
 
   updateParticles() {
     this.particles.children.forEach((el, cur) => {
-      //console.log(el.geometry.attributes);
       if (el.life > 50) {
         const object = this.particles.children[cur];
         object.geometry.dispose();

@@ -1,6 +1,6 @@
 import Experience from "../Experience.js";
 
-import FairyDust from "./FairyDust.js";
+import FairyDust from "../Components/Fairy/FairyDust.js";
 
 export default class FairyScene {
   constructor() {

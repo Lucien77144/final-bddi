@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
-import Experience from "../Experience.js";
+import Experience from "../../Experience";
 
 import FairyPosition from "./FairyPosition.js";
 
-import fairyDustVertexShader from "../Shaders/fairyDust/vertex.glsl";
-import fairyDustFragmentShader from "../Shaders/fairyDust/fragment.glsl";
-import fragmentSimulation from "../Shaders/fairyDust/fragmentSimulation.frag";
+import fairyDustVertexShader from "./shaders/vertexShader.glsl";
+import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
+import fragmentSimulation from "./shaders/fragmentSimulation.frag";
 
 export default class FairyDust {
   constructor() {

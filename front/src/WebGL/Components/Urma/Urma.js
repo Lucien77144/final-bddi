@@ -4,12 +4,12 @@ import vertexShader from "./shaders/vertexShader.glsl";
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 
-let options = {
-  speed: 90,
-  speedEase: 1000,
+const SIZE_FACTOR = 2;
+const OPTIONS = {
+  SPEED: 90,
+  SPEEDEASE: 1000,
 }
 
-const SIZE_FACTOR = 2;
 let data = {
   time: {
     start: 0,
@@ -95,10 +95,10 @@ export default class Urma {
       data.status.left.end && (data.status.left.end = false);
     }
 
-    let endVelocity = (this.time.current - data.time.end) / options.speedEase * 2;
+    let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
     endVelocity = endVelocity > 1 ? 1 : endVelocity;
 
-    data.move.velocity = (this.time.current - data.time.start) / options.speedEase;
+    data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
 
@@ -112,7 +112,7 @@ export default class Urma {
 
     const isOneWay = (data.status.left.start && !data.status.right.start) || (!data.status.left.start && data.status.right.start);
 
-    data.move.delta = isOneWay ? data.move.velocity * (options.speed / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
     meshPos.z += data.move.delta;
     cameraPos.z = meshPos.z - data.move.delta*5;
 

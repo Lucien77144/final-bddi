@@ -16,7 +16,7 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 750,
+      count: 500,
       size: 3,
     };
     this.grassGroups = [];
@@ -58,7 +58,7 @@ export default class GrassFloor {
 
   setGrassDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
             group.children.forEach((e) => {

@@ -13,7 +13,12 @@
     </noscript>
     <section class="" id="landingPage">
       <div class="title">
-        Bienvenue !
+        <svg width="398" height="136" viewBox="0 0 398 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.02629 1V72.9015M73.4592 1V85.1506C73.4592 90.076 73.4592 96.7442 72.2869 103.524M3.02629 72.9015V85.1506C3.02629 100.462 3.02629 132.616 38.2427 132.616C62.1307 132.616 69.815 117.821 72.2869 103.524M3.02629 72.9015C1.49285 124.96 67.5219 131.085 72.2869 103.524" stroke="white" stroke-width="5.16491"/>
+          <path d="M91.8086 131.085V72.9015M113.245 72.9015C127.025 72.9015 156.117 66.7769 156.117 37.6852C156.117 17.1523 145.439 8.82325 131.619 5.69963M113.245 72.9015C102.22 72.9015 94.3605 72.9015 91.8086 72.9015M113.245 72.9015L154.586 131.085M113.245 72.9015H91.8086M91.8086 72.9015V54.5277M91.8086 54.5277V4H113.245C119.551 4 125.858 4.39759 131.619 5.69963M91.8086 54.5277C91.8086 34.6229 104.058 5.69963 131.619 5.69963" stroke="white" stroke-width="5.16491"/>
+          <path d="M274.015 4V132.616M274.015 4V74.4326C274.015 39.4908 258.472 35.3607 253.743 44.544M274.015 4L253.743 44.544M171.428 132.616V74.4326M201.15 65.2457L221.956 108.118L243.392 65.2457M201.15 65.2457C206.644 76.5669 237.607 76.8162 243.392 65.2457M201.15 65.2457L191.333 45.0161M243.392 65.2457L253.743 44.544M171.428 74.4326V4L191.333 45.0161M171.428 74.4326C171.428 39.2163 186.739 35.5508 191.333 45.0161M253.633 44.7629C253.669 44.6891 253.706 44.6162 253.743 44.544" stroke="white" stroke-width="5.16491"/>
+          <path d="M313.263 83.8336L345.006 7.27637L370.887 71.5844M313.263 83.8336L294.63 128.773M313.263 83.8336L318.342 71.5844C321.354 75.6675 329.616 83.8336 343.942 83.8336M343.942 83.8336C375.219 83.8336 385.376 108.332 395.534 132.83L375.816 83.8336L370.887 71.5844M343.942 83.8336C358.268 83.8336 367.874 75.6675 370.887 71.5844M343.942 83.8336C314.394 83.8336 304.228 105.699 294.63 128.773M294.63 128.773C294.068 130.123 293.509 131.476 292.947 132.83L294.63 128.773Z" stroke="white" stroke-width="5.16491"/>
+        </svg>          
       </div>
       <div class="create-room">
         <button id="create">Créez une partie</button>
@@ -26,11 +31,16 @@
     </section>
     <section class="hidden" id="roleSelection">
       <div class="title">
-        Choisissez votre rôle
+        Choisissez votre personnage
       </div>
       <div class="roles">
-        <button id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
-        <button id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
+        <button class="hidden" id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
+        <button class="hidden" id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
+        <div class="d-flex">
+          <p>Urma</p>
+          <p>Heda</p>
+        </div>
+        <canvas id="roleSelectionCanvas"></canvas>
       </div>
     </section>
     <section class="hidden" id="scene">

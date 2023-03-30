@@ -74,15 +74,12 @@ socket.on('selectRole', () => {
     roleSelection.classList.remove('hidden');
 });
 
-selectionUrma.addEventListener('click', () => {
-    console.log('Urma');
-    socket.emit('roleSelect', {roomId : room.id, role: 'urma'});
-});
 
-selectionHeda.addEventListener('click', () => {
-    console.log('Heda');
-    socket.emit('roleSelect', {roomId : room.id, role: 'heda'});
-});
+
+export function roleSelectionEvent(role) {
+    console.log('Select role');
+    socket.emit('roleSelect', {roomId : room.id, role: role});
+}
 
 socket.on('role', (playerRole) => {
     currentPlayer.role = playerRole;

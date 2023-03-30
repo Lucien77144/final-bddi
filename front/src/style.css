@@ -28,3 +28,34 @@ body {
   position : relative;
   z-index: 1;
 }
+
+section {
+  background: linear-gradient(82.36deg, #C0E1EC 9.76%, #81CDE6 86.58%);
+  width: 100vw;
+  height: 100vh;
+  
+}
+
+#landingPage {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position : relative;
+}
+
+#roleSelectionCanvas {
+  width : 80vw;
+  height : 80vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position : relative;
+}
+
+.d-flex {
+  display: flex;
+  width : 100vw;
+  justify-content: space-around;
+}

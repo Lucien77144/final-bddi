@@ -1,10 +1,17 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Vector3 } from "three";
+<<<<<<< HEAD
 import GrassFloor from "components/Grass/GrassFloor.js";
 import Urma from "components/Urma/Urma.js";
 import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
+=======
+import GrassFloor from "../Components/Grass/GrassFloor.js";
+import Urma from "../Components/Urma/Urma.js";
+import Column from "../Components/Column/Column.js";
+import Rock from "../Components/Rock/Rock.js";
+>>>>>>> d61273974b3a32b09696d92cc14477908b2af00f
 
 export default class GrassScene {
   constructor() {

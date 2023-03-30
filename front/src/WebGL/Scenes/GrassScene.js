@@ -5,9 +5,6 @@ import GrassFloor from "components/Grass/GrassFloor.js";
 import Urma from "components/Urma/Urma.js";
 import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
-import GrassFloor from "../Components/Grass/GrassFloor.js";
-import Urma from "../Components/Urma/Urma.js";
-import Column from "../Components/Column/Column.js";
 import Rock from "../Components/Rock/Rock.js";
 
 export default class GrassScene {

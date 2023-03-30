@@ -65,7 +65,9 @@ export default class FairyPosition {
   }
 
   updatePosition() {
-    this.handleMouseMove();
+    if(currentRoom) {
+      this.handleMouseMove();
+    }
 
     for (let i = 0; i < this.nbPoints; i++) {
       const i3 = i * 3;

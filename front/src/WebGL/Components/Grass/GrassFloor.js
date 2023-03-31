@@ -25,7 +25,6 @@ export default class GrassFloor {
       this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
     }
 
-    this.setTextures();
     this.setMaterials();
     this.setGround();
   }
@@ -87,21 +86,6 @@ export default class GrassFloor {
 
     this.setGrass(this.ground.children[0]);
     this.setGrassDebug();
-  }
-
-  setTextures() {
-    this.textures = {};
-
-    this.textures.color = this.resources.items.grassColorTexture;
-    this.textures.color.encoding = sRGBEncoding;
-    this.textures.color.repeat.set(1.5, 1.5);
-    this.textures.color.wrapS = RepeatWrapping;
-    this.textures.color.wrapT = RepeatWrapping;
-
-    this.textures.normal = this.resources.items.grassNormalTexture;
-    this.textures.normal.repeat.set(1.5, 1.5);
-    this.textures.normal.wrapS = RepeatWrapping;
-    this.textures.normal.wrapT = RepeatWrapping;
   }
 
   setMaterials() {

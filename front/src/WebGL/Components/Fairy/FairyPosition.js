@@ -7,9 +7,13 @@ import Cube from "components/Cube/Cube.js";
 export default class FairyPosition {
   constructor() {
     this.fairy = new Cube();
+
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
+
     this.mouseMove = new MouseMove();
+
     this.nbPoints = 500;
+
     this.positions = this.setPosition(new Float32Array(this.nbPoints * 3));
   }
 
@@ -53,7 +57,7 @@ export default class FairyPosition {
 
         this.positions[i3] = this.lerpPoint.x;
         this.positions[i3 + 1] = this.lerpPoint.y;
-        this.positions[i3 + 2] = this.mouseMove.cursor.z;
+        this.positions[i3 + 2] = this.lerpPoint.z;
       }
     }
   }
@@ -69,8 +73,8 @@ export default class FairyPosition {
   isFairyMoving() {
     if (this.fairy) {
       if (
-        Math.floor(this.positions[this.positions.length - 3] * 1000) ===
-        Math.floor(this.mouseMove.cursor.x * 1000)
+        Math.floor(this.positions[this.positions.length - 1] * 1000) ===
+        Math.floor(this.mouseMove.cursor.z * 1000)
       ) {
         return false;
       } else {

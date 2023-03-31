@@ -12,8 +12,9 @@ let grassColors = {
   color1: '#0a9044',
   color2: '#0ca855',
   color3: '#148538',
-  color4: '#043418',
-  color5: '#0a353b',
+  color4: '#15293b',
+  color5: '#348bd9',
+  baseColor: '#11382a',
 }
 
 function interpolate(val, oldMin, oldMax, newMin, newMax) {
@@ -115,6 +116,7 @@ class Grass extends THREE.Mesh {
         uColor3: { value: new THREE.Color(grassColors.color3) },
         uColor4: { value: new THREE.Color(grassColors.color4) },
         uColor5: { value: new THREE.Color(grassColors.color5) },
+        uBaseColor: { value: new THREE.Color(grassColors.baseColor) },
       },
       side: THREE.DoubleSide,
       alphaTest: 0,

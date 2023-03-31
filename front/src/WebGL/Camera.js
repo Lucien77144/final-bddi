@@ -27,7 +27,6 @@ export default class Camera {
     };
 
     this.setInstance();
-    // this.updatePosition();
     // this.setControls();
     if (this.debug.active) this.setDebug();
   }
@@ -109,14 +108,7 @@ export default class Camera {
     }
   }
 
-  updatePosition() {
-    this.instance.position.z = this.urma.position.z;
-  }
-
   update() {
-    if (!this.urma && this.experience.activeScene) {
-      this.urma = this.experience.activeScene.urma;
-    }
     if(this.controls) this.controls.update();
   } 
 }

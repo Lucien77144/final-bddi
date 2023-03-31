@@ -16,7 +16,7 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 300,
+      count: 500,
       size: 3,
     };
     this.grassGroups = [];
@@ -81,6 +81,7 @@ export default class GrassFloor {
     this.ground = this.resources.items.groundModel.scene;
     this.ground.position.set(0, 0, 0);
     this.ground.children[0].material = this.material;
+    this.ground.children[0].ignoreEnvironment = true;
     this.scene.add(this.ground);
 
     this.setGrass(this.ground.children[0]);
@@ -104,7 +105,8 @@ export default class GrassFloor {
 
   setMaterials() {
     this.material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#0b471b"),
+      color: new THREE.Color("#10382a"),
+      envMapIntensity: 0,
     });
   }
 

@@ -19,11 +19,11 @@ export default class Environment {
     }
 
     this.setSunLight();
-    this.setEnvironmentMap();
+    // this.setEnvironmentMap();
   }
 
   setSunLight() {
-    this.sunLight = new AmbientLight("#96ffd6", 4);
+    this.sunLight = new AmbientLight("#96ffd6", 1);
     this.sunLight.position.set(3.5, 2, -1.25);
     this.sunLight.name = "sunLight";
     this.scene.add(this.sunLight);
@@ -41,7 +41,7 @@ export default class Environment {
 
   setEnvironmentMap() {
     this.environmentMap = {};
-    this.environmentMap.intensity = 0.4;
+    this.environmentMap.intensity = 1.5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
     this.environmentMap.texture.encoding = sRGBEncoding;
 
@@ -51,9 +51,10 @@ export default class Environment {
       this.scene.traverse((child) => {
         if (
           child instanceof Mesh &&
-          child.material instanceof MeshStandardMaterial
+          child.material instanceof MeshStandardMaterial &&
+          !child.ignoreEnvironment
         ) {
-          child.material.envMap = this.environmentMap.texture;
+          // child.material.envMap = this.environmentMap.texture;
           child.material.envMapIntensity = this.environmentMap.intensity;
           child.material.needsUpdate = true;
         }

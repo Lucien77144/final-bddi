@@ -38,6 +38,7 @@ export default class Urma {
     this.scene = this.experience.scene;
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
+    console.log(this.camera);
 
     this.position = _position;
 

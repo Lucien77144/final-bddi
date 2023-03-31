@@ -1,9 +1,16 @@
 import Experience from "webgl/Experience.js";
-import { BoxGeometry, CatmullRomCurve3, Mesh, MeshBasicMaterial, Vector3 } from "three";
+import { CatmullRomCurve3, Vector3 } from "three";
 
 let t = 0;
+let instance = null;
 export default class PathUrma {
   constructor(_position = new Vector3(0, 0, 0)) {
+    // Singleton
+    if (instance) {
+        return instance;
+    }
+    instance = this;
+    
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.position = _position;

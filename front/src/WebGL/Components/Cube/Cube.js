@@ -26,7 +26,7 @@ export default class Cube {
   }
 
   setGeometry() {
-    this.geometry = new BoxGeometry(.1, .1, .1);
+    this.geometry = new BoxGeometry(1, 1, 1);
   }
 
   setMaterial() {

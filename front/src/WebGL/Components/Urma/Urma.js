@@ -3,6 +3,7 @@ import fragmentShader from "./shaders/fragmentShader.glsl";
 import vertexShader from "./shaders/vertexShader.glsl";
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
+import PathUrma from "./PathUrma";
 
 const SIZE_FACTOR = 2;
 const OPTIONS = {
@@ -32,12 +33,20 @@ let data = {
   }
 }
 
+let instance = null;
 export default class Urma {
   constructor(_position = new Vector3(0, 0, 0)) {
+    // Singleton
+    if (instance) {
+      return instance;
+    }
+    instance = this;
+
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
+    this.path = new PathUrma();
 
     this.position = _position;
 
@@ -63,7 +72,7 @@ export default class Urma {
     this.mesh.position.copy(this.position);
     this.mesh.name = "urma";
     this.scene.add(this.mesh);
-    this.camera.position.z = this.mesh.position.z
+    this.camera.position.z = this.mesh.position.z;
   }
 
   setInputs() {
@@ -89,7 +98,9 @@ export default class Urma {
     const isOneWay = (data.status.left.start !== data.status.right.start);
 
     data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
-    meshPos.z += data.move.delta;
+
+    meshPos.copy(this.path.position);
+
     cameraPos.z = meshPos.z - data.move.delta*5;
 
     const rdmCamera = (Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4;
@@ -114,7 +125,8 @@ export default class Urma {
     data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
-
+    
+    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
   }
 }

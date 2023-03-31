@@ -2,11 +2,6 @@ import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
 import * as THREE from "three";
 
-import {
-  RepeatWrapping,
-  sRGBEncoding,
-} from "three";
-
 export default class GrassFloor {
   constructor() {
     this.experience = new Experience();

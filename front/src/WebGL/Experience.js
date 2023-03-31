@@ -48,8 +48,10 @@ export default class Experience {
   switchScene(nextName) {
     this.scene = new Scene();
     this.debug = new Debug();
+    this.camera = new Camera();
     this.activeScene = new SceneManager(nextName);
     this.renderer.scene = this.scene;
+    this.renderer.camera = this.camera;
     this.update();
   }
 

@@ -74,6 +74,7 @@ export default class GrassFloor {
             });
           })
         });
+      this.debugFolder.addInput(this.material, "wireframe");
     }
   }
 
@@ -104,9 +105,8 @@ export default class GrassFloor {
   }
 
   setMaterials() {
-    this.material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#10382a"),
-      envMapIntensity: 0,
+    this.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#040f0b"),
     });
   }
 

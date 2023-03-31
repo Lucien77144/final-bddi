@@ -38,7 +38,6 @@ export default class Urma {
     this.scene = this.experience.scene;
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
-    console.log(this.camera);
 
     this.position = _position;
 
@@ -70,20 +69,33 @@ export default class Urma {
   setInputs() {
     ["right", 'left'].forEach((dir) => {
       InputManager.on(dir, (val) => {
-        this.moveEvent(dir, val);
+        if (val && !data.status[dir].start) {
+          data.status[dir].start = true;
+          data.time.start = this.time.current;
+        } else if (!val && data.status[dir].start && data.move.flag) {
+          data.move.flag = false;
+          data.status[dir].end = true;
+          data.time.end = this.time.current;
+        }
       });
     })
   }
 
-  moveEvent(dir, value) {
-    if (value && !data.status[dir].start) {
-      data.status[dir].start = true;
-      data.time.start = this.time.current;
-    } else if (!value && data.status[dir].start && data.move.flag) {
-      data.move.flag = false;
-      data.status[dir].end = true;
-      data.time.end = this.time.current;
-    }
+  updatePosition() {
+    const { mesh, camera, time } = this;
+    const { position: meshPos } = mesh;
+    const { position: cameraPos, rotation: cameraRot } = camera;
+
+    const isOneWay = (data.status.left.start !== data.status.right.start);
+
+    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+    meshPos.z += data.move.delta;
+    cameraPos.z = meshPos.z - data.move.delta*5;
+
+    const rdmCamera = (Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4;
+    cameraPos.y = 4 - Math.abs(data.move.delta)*2 + rdmCamera;
+    
+    cameraRot.z = data.move.delta/10;
   }
 
   update() {
@@ -104,22 +116,5 @@ export default class Urma {
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
 
     this.updatePosition();
-  }
-
-  updatePosition() {
-    const meshPos = this.mesh.position;
-    const cameraPos = this.camera.position;
-    const cameraRot = this.camera.rotation;
-
-    const isOneWay = (data.status.left.start && !data.status.right.start) || (!data.status.left.start && data.status.right.start);
-
-    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
-    meshPos.z += data.move.delta;
-    cameraPos.z = meshPos.z - data.move.delta*5;
-
-    const rdmCamera = (Math.cos(this.time.current/200) * data.move.velocity / 15) * data.move.delta*4;
-    cameraPos.y = 4 - Math.abs(data.move.delta)*2 + rdmCamera;
-    
-    cameraRot.z = data.move.delta/10;
   }
 }

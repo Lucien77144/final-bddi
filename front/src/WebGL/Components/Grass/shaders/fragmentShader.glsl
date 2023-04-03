@@ -47,5 +47,5 @@ void main() {
 
   float lighting = normalize(dot(vNormal, vec3(10)));
   vec3 result = color + lighting * 0.03;
-  gl_FragColor = vec4(mix(uBaseColor,   result, vPosition.y*1.5), 1.0);
+  gl_FragColor = vec4(mix(uBaseColor, result, vPosition.y * 1.5), 1.0);
 }

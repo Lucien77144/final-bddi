@@ -2,11 +2,6 @@ import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
 import * as THREE from "three";
 
-import {
-  RepeatWrapping,
-  sRGBEncoding,
-} from "three";
-
 export default class GrassFloor {
   constructor() {
     this.experience = new Experience();
@@ -25,7 +20,6 @@ export default class GrassFloor {
       this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
     }
 
-    this.setTextures();
     this.setMaterials();
     this.setGround();
   }
@@ -74,6 +68,7 @@ export default class GrassFloor {
             });
           })
         });
+      this.debugFolder.addInput(this.material, "wireframe");
     }
   }
 
@@ -88,25 +83,9 @@ export default class GrassFloor {
     this.setGrassDebug();
   }
 
-  setTextures() {
-    this.textures = {};
-
-    this.textures.color = this.resources.items.grassColorTexture;
-    this.textures.color.encoding = sRGBEncoding;
-    this.textures.color.repeat.set(1.5, 1.5);
-    this.textures.color.wrapS = RepeatWrapping;
-    this.textures.color.wrapT = RepeatWrapping;
-
-    this.textures.normal = this.resources.items.grassNormalTexture;
-    this.textures.normal.repeat.set(1.5, 1.5);
-    this.textures.normal.wrapS = RepeatWrapping;
-    this.textures.normal.wrapT = RepeatWrapping;
-  }
-
   setMaterials() {
-    this.material = new THREE.MeshStandardMaterial({
-      color: new THREE.Color("#10382a"),
-      envMapIntensity: 0,
+    this.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#040f0b"),
     });
   }
 

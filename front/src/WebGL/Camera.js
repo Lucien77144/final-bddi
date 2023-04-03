@@ -75,7 +75,7 @@ export default class Camera {
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: "Camera",
-      expanded: false,
+      expanded: true,
     });
 
     this.debugFolder
@@ -87,14 +87,6 @@ export default class Camera {
     this.debugFolder
       .addInput(this.instance.position, "x", {
         label: "Position X",
-        min: -20,
-        max: 20,
-        step: 0.1,
-      })
-
-    this.debugFolder
-      .addInput(this.instance.position, "y", {
-        label: "Position Y",
         min: -20,
         max: 20,
         step: 0.1,

@@ -39,7 +39,12 @@ export default class GrassFloor {
       const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
       const angleZ = -Math.atan2(normal.x, normal.y);
 
-      this.grass = new Grass(mesh.scale, this.grassParameters.size, this.grassParameters.count, x, y, z);
+      this.grass = new Grass(
+        mesh,
+        this.grassParameters.size,
+        this.grassParameters.count,
+        {x, y, z},
+      );
       this.grass.rotation.x = angleX * anglePower;
       this.grass.rotation.z = angleZ * anglePower;
   
@@ -48,6 +53,23 @@ export default class GrassFloor {
     group.position.copy(mesh.position);
     this.grassGroups.push(group);
     this.scene.add(group);
+  }
+
+  setGround() {
+    this.ground = this.resources.items.groundModel.scene;
+    this.ground.position.set(0, 0, 0);
+    this.ground.children[0].material = this.material;
+    this.ground.children[0].ignoreEnvironment = true;
+    this.scene.add(this.ground);
+
+    this.setGrass(this.ground.children[0]);
+    this.setGrassDebug();
+  }
+
+  setMaterials() {
+    this.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#040f0b"),
+    });
   }
 
   setGrassDebug() {
@@ -70,23 +92,6 @@ export default class GrassFloor {
         });
       this.debugFolder.addInput(this.material, "wireframe");
     }
-  }
-
-  setGround() {
-    this.ground = this.resources.items.groundModel.scene;
-    this.ground.position.set(0, 0, 0);
-    this.ground.children[0].material = this.material;
-    this.ground.children[0].ignoreEnvironment = true;
-    this.scene.add(this.ground);
-
-    this.setGrass(this.ground.children[0]);
-    this.setGrassDebug();
-  }
-
-  setMaterials() {
-    this.material = new THREE.MeshBasicMaterial({
-      color: new THREE.Color("#040f0b"),
-    });
   }
 
   update() {

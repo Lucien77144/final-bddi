@@ -45,7 +45,7 @@ export class GrassGeometry extends THREE.BufferGeometry {
         ])
       )
 
-      const blade = this.computeBlade([x, 0, y], i)
+      const blade = this.computeBlade([x, 0, y], i);
       positions.push(...blade.positions)
       indices.push(...blade.indices)
     }
@@ -57,7 +57,6 @@ export class GrassGeometry extends THREE.BufferGeometry {
     this.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2))
     this.setIndex(indices)
     this.computeVertexNormals()
-
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
@@ -80,9 +79,9 @@ export class GrassGeometry extends THREE.BufferGeometry {
     const tc = bendVec.map((n, i) => n * BLADE_TIP_OFFSET + center[i])
 
     // Attenuate height
-    tl[1] += height / 2
-    tr[1] += height / 2
-    tc[1] += height
+    tl[1] += height / 2;
+    tr[1] += height / 2;
+    tc[1] += height;
 
     return {
       positions: [...bl, ...br, ...tr, ...tl, ...tc],
@@ -105,7 +104,7 @@ const cloudTexture = new THREE.TextureLoader().load('/img/cloud.jpg')
 cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 
 class Grass extends THREE.Mesh {
-  constructor(size, grassSize, count, x, y, z) {
+  constructor(mesh, grassSize, count, pos) {
     const geometry = new GrassGeometry(grassSize, count);
     const material = new THREE.ShaderMaterial({
       uniforms: {
@@ -124,8 +123,8 @@ class Grass extends THREE.Mesh {
       fragmentShader,
     });
     super(geometry, material);
-    this.name = 'Grass'
-    this.position.set(x * size.x, y * size.y, z * size.z);
+
+    this.position.set(pos.x * mesh.scale.x, pos.y * mesh.scale.y, pos.z * mesh.scale.z);
   }
 
   update(time) {

@@ -10,6 +10,7 @@ uniform vec3 uColor2;
 uniform vec3 uColor3;
 uniform vec3 uColor4;
 uniform vec3 uColor5;
+uniform vec3 uBaseColor;
 
 vec3 shadowSource(vec3 color) {
   return mix(color, vec3(0, 0, 0), -vPosition.y * 0.5);
@@ -45,5 +46,6 @@ void main() {
   color = shadowSource(color);
 
   float lighting = normalize(dot(vNormal, vec3(10)));
-  gl_FragColor = vec4(color + lighting * 0.03, 1.0);
+  vec3 result = color + lighting * 0.03;
+  gl_FragColor = vec4(mix(uBaseColor, result, vPosition.y * 1.5), 1.0);
 }

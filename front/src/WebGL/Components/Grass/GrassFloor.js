@@ -1,12 +1,6 @@
-import Experience from "../../Experience.js";
+import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
 import * as THREE from "three";
-
-import {
-  Mesh,
-  RepeatWrapping,
-  sRGBEncoding,
-} from "three";
 
 export default class GrassFloor {
   constructor() {
@@ -17,22 +11,17 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 750,
+      count: 500,
       size: 3,
     };
     this.grassGroups = [];
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
+      this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
     }
 
-    this.setTextures();
-    this.setMesh();
+    this.setMaterials();
     this.setGround();
-
-    this.time.on("tick", () => {
-      this.update();
-    });
   }
 
   setGrass(mesh) {
@@ -63,7 +52,7 @@ export default class GrassFloor {
 
   setGrassDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
             group.children.forEach((e) => {
@@ -79,7 +68,25 @@ export default class GrassFloor {
             });
           })
         });
+      this.debugFolder.addInput(this.material, "wireframe");
     }
+  }
+
+  setGround() {
+    this.ground = this.resources.items.groundModel.scene;
+    this.ground.position.set(0, 0, 0);
+    this.ground.children[0].material = this.material;
+    this.ground.children[0].ignoreEnvironment = true;
+    this.scene.add(this.ground);
+
+    this.setGrass(this.ground.children[0]);
+    this.setGrassDebug();
+  }
+
+  setMaterials() {
+    this.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#040f0b"),
+    });
   }
 
   update() {
@@ -88,38 +95,5 @@ export default class GrassFloor {
         e.update(this.time.elapsed);
       });
     })
-  }
-
-  setGround() {
-    this.ground = this.resources.items.groundModel.scene;
-    this.ground.position.set(0, 0, 0);
-    this.scene.add(this.ground);
-
-    this.setGrass(this.ground.children[2]);
-    this.setGrass(this.ground.children[3]);
-    this.setGrassDebug();
-  }
-
-  setTextures() {
-    this.textures = {};
-
-    this.textures.color = this.resources.items.grassColorTexture;
-    this.textures.color.encoding = sRGBEncoding;
-    this.textures.color.repeat.set(1.5, 1.5);
-    this.textures.color.wrapS = RepeatWrapping;
-    this.textures.color.wrapT = RepeatWrapping;
-
-    this.textures.normal = this.resources.items.grassNormalTexture;
-    this.textures.normal.repeat.set(1.5, 1.5);
-    this.textures.normal.wrapS = RepeatWrapping;
-    this.textures.normal.wrapT = RepeatWrapping;
-  }
-
-  setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.mesh.rotation.x = -Math.PI * 0.5;
-    this.mesh.receiveShadow = true;
-    this.mesh.name = "floor";
-    this.scene.add(this.mesh);
   }
 }

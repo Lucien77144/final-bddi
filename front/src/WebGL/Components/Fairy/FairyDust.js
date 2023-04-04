@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import Experience from "../../Experience.js";
+import Experience from "webgl/Experience.js";
 import vertexShader from "./shaders/vertexShader.glsl";
 import fragmentShader from "./shaders/fragmentShader.glsl";
 import FairyPosition from "./FairyPosition.js";

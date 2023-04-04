@@ -2,11 +2,20 @@ import * as THREE from 'three';
 import vertexShader from './shaders/vertexShader.glsl';
 import fragmentShader from './shaders/fragmentShader.glsl';
 
-const BLADE_WIDTH = 0.1
-const BLADE_HEIGHT = 0.01
+const BLADE_WIDTH = 0.05
+const BLADE_HEIGHT = 0.005
 const BLADE_HEIGHT_VARIATION = 0.5
 const BLADE_VERTEX_COUNT = 5
 const BLADE_TIP_OFFSET = 0.1
+
+let grassColors = {
+  color1: '#0a9044',
+  color2: '#0ca855',
+  color3: '#148538',
+  color4: '#15293b',
+  color5: '#348bd9',
+  baseColor: '#11382a',
+}
 
 function interpolate(val, oldMin, oldMax, newMin, newMax) {
   return ((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
@@ -102,24 +111,26 @@ class Grass extends THREE.Mesh {
       uniforms: {
         uTime: { value: 0 },
         uColorScale: { value: Math.floor(Math.random()*10)/10 },
-        uColor1: { value: new THREE.Color(0x96d96f) },
-        uColor2: { value: new THREE.Color(0x73b247) },
-        uColor3: { value: new THREE.Color(0x3c9464) },
-        uColor4: { value: new THREE.Color(0x075047) },
-        uColor5: { value: new THREE.Color(0x0a353b) },
+        uColor1: { value: new THREE.Color(grassColors.color1) },
+        uColor2: { value: new THREE.Color(grassColors.color2) },
+        uColor3: { value: new THREE.Color(grassColors.color3) },
+        uColor4: { value: new THREE.Color(grassColors.color4) },
+        uColor5: { value: new THREE.Color(grassColors.color5) },
+        uBaseColor: { value: new THREE.Color(grassColors.baseColor) },
       },
       side: THREE.DoubleSide,
+      alphaTest: 0,
       vertexShader,
       fragmentShader,
     });
     super(geometry, material);
-
+    this.name = 'Grass'
     this.position.set(x * size.x, y * size.y, z * size.z);
   }
 
   update(time) {
     this.material.uniforms.uTime.value = time;
-  }
+  };
 
   updateGrass(size, count) {
     this.material.uniforms.uTime.value = 0;

@@ -1,4 +1,4 @@
-import Experience from "./Experience.js";
+import Experience from "webgl/Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PerspectiveCamera } from "three";
 
@@ -11,24 +11,23 @@ export default class Camera {
     this.debug = this.experience.debug;
 
     this.options = {
-      fov: 35,
+      fov: 45,
       near: 1,
       far: 100,
       position: {
-        x: 6,
+        x: 8,
         y: 4,
-        z: 8,
+        z: 0,
       },
-      target: {
+      rotate: {
         x: 0,
-        y: 0,
+        y: Math.PI/2,
         z: 0,
       },
     };
 
     this.setInstance();
-    this.setControls();
-    this.applySavedSettings();
+    // this.setControls();
     if (this.debug.active) this.setDebug();
   }
 
@@ -40,10 +39,6 @@ export default class Camera {
       this.options.far
     );
     this.instance.name = "camera";
-    this.scene.add(this.instance);
-  }
-
-  applySavedSettings() {
 
     this.instance.position.set(
       this.options.position.x,
@@ -51,11 +46,13 @@ export default class Camera {
       this.options.position.z
     );
 
-    this.controls.target.set(
-      this.options.target.x,
-      this.options.target.y,
-      this.options.target.z
-    );
+    this.instance.rotation.set(
+      this.options.rotate.x,
+      this.options.rotate.y,
+      this.options.rotate.z
+    )
+
+    this.scene.add(this.instance);
   }
 
   setControls() {
@@ -67,11 +64,6 @@ export default class Camera {
       this.options.position.x,
       this.options.position.y,
       this.options.position.z
-    );
-    this.controls.target.set(
-      this.options.target.x,
-      this.options.target.y,
-      this.options.target.z
     );
   }
 
@@ -93,13 +85,30 @@ export default class Camera {
       .on("click", this.resetControls.bind(this));
 
     this.debugFolder
-      .addInput(this.controls, "enabled", {
-        label: "Orbit Controls",
+      .addInput(this.instance.position, "x", {
+        label: "Position X",
+        min: -20,
+        max: 20,
+        step: 0.1,
       })
-      .on("change", this.resetControls.bind(this));
+
+    this.debugFolder
+      .addInput(this.instance.position, "y", {
+        label: "Position Y",
+        min: -20,
+        max: 20,
+        step: 0.1,
+      })
+
+    if(this.controls) {
+      this.debugFolder
+        .addInput(this.controls, "enabled", {
+          label: "Orbit Controls",
+        });
+    }
   }
 
   update() {
-    this.controls.update();
-  }
+    if(this.controls) this.controls.update();
+  } 
 }

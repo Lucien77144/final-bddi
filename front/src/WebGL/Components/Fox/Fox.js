@@ -1,7 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { AnimationMixer, Mesh, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import cloneGltf from "@/WebGL/Utils/GltfClone";
 
 export default class Fox {
   constructor(_position = new Vector3(0, 0, 0)) {
@@ -30,7 +30,7 @@ export default class Fox {
   }
 
   setModel() {
-    this.model = SkeletonUtils.clone(this.resource.scene);
+    this.model = cloneGltf(this.resource).scene;
 
     this.model.scale.set(0.02, 0.02, 0.02);
     this.model.position.copy(this.position);

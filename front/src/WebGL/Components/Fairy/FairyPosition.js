@@ -1,8 +1,9 @@
 import * as THREE from "three";
 
-import MouseMove from "../../Utils/MouseMove.js";
+import MouseMove from "utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
+import PathUrma from "../Urma/PathUrma";
 
 import { currentRoom } from "../../../scripts/movement.js"
 import { currentPlayer } from "../../../scripts/room.js"
@@ -15,6 +16,7 @@ export default class FairyPosition {
   constructor() {
     console.log(currentPlayer);
     this.fairy = new Cube();
+    this.path = new PathUrma();
 
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
 
@@ -94,12 +96,13 @@ export default class FairyPosition {
 
         this.positions[i3] = this.lerpPoint.x;
         this.positions[i3 + 1] = this.lerpPoint.y;
-        this.positions[i3 + 2] = this.mouseMove.cursor.z;
+        this.positions[i3 + 2] = this.lerpPoint.z;
       }
     }
   }
   
   moveFairy() {
+    this.positions[this.positions.length - 3] = this.path.position.x;
     this.fairy.mesh.position.set(
       this.positions[this.positions.length - 3],
       this.positions[this.positions.length - 2],
@@ -110,8 +113,8 @@ export default class FairyPosition {
   isFairyMoving() {
     if (this.fairy) {
       if (
-        Math.floor(this.positions[this.positions.length - 3] * 1000) ===
-        Math.floor(this.mouseMove.cursor.x * 1000)
+        Math.floor(this.positions[this.positions.length - 1] * 1000) ===
+        Math.floor(this.mouseMove.cursor.z * 1000)
       ) {
         return false;
       } else {

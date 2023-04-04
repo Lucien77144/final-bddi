@@ -65,7 +65,7 @@ export default class FairyPosition {
   }
   
   moveFairy() {
-    this.positions[this.positions.length - 3] = this.path.position.x;
+    // this.positions[this.positions.length - 3] = this.path.position.x;
     this.fairy.mesh.position.set(
       this.positions[this.positions.length - 3],
       this.positions[this.positions.length - 2],

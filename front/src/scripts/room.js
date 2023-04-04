@@ -1,3 +1,4 @@
+import Experience from '@/WebGL/Experience.js';
 import { socket } from './socket.js';
 
 /**
@@ -91,6 +92,8 @@ socket.on('role', (playerRole) => {
         <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
+    const experience = new Experience();
+    experience.setUp();
     scene.classList.remove('hidden');
 });
 

@@ -25,8 +25,10 @@ body {
 }
 
 .room-info {
-  position : relative;
+  position : absolute;
   z-index: 1;
+  top : 1%;
+  left : 1%;
 }
 
 section {

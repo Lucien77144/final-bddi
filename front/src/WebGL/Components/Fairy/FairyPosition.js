@@ -1,57 +1,65 @@
 import * as THREE from "three";
 
+
 import MouseMove from "utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
 import PathUrma from "../Urma/PathUrma";
 
-import { currentRoom } from "../../../scripts/movement.js"
-import { currentPlayer } from "../../../scripts/room.js"
-
-import Sizes from "../../Utils/Sizes.js";
-import Experience from "../../Experience.js";
-
+// Server
+import { currentPlayer } from "@/scripts/room";
+import { currentRoom } from "@/scripts/movement";
+import Experience from "@/WebGL/Experience";
 
 export default class FairyPosition {
   constructor() {
-    console.log(currentPlayer);
     this.fairy = new Cube();
     this.path = new PathUrma();
 
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
 
     this.mouseMove = new MouseMove();
-    this.experience = new Experience();
 
-    this.sizes = new Sizes();
-    this.camera = this.experience.camera.instance;
-    // Find the player with heda role
     this.nbPoints = 500;
 
     this.positions = this.setPosition(new Float32Array(this.nbPoints * 3));
 
+    // Changes for server
+
+    this.experience = new Experience();
+    this.camera = this.experience.camera.instance;
+    this.sizes = this.experience.sizes;
+
+    this.player = currentPlayer;
+    
+    console.log(this.player);
+
     this.cursor = {};
     this.cursor.x = 0;
     this.cursor.y = 0;
-    this.cursor.z = 0.8;
+    this.cursor.z = 8;
 
+    window.addEventListener("mousemove", (event) => {
+        this.handleMouseMove(event);
+    });
   }
 
-  handleMouseMove() {
-      const hedaCursor = currentRoom.players.find(player => player.role === "heda").position;
-      this.cursor.x = (hedaCursor.x / this.sizes.width) * 2 - 1;
-      this.cursor.y = -(hedaCursor.y / this.sizes.height) * 2 + 1;
+  handleMouseMove(event) {
+    if(this.player.role === 'heda') {
+      this.cursor.x = (event.clientX / this.sizes.width) * 2 - 1;
+      this.cursor.y = -(event.clientY / this.sizes.height) * 2 + 1;
       this.cursor.z = 1;
   
       var vector = new THREE.Vector3(this.cursor.x, this.cursor.y, 0.5);
       vector.unproject(this.camera);
       var dir = vector.sub(this.camera.position).normalize();
-      var distance = -this.camera.position.z / dir.z;
+      var distance = -this.camera.position.x / dir.x;
       var pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
   
       this.cursor = pos;
+    } 
   }
-  
+
   setPosition(array) {
     for (let i = 0; i < this.nbPoints; i++) {
       const i3 = i * 3;
@@ -67,10 +75,6 @@ export default class FairyPosition {
   }
 
   updatePosition() {
-    if(currentRoom) {
-      this.handleMouseMove();
-    }
-
     for (let i = 0; i < this.nbPoints; i++) {
       const i3 = i * 3;
       const previous = (i - 1) * 3;
@@ -103,6 +107,22 @@ export default class FairyPosition {
   
   moveFairy() {
     // this.positions[this.positions.length - 3] = this.path.position.x;
+    if(this.player.role === 'urma') {
+      if(currentRoom) {
+        this.player.position = currentRoom.players.filter((player) => player.role === 'heda')[0].position;
+        this.cursor.x = (this.player.position.x / this.sizes.width) * 2 - 1;
+        this.cursor.y = -(this.player.position.y / this.sizes.height) * 2 + 1;
+        this.cursor.z = 1;
+    
+        var vector = new THREE.Vector3(this.cursor.x, this.cursor.y, 0.5);
+        vector.unproject(this.camera);
+        var dir = vector.sub(this.camera.position).normalize();
+        var distance = -this.camera.position.x / dir.x;
+        var pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
+    
+        this.cursor = pos;
+      }
+    }
     this.fairy.mesh.position.set(
       this.positions[this.positions.length - 3],
       this.positions[this.positions.length - 2],
@@ -114,7 +134,7 @@ export default class FairyPosition {
     if (this.fairy) {
       if (
         Math.floor(this.positions[this.positions.length - 1] * 1000) ===
-        Math.floor(this.mouseMove.cursor.z * 1000)
+        Math.floor(this.cursor.z * 1000)
       ) {
         return false;
       } else {
@@ -124,7 +144,6 @@ export default class FairyPosition {
   }
 
   update() {
-
     if (this.positions) {
       this.updatePosition();
       this.moveFairy()

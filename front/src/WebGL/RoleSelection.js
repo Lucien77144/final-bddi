@@ -75,7 +75,7 @@ export default class RoleSelection {
         if (this.intersects.length > 0) {
           const objectToMove = this.intersects[0].object
             // rotate the urmaCadre in the direction of the mouse
-            console.log(this.mouse);
+            // console.log(this.mouse);
             objectToMove.rotation.x = (this.mouse.y * 0.1) 
             objectToMove.rotation.y = (this.mouse.x * 0.1)
             objectToMove.scale.x = 1.1

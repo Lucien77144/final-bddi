@@ -124,7 +124,7 @@ class Grass extends THREE.Mesh {
       fragmentShader,
     });
     super(geometry, material);
-
+    this.name = 'Grass'
     this.position.set(x * size.x, y * size.y, z * size.z);
   }
 

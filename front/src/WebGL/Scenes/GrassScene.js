@@ -33,7 +33,7 @@ export default class GrassScene {
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))
     this.urma = new Urma(new Vector3(0, 5, 8));
-    this.cube = new Cube(new Vector3(-2.7, 3, -.4));
+    this.cube = new Cube(new Vector3(6.36, 0, 10));
     this.column = new Column(new Vector3(0, 0, 0));
   }
 

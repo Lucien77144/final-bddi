@@ -45,6 +45,7 @@ export default class Camera {
       this.options.position.y,
       this.options.position.z
     );
+    this.instance.position.x = 20;
 
     this.instance.rotation.set(
       this.options.rotate.x,
@@ -89,7 +90,7 @@ export default class Camera {
         label: "Position X",
         min: -20,
         max: 20,
-        step: 0.1,
+        step: 0.01,
       })
 
     if(this.controls) {

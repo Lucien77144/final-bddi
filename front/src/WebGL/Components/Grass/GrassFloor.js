@@ -29,6 +29,19 @@ export default class GrassFloor {
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
 
+    const limits = {
+      min: {
+        x: mesh.geometry.boundingBox.min.x * mesh.scale.x,
+        y: mesh.geometry.boundingBox.min.y * mesh.scale.y,
+        z: mesh.geometry.boundingBox.min.z * mesh.scale.z,
+      },
+      max: {
+        x: mesh.geometry.boundingBox.max.x * mesh.scale.x,
+        y: mesh.geometry.boundingBox.max.y * mesh.scale.y,
+        z: mesh.geometry.boundingBox.max.z * mesh.scale.z,
+      },
+    }
+
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
       const y = positions[i + 1];
@@ -44,6 +57,7 @@ export default class GrassFloor {
         this.grassParameters.size,
         this.grassParameters.count,
         {x, y, z},
+        limits
       );
       this.grass.rotation.x = angleX * anglePower;
       this.grass.rotation.z = angleZ * anglePower;
@@ -57,12 +71,14 @@ export default class GrassFloor {
 
   setGround() {
     this.ground = this.resources.items.groundModel.scene;
+
+    const groundMesh = this.ground.children[0];
     this.ground.position.set(0, 0, 0);
-    this.ground.children[0].material = this.material;
-    this.ground.children[0].ignoreEnvironment = true;
+    groundMesh.material = this.material;
+    groundMesh.ignoreEnvironment = true;
     this.scene.add(this.ground);
 
-    this.setGrass(this.ground.children[0]);
+    this.setGrass(groundMesh);
     this.setGrassDebug();
   }
 

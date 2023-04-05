@@ -22,7 +22,7 @@ function interpolate(val, oldMin, oldMax, newMin, newMax) {
 }
 
 export class GrassGeometry extends THREE.BufferGeometry {
-  constructor(size, count) {
+  constructor(size, count, brushPos, limits) {
     super()
 
     const positions = []
@@ -35,19 +35,24 @@ export class GrassGeometry extends THREE.BufferGeometry {
       const radius = (size / 2) * Math.random()
       const theta = Math.random() * 2 * Math.PI
 
-      const x = radius * Math.cos(theta)
-      const y = radius * Math.sin(theta)
-
-      uvs.push(
-        ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
-          interpolate(x, surfaceMin, surfaceMax, 0, 1),
-          interpolate(y, surfaceMin, surfaceMax, 0, 1)
-        ])
-      )
-
-      const blade = this.computeBlade([x, 0, y], i);
-      positions.push(...blade.positions)
-      indices.push(...blade.indices)
+      const x = radius * Math.cos(theta);
+      const y = radius * Math.sin(theta);
+      
+      if (
+        ((brushPos.x+x) > limits.min.x) && ((brushPos.x+x) < limits.max.x) && 
+        ((brushPos.z+y) > limits.min.z) && ((brushPos.z+y) < limits.max.z)
+      ) {
+        uvs.push(
+          ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
+            interpolate(x, surfaceMin, surfaceMax, 0, 1),
+            interpolate(y, surfaceMin, surfaceMax, 0, 1)
+          ])
+        )
+  
+        const blade = this.computeBlade([x, 0, y], i);
+        positions.push(...blade.positions)
+        indices.push(...blade.indices)
+      }
     }
 
     this.setAttribute(
@@ -104,8 +109,11 @@ const cloudTexture = new THREE.TextureLoader().load('/img/cloud.jpg')
 cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 
 class Grass extends THREE.Mesh {
-  constructor(mesh, grassSize, count, pos) {
-    const geometry = new GrassGeometry(grassSize, count);
+  constructor(mesh, grassSize, count, pos, limits) {
+
+    const brushPos = new THREE.Vector3(pos.x * mesh.scale.x, pos.y * mesh.scale.y, pos.z * mesh.scale.z);
+    
+    const geometry = new GrassGeometry(grassSize, count, brushPos, limits);
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
@@ -124,7 +132,7 @@ class Grass extends THREE.Mesh {
     });
     super(geometry, material);
 
-    this.position.set(pos.x * mesh.scale.x, pos.y * mesh.scale.y, pos.z * mesh.scale.z);
+    this.position.copy(brushPos);
   }
 
   update(time) {

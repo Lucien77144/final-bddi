@@ -45,9 +45,9 @@ export default class Cube {
 
   setDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.mesh.position, "x", { min: -15, max: 15, step : .1 });
-      this.debugFolder.addInput(this.mesh.position, "y", { min: -15, max: 15, step : .1 });
-      this.debugFolder.addInput(this.mesh.position, "z", { min: -15, max: 15, step : .1 });
+      this.debugFolder.addInput(this.mesh.position, "x", { min: -15, max: 15, step : .01 });
+      this.debugFolder.addInput(this.mesh.position, "y", { min: -15, max: 15, step : .01 });
+      this.debugFolder.addInput(this.mesh.position, "z", { min: -15, max: 15, step : .01 });
     }
   }
 }

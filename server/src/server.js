@@ -70,6 +70,13 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on('updateUrmaPosition', (data) => {
+    // Send data to heda
+    let room = rooms.find(room => room.id === data.roomId);
+    let heda = room.players.find(player => player.role === 'heda');
+    io.to(heda.id).emit('updateUrmaPosition', data);
+  });
+
 });
 
 function generateRandomId() {

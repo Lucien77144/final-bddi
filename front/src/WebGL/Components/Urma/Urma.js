@@ -4,6 +4,8 @@ import vertexShader from "./shaders/vertexShader.glsl";
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
+import * as MOVE from "@/scripts/movement"
+import { currentPlayer } from "@/scripts/room";
 
 const SIZE_FACTOR = 2;
 const OPTIONS = {
@@ -53,20 +55,22 @@ export default class Urma {
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
+    if(currentPlayer.role === "urma") {
     this.setInputs();
+    }
   }
-
+  
   setGeometry() {
     this.geometry = new BoxGeometry(.75/SIZE_FACTOR, 1.40/SIZE_FACTOR, .75/SIZE_FACTOR);
   }
-
+  
   setMaterial() {
     this.material = new ShaderMaterial({
       fragmentShader,
       vertexShader,
     });
   }
-
+  
   setMesh() {
     this.mesh = new Mesh(this.geometry, this.material);
     this.mesh.position.copy(this.position);
@@ -74,8 +78,9 @@ export default class Urma {
     this.scene.add(this.mesh);
     this.camera.position.z = this.mesh.position.z;
   }
-
+  
   setInputs() {
+    
     ["right", 'left'].forEach((dir) => {
       InputManager.on(dir, (val) => {
         if (val && !data.status[dir].start) {
@@ -88,45 +93,67 @@ export default class Urma {
         }
       });
     })
-  }
+}
 
   updatePosition() {
-    const { mesh, camera, time } = this;
-    const { position: meshPos } = mesh;
-    const { position: cameraPos, rotation: cameraRot } = camera;
-
-    const isOneWay = (data.status.left.start !== data.status.right.start);
-
-    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
-
-    meshPos.copy(this.path.position);
-
-    cameraPos.z = meshPos.z - data.move.delta*5;
-
-    const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-    cameraPos.y = 4 - rdmCamera;
+    if(currentPlayer.role === "urma") {
+      const { mesh, camera, time } = this;
+      const { position: meshPos } = mesh;
+      const { position: cameraPos, rotation: cameraRot } = camera;
+  
+      const isOneWay = (data.status.left.start !== data.status.right.start);
+  
+      data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+  
+      meshPos.copy(this.path.position);
+      
+      cameraPos.z = meshPos.z - data.move.delta*5;
+      
+      const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+      cameraPos.y = 4 - rdmCamera;
+      
+      cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+  
+      MOVE.updateUrmaPosition(meshPos);
+    } else {
+        const { mesh, camera, time } = this;
+        const { position: meshPos } = mesh;
+        const { position: cameraPos, rotation: cameraRot } = camera;
     
-    cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+        const isOneWay = (data.status.left.start !== data.status.right.start);
+    
+        data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+        meshPos.copy(MOVE.urmaPosition);
+        
+        cameraPos.z = meshPos.z - data.move.delta*5;
+        
+        const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+        cameraPos.y = 4 - rdmCamera;
+        
+        cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+      }
   }
 
   update() {
-    if (data.move.velocity == 0) {
-      data.move.flag = true;
 
-      data.status.left.start && (data.status.left.start = false);
-      data.status.right.start && (data.status.right.start = false);
-      data.status.right.end && (data.status.right.end = false);
-      data.status.left.end && (data.status.left.end = false);
-    }
-
-    let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
-    endVelocity = endVelocity > 1 ? 1 : endVelocity;
-
-    data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
-    data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
-    data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
-    
-    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
-    this.updatePosition();
+      if (data.move.velocity == 0) {
+        data.move.flag = true;
+  
+        data.status.left.start && (data.status.left.start = false);
+        data.status.right.start && (data.status.right.start = false);
+        data.status.right.end && (data.status.right.end = false);
+        data.status.left.end && (data.status.left.end = false);
+      }
+  
+      let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
+      endVelocity = endVelocity > 1 ? 1 : endVelocity;
+  
+      data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
+      data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
+      data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
+      
+      this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
+  
+      this.updatePosition();
   }
 }

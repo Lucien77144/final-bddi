@@ -13,6 +13,16 @@ import { socket } from "./socket";
  */
 
 export let currentRoom = room;
+export let urmaPosition = {x : 0, y : 0, z : 0};
+
+export let updateUrmaPosition = (urmaPos) => {
+    socket.emit('updateUrmaPosition', {roomId : room.id, urmaPos});
+}
+
+socket.on('updateUrmaPosition', (data) => {
+    // console.log('Update urma position', data);
+    urmaPosition = data.urmaPos;
+});
 
 socket.on('startMovement', () => {
     console.log('Start movement');

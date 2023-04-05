@@ -87,9 +87,9 @@ export default class FairyPosition {
   }
 
   update() {
-    if (this.positions) {
-      this.updatePosition();
-      this.moveFairy()
-    }
+  //   if (this.positions) {
+  //     this.updatePosition();
+  //     this.moveFairy()
+  //   }
   }
 }

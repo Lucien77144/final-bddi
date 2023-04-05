@@ -5,7 +5,7 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { LuminosityHighPassShader } from 'three/examples/jsm/shaders/LuminosityHighPassShader';
-
+import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
 
 export default class OutlineModule {
     constructor() {
@@ -60,7 +60,13 @@ export default class OutlineModule {
         if (intersects.length > 0 && intersects[0].object.interactive === true) {
             const object = intersects[0].object;
             this.outlinePass.selectedObjects = [object];
-            // console.log(object);
+            const interactText = document.querySelector('.interact-text');
+            interactText.classList.remove('hidden');
+            const cssObject = new CSS3DObject(interactText);
+            cssObject.position.set(object.position.x, object.position.y + 1, object.position.z);
+            this.scene.add(cssObject);
+            console.log(cssObject);
+
         } else {
             this.outlinePass.selectedObjects = [];
         }

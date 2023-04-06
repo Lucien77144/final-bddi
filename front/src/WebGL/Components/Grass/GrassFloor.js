@@ -24,7 +24,7 @@ export default class GrassFloor {
     this.setGround();
   }
 
-  setGrass(mesh) {
+  setGrass(mesh, limitBlend) {
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
@@ -40,6 +40,7 @@ export default class GrassFloor {
         y: mesh.geometry.boundingBox.max.y * mesh.scale.y,
         z: mesh.geometry.boundingBox.max.z * mesh.scale.z,
       },
+      params : limitBlend,
     }
 
     for (var i = 0; i < positions.length; i += 3) {
@@ -78,7 +79,26 @@ export default class GrassFloor {
     groundMesh.ignoreEnvironment = true;
     this.scene.add(this.ground);
 
-    this.setGrass(groundMesh);
+    let limitBlend = {
+      right: {
+        y: 0.2,
+        offset: 25, // %, 0 = disabled
+      },
+      // left: {
+      //   y: 0.15,
+      //   offset: 15, // %, 0 = disabled
+      // },
+      // top: {
+      //   y: 0.15,
+      //   offset: 15, // %, 0 = disabled
+      // },
+      // bottom: {
+      //   y: 0.5,
+      //   offset: 15, // %, 0 = disabled
+      // },
+    };
+
+    this.setGrass(groundMesh, limitBlend);
     this.setGrassDebug();
   }
 
@@ -98,6 +118,7 @@ export default class GrassFloor {
             });
           })
         });
+
       this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
@@ -106,6 +127,7 @@ export default class GrassFloor {
             });
           })
         });
+
       this.debugFolder.addInput(this.material, "wireframe");
     }
   }

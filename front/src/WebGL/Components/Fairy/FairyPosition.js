@@ -55,7 +55,7 @@ export default class FairyPosition {
           this.positions[previous + 2]
         );
 
-        this.lerpPoint = currentPoint.lerp(previousPoint, 0.98);
+        this.lerpPoint = currentPoint.lerp(previousPoint, 0.97);
 
         this.positions[i3] = this.lerpPoint.x;
         this.positions[i3 + 1] = this.lerpPoint.y;
@@ -63,7 +63,7 @@ export default class FairyPosition {
       }
     }
   }
-  
+
   moveFairy() {
     // this.positions[this.positions.length - 3] = this.path.position.x;
     this.fairy.mesh.position.set(
@@ -89,7 +89,7 @@ export default class FairyPosition {
   update() {
     if (this.positions) {
       this.updatePosition();
-      this.moveFairy()
+      this.moveFairy();
     }
   }
 }

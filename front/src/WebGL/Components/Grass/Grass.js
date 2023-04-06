@@ -36,20 +36,26 @@ export class GrassGeometry extends THREE.BufferGeometry {
       const theta = Math.random() * 2 * Math.PI
 
       const x = radius * Math.cos(theta);
-      const y = radius * Math.sin(theta);
+      const z = radius * Math.sin(theta);
+      const convPos = {
+        x: brushPos.x + x,
+        y: brushPos.y,
+        z: brushPos.z + z,
+      }
       
       if (
-        ((brushPos.x+x) > limits.min.x) && ((brushPos.x+x) < limits.max.x) && 
-        ((brushPos.z+y) > limits.min.z) && ((brushPos.z+y) < limits.max.z)
+        this.getSquareLimits(convPos, limits)
+        &&
+        this.buildBlendLimits(convPos, limits)
       ) {
         uvs.push(
           ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
             interpolate(x, surfaceMin, surfaceMax, 0, 1),
-            interpolate(y, surfaceMin, surfaceMax, 0, 1)
+            interpolate(z, surfaceMin, surfaceMax, 0, 1)
           ])
         )
   
-        const blade = this.computeBlade([x, 0, y], i);
+        const blade = this.computeBlade([x, 0, z], i);
         positions.push(...blade.positions)
         indices.push(...blade.indices)
       }
@@ -62,6 +68,33 @@ export class GrassGeometry extends THREE.BufferGeometry {
     this.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2))
     this.setIndex(indices)
     this.computeVertexNormals()
+  }
+
+  getSquareLimits(pos, limit) {
+    return pos.x > limit.min.x && pos.x < limit.max.x && pos.z > limit.min.z && pos.z < limit.max.z;
+  }
+
+  buildBlendLimits(pos, limits) {
+    const squareSize = {
+      x: limits.max.x - limits.min.x,
+      z: limits.max.z - limits.min.z,
+    }
+
+    let result = false;
+    Object.entries(limits.params)
+      .filter(([_, { offset }]) => offset > 0)
+      .forEach((e) => {
+        const axe = (e[0] == 'right' || e[0] == 'left'); // true = z, false = x
+        const dir = (e[0] == 'right' || e[0] == 'top') ? -1 : 1; 
+        const offset = (axe ? squareSize.z / 100 * e[1].offset : squareSize.x / 100 * e[1].offset) * dir;
+
+        const limit = limits[dir > 0 ? 'max' : 'min'][axe ? 'z' : 'x'];
+        const newPos = pos[axe ? 'z' : 'x'] + offset;
+
+        result = result ? result : !(dir < 0 ? newPos > limit : !(newPos > limit));
+        result = result && !(pos.y > e[1].y);
+      })
+    return !result;
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl

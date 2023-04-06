@@ -55,7 +55,7 @@ export default class FairyPosition {
           this.positions[previous + 2]
         );
 
-        this.lerpPoint = currentPoint.lerp(previousPoint, 0.97);
+        this.lerpPoint = currentPoint.lerp(previousPoint, 0.97gi);
 
         this.positions[i3] = this.lerpPoint.x;
         this.positions[i3 + 1] = this.lerpPoint.y;

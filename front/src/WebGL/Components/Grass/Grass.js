@@ -1,19 +1,28 @@
 import * as THREE from 'three';
-import vertexShader from './shaders/vertexShader.vert';
-import fragmentShader from './shaders/fragmentShader.frag';
+import vertexShader from './shaders/vertexShader.glsl';
+import fragmentShader from './shaders/fragmentShader.glsl';
 
-const BLADE_WIDTH = 0.1
-const BLADE_HEIGHT = 0.01
+const BLADE_WIDTH = 0.05
+const BLADE_HEIGHT = 0.005
 const BLADE_HEIGHT_VARIATION = 0.5
 const BLADE_VERTEX_COUNT = 5
 const BLADE_TIP_OFFSET = 0.1
+
+let grassColors = {
+  color1: '#0a9044',
+  color2: '#0ca855',
+  color3: '#148538',
+  color4: '#15293b',
+  color5: '#348bd9',
+  baseColor: '#11382a',
+}
 
 function interpolate(val, oldMin, oldMax, newMin, newMax) {
   return ((val - oldMin) * (newMax - newMin)) / (oldMax - oldMin) + newMin
 }
 
 export class GrassGeometry extends THREE.BufferGeometry {
-  constructor(size, count) {
+  constructor(size, count, brushPos, limits) {
     super()
 
     const positions = []
@@ -26,19 +35,24 @@ export class GrassGeometry extends THREE.BufferGeometry {
       const radius = (size / 2) * Math.random()
       const theta = Math.random() * 2 * Math.PI
 
-      const x = radius * Math.cos(theta)
-      const y = radius * Math.sin(theta)
-
-      uvs.push(
-        ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
-          interpolate(x, surfaceMin, surfaceMax, 0, 1),
-          interpolate(y, surfaceMin, surfaceMax, 0, 1)
-        ])
-      )
-
-      const blade = this.computeBlade([x, 0, y], i)
-      positions.push(...blade.positions)
-      indices.push(...blade.indices)
+      const x = radius * Math.cos(theta);
+      const y = radius * Math.sin(theta);
+      
+      if (
+        ((brushPos.x+x) > limits.min.x) && ((brushPos.x+x) < limits.max.x) && 
+        ((brushPos.z+y) > limits.min.z) && ((brushPos.z+y) < limits.max.z)
+      ) {
+        uvs.push(
+          ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
+            interpolate(x, surfaceMin, surfaceMax, 0, 1),
+            interpolate(y, surfaceMin, surfaceMax, 0, 1)
+          ])
+        )
+  
+        const blade = this.computeBlade([x, 0, y], i);
+        positions.push(...blade.positions)
+        indices.push(...blade.indices)
+      }
     }
 
     this.setAttribute(
@@ -48,7 +62,6 @@ export class GrassGeometry extends THREE.BufferGeometry {
     this.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2))
     this.setIndex(indices)
     this.computeVertexNormals()
-
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
@@ -71,9 +84,9 @@ export class GrassGeometry extends THREE.BufferGeometry {
     const tc = bendVec.map((n, i) => n * BLADE_TIP_OFFSET + center[i])
 
     // Attenuate height
-    tl[1] += height / 2
-    tr[1] += height / 2
-    tc[1] += height
+    tl[1] += height / 2;
+    tr[1] += height / 2;
+    tc[1] += height;
 
     return {
       positions: [...bl, ...br, ...tr, ...tl, ...tc],
@@ -96,30 +109,35 @@ const cloudTexture = new THREE.TextureLoader().load('/img/cloud.jpg')
 cloudTexture.wrapS = cloudTexture.wrapT = THREE.RepeatWrapping
 
 class Grass extends THREE.Mesh {
-  constructor(size, grassSize, count, x, y, z) {
-    const geometry = new GrassGeometry(grassSize, count);
+  constructor(mesh, grassSize, count, pos, limits) {
+
+    const brushPos = new THREE.Vector3(pos.x * mesh.scale.x, pos.y * mesh.scale.y, pos.z * mesh.scale.z);
+    
+    const geometry = new GrassGeometry(grassSize, count, brushPos, limits);
     const material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uColorScale: { value: Math.floor(Math.random()*10)/10 },
-        uColor1: { value: new THREE.Color(0x96d96f) },
-        uColor2: { value: new THREE.Color(0x73b247) },
-        uColor3: { value: new THREE.Color(0x3c9464) },
-        uColor4: { value: new THREE.Color(0x075047) },
-        uColor5: { value: new THREE.Color(0x0a353b) },
+        uColor1: { value: new THREE.Color(grassColors.color1) },
+        uColor2: { value: new THREE.Color(grassColors.color2) },
+        uColor3: { value: new THREE.Color(grassColors.color3) },
+        uColor4: { value: new THREE.Color(grassColors.color4) },
+        uColor5: { value: new THREE.Color(grassColors.color5) },
+        uBaseColor: { value: new THREE.Color(grassColors.baseColor) },
       },
       side: THREE.DoubleSide,
+      alphaTest: 0,
       vertexShader,
-      fragmentShader
+      fragmentShader,
     });
     super(geometry, material);
 
-    this.position.set(x * size.x, y * size.y, z * size.z);
+    this.position.copy(brushPos);
   }
 
   update(time) {
     this.material.uniforms.uTime.value = time;
-  }
+  };
 
   updateGrass(size, count) {
     this.material.uniforms.uTime.value = 0;

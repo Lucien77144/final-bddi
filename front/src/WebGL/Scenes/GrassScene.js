@@ -1,10 +1,12 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Vector3 } from "three";
-import GrassFloor from "../Components/Grass/GrassFloor.js";
-import Urma from "../Components/Urma/Urma.js";
-import Column from "../Components/Column/Column.js";
+import GrassFloor from "components/Grass/GrassFloor.js";
+import Urma from "components/Urma/Urma.js";
+import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
+import Rock from "../Components/Rock/Rock.js";
+import Cube from "../Components/Cube/Cube.js";
 
 export default class GrassScene {
   constructor() {
@@ -31,6 +33,7 @@ export default class GrassScene {
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))
     this.urma = new Urma(new Vector3(0, 5, 8));
+    this.cube = new Cube(new Vector3(6.36, 0, 10));
     this.column = new Column(new Vector3(0, 0, 0));
   }
 

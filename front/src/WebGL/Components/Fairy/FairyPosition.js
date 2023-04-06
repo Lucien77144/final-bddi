@@ -1,12 +1,14 @@
 import * as THREE from "three";
 
-import MouseMove from "../Utils/MouseMove.js";
+import MouseMove from "utils/MouseMove.js";
 
 import Cube from "components/Cube/Cube.js";
+import PathUrma from "../Urma/PathUrma";
 
 export default class FairyPosition {
   constructor() {
     this.fairy = new Cube();
+    this.path = new PathUrma();
 
     this.fairy.mesh.scale.set(0.2, 0.2, 0.2);
 
@@ -63,6 +65,7 @@ export default class FairyPosition {
   }
   
   moveFairy() {
+    // this.positions[this.positions.length - 3] = this.path.position.x;
     this.fairy.mesh.position.set(
       this.positions[this.positions.length - 3],
       this.positions[this.positions.length - 2],

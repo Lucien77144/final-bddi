@@ -1,6 +1,6 @@
-import Experience from "../Experience.js";
+import Experience from "webgl/Experience.js";
 import {
-  DirectionalLight,
+  AmbientLight,
   Mesh,
   MeshStandardMaterial,
   sRGBEncoding,
@@ -23,11 +23,7 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.sunLight = new DirectionalLight("#ffffff", 4);
-    this.sunLight.castShadow = true;
-    this.sunLight.shadow.camera.far = 15;
-    this.sunLight.shadow.mapSize.set(1024, 1024);
-    this.sunLight.shadow.normalBias = 0.05;
+    this.sunLight = new AmbientLight("#96ffd6", 2);
     this.sunLight.position.set(3.5, 2, -1.25);
     this.sunLight.name = "sunLight";
     this.scene.add(this.sunLight);
@@ -40,45 +36,25 @@ export default class Environment {
         step: 0.001,
         label: "sunLightIntensity",
       });
-
-      this.debugFolder.addInput(this.sunLight.position, "x", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightX",
-      });
-
-      this.debugFolder.addInput(this.sunLight.position, "y", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightY",
-      });
-
-      this.debugFolder.addInput(this.sunLight.position, "z", {
-        min: -5,
-        max: 5,
-        step: 0.001,
-        label: "sunLightZ",
-      });
     }
   }
 
   setEnvironmentMap() {
     this.environmentMap = {};
-    this.environmentMap.intensity = 0.4;
+    this.environmentMap.intensity = 1.5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
     this.environmentMap.texture.encoding = sRGBEncoding;
 
-    this.scene.environment = this.environmentMap.texture;
+    // this.scene.environment = this.environmentMap.texture;
 
     this.environmentMap.updateMaterials = () => {
       this.scene.traverse((child) => {
         if (
           child instanceof Mesh &&
-          child.material instanceof MeshStandardMaterial
+          child.material instanceof MeshStandardMaterial &&
+          !child.ignoreEnvironment
         ) {
-          child.material.envMap = this.environmentMap.texture;
+          // child.material.envMap = this.environmentMap.texture;
           child.material.envMapIntensity = this.environmentMap.intensity;
           child.material.needsUpdate = true;
         }

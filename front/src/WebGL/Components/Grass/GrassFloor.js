@@ -1,12 +1,6 @@
-import Experience from "../Experience.js";
-import Grass from "./Grass/Grass.js";
+import Experience from "webgl/Experience.js";
+import Grass from "./Grass.js";
 import * as THREE from "three";
-
-import {
-  Mesh,
-  RepeatWrapping,
-  sRGBEncoding,
-} from "three";
 
 export default class GrassFloor {
   constructor() {
@@ -17,28 +11,36 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 750,
+      count: 500,
       size: 3,
     };
     this.grassGroups = [];
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder({ title: "grass" });
+      this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
     }
 
-    this.setTextures();
-    this.setMesh();
+    this.setMaterials();
     this.setGround();
-
-    this.time.on("tick", () => {
-      this.update();
-    });
   }
 
   setGrass(mesh) {
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
+
+    const limits = {
+      min: {
+        x: mesh.geometry.boundingBox.min.x * mesh.scale.x,
+        y: mesh.geometry.boundingBox.min.y * mesh.scale.y,
+        z: mesh.geometry.boundingBox.min.z * mesh.scale.z,
+      },
+      max: {
+        x: mesh.geometry.boundingBox.max.x * mesh.scale.x,
+        y: mesh.geometry.boundingBox.max.y * mesh.scale.y,
+        z: mesh.geometry.boundingBox.max.z * mesh.scale.z,
+      },
+    }
 
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
@@ -50,7 +52,13 @@ export default class GrassFloor {
       const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
       const angleZ = -Math.atan2(normal.x, normal.y);
 
-      this.grass = new Grass(mesh.scale, this.grassParameters.size, this.grassParameters.count, x, y, z);
+      this.grass = new Grass(
+        mesh,
+        this.grassParameters.size,
+        this.grassParameters.count,
+        {x, y, z},
+        limits
+      );
       this.grass.rotation.x = angleX * anglePower;
       this.grass.rotation.z = angleZ * anglePower;
   
@@ -61,9 +69,28 @@ export default class GrassFloor {
     this.scene.add(group);
   }
 
+  setGround() {
+    this.ground = this.resources.items.groundModel.scene;
+
+    const groundMesh = this.ground.children[0];
+    this.ground.position.set(0, 0, 0);
+    groundMesh.material = this.material;
+    groundMesh.ignoreEnvironment = true;
+    this.scene.add(this.ground);
+
+    this.setGrass(groundMesh);
+    this.setGrassDebug();
+  }
+
+  setMaterials() {
+    this.material = new THREE.MeshBasicMaterial({
+      color: new THREE.Color("#040f0b"),
+    });
+  }
+
   setGrassDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 100, max: 10000, step : 50 })
+      this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
             group.children.forEach((e) => {
@@ -79,6 +106,7 @@ export default class GrassFloor {
             });
           })
         });
+      this.debugFolder.addInput(this.material, "wireframe");
     }
   }
 
@@ -88,38 +116,5 @@ export default class GrassFloor {
         e.update(this.time.elapsed);
       });
     })
-  }
-
-  setGround() {
-    this.ground = this.resources.items.groundModel.scene;
-    this.ground.position.set(0, 0, 0);
-    this.scene.add(this.ground);
-
-    this.setGrass(this.ground.children[2]);
-    this.setGrass(this.ground.children[3]);
-    this.setGrassDebug();
-  }
-
-  setTextures() {
-    this.textures = {};
-
-    this.textures.color = this.resources.items.grassColorTexture;
-    this.textures.color.encoding = sRGBEncoding;
-    this.textures.color.repeat.set(1.5, 1.5);
-    this.textures.color.wrapS = RepeatWrapping;
-    this.textures.color.wrapT = RepeatWrapping;
-
-    this.textures.normal = this.resources.items.grassNormalTexture;
-    this.textures.normal.repeat.set(1.5, 1.5);
-    this.textures.normal.wrapS = RepeatWrapping;
-    this.textures.normal.wrapT = RepeatWrapping;
-  }
-
-  setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.mesh.rotation.x = -Math.PI * 0.5;
-    this.mesh.receiveShadow = true;
-    this.mesh.name = "floor";
-    this.scene.add(this.mesh);
   }
 }

@@ -53,7 +53,7 @@ export class GrassGeometry extends THREE.BufferGeometry {
           ])
         )
   
-        const blade = this.computeBlade([x, 0, z], i);
+        const blade = this.computeBlade([x, blendLimits.y, z], i);
         positions.push(...blade.positions)
         indices.push(...blade.indices)
       }
@@ -97,7 +97,7 @@ export class GrassGeometry extends THREE.BufferGeometry {
         end: factor * (e.offset_start + e.offset_end),
       };
     }
-    const getNewPos = (offset) => {
+    const getPosFromOffsets = (offset) => {
       return {
         start: pos[edge.axe] + offset.start,
         end: pos[edge.axe] + offset.end,
@@ -110,19 +110,32 @@ export class GrassGeometry extends THREE.BufferGeometry {
     Object.entries(limits.params)
       .filter(([_, { offset_start }]) => (offset_start >= 0) && (offset_start < 100))
       .forEach((e) => {
+        if (e[1].offset_end + e[1].offset_start > 100) {
+          e[1].offset_end = 100 - e[1].offset_start;
+        }
         edge = getEdge(e[0]);
         if (!edge) return;
 
         const offset = getOffset(e[1]);
-        const newPos = getNewPos(offset);
+        const posOffset = getPosFromOffsets(offset);
         const border = limits[edge.dir][edge.axe];
 
-        const overLimit = toDir( newPos.start > border );
-        const lowerLimit = !toDir( !(newPos.end > border) );
+        const overLimit = toDir( posOffset.start > border );
+        const lowerLimit = !toDir( !(posOffset.end > border) );
         const isYTooLow = !(pos.y > e[1].y);
 
-        // if lowerLimit is reached, y is too low or overLimit is reached, we don't print
         result.status ||= lowerLimit && isYTooLow || overLimit; // false = print
+
+        if(!result.status) {
+          const currPos = pos[edge.axe];
+          const min = border - offset.end;
+          const max = border - offset.start;
+          
+          const delta = currPos / (max - min);
+          const maxHeight = BLADE_HEIGHT + 1 * BLADE_HEIGHT_VARIATION;
+
+          result.pos.y = Math.min(0 - delta * maxHeight, 0);
+        }
       })
     return !result.status && result.pos;
   }

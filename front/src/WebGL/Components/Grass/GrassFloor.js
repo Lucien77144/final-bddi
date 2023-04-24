@@ -83,7 +83,7 @@ export default class GrassFloor {
       right: {
         y: 0.5,
         offset_start: 10, // %, -1 = disabled,
-        offset_end: 10,
+        offset_end: 20,
       },
       // left: {
       //   y: 0.15,
@@ -96,9 +96,9 @@ export default class GrassFloor {
       //   offset_end: 25,
       // },
       // bottom: {
-      //   y: 0.5,
+      //   y: -1,
       //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 10,
+      //   offset_end: 50,
       // },
     };
 

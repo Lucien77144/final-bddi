@@ -44,7 +44,9 @@ export class GrassGeometry extends THREE.BufferGeometry {
       }
 
       const blendLimits = this.buildBlendLimits(convPos, limits);
-      
+      // console.log(blendLimits);
+      // debugger
+
       if (this.getSquareLimits(convPos, limits) && blendLimits) {
         uvs.push(
           ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
@@ -131,20 +133,21 @@ export class GrassGeometry extends THREE.BufferGeometry {
           const min = border - offset.end;
           const max = border - offset.start;
           
-          const delta = currPos / (max - min);
-          const maxHeight = BLADE_HEIGHT + 1 * BLADE_HEIGHT_VARIATION;
+          const delta = (currPos-min) / (max - min);
+          const maxHeight = BLADE_HEIGHT + BLADE_HEIGHT_VARIATION;
+          const newY = Math.min(0 - delta * maxHeight, 0);
 
-          result.pos.y = Math.min(0 - delta * maxHeight, 0);
+          result.pos.y = Math.min(newY, result.pos.y);
         }
-      })
+      });
     return !result.status && result.pos;
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
   // TODO: reduce vertex count, optimize & possibly move to GPU
   computeBlade(center, index = 0) {
-    const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION
-    const vIndex = index * BLADE_VERTEX_COUNT
+    const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION;
+    const vIndex = index * BLADE_VERTEX_COUNT;
 
     // Randomize blade orientation and tip angle
     const yaw = Math.random() * Math.PI * 2

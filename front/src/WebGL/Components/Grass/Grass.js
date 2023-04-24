@@ -118,16 +118,16 @@ export class GrassGeometry extends THREE.BufferGeometry {
         const border = limits[edge.dir][edge.axe];
 
         const overLimit = newPos.start > border;
-        const lowerLimit = newPos.start > border;
+        const lowerLimit = newPos.end > border;
 
         const dirStatus = {
-          over : toDir(overLimit),
-          lower : toDir(!lowerLimit),
+          over : toDir(!overLimit),
+          lower : toDir(lowerLimit),
         }
 
-        result.status = result.status || dirStatus.over;
+        result.status = result.status || dirStatus.lower;
         result.status = result.status && !(pos.y > e[1].y);
-        // result.status = result.status || c.under;
+        result.status = !dirStatus.over ? true : result.status;
       })
     return !result.status ? result.pos : false;
   }

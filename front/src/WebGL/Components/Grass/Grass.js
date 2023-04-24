@@ -83,29 +83,48 @@ export class GrassGeometry extends THREE.BufferGeometry {
       pos: { ...pos },
     };
 
+    const getEdge = (e) => {
+      return {
+        axe: (e == 'right' || e == 'left') ? 'z' : 'x',
+        dir: (e == 'right' || e == 'top') ? 'min' : 'max',
+      }
+    }
     const getOffset = (o, e) => {
       const factor = squareSize[o.axe] / 100 * (o.dir == 'min' ? -1 : 1);
       return {
         start: factor * e.offset_start,
-        end: factor * e.offset_end,
+        end: factor * (e.offset_start + e.offset_end),
       };
+    }
+    const getNewPos = (edge, offset) => {
+      return {
+        start: pos[edge.axe] + offset.start,
+        end: pos[edge.axe] + offset.end,
+      };
+    }
+    const toDir = (dir, val) => {
+      return dir == 'min' ? !val : val;
     }
 
     Object.entries(limits.params)
-      .filter(([_, { offset_start }]) => (offset_start > 0))
+      .filter(([_, { offset_start }]) => (offset_start >= 0) && (offset_start < 100))
       .forEach((e) => {
-        const o = {
-          axe: (e[0] == 'right' || e[0] == 'left') ? 'z' : 'x',
-          dir: (e[0] == 'right' || e[0] == 'top') ? 'min' : 'max',
+        const edge = getEdge(e[0]);
+        const offset = getOffset(edge, e[1]);
+        const newPos = getNewPos(edge, offset);
+        const border = limits[edge.dir][edge.axe];
+
+        const overLimit = newPos.start > border;
+        const lowerLimit = newPos.start > border;
+
+        const dirStatus = {
+          over : toDir(edge.dir, overLimit),
+          lower : toDir(edge.dir, !lowerLimit),
         }
 
-        const offset = getOffset(o, e[1]);
-
-        const limit = limits[o.dir][o.axe];
-        const newPos = pos[o.axe] + offset.start;
-
-        result.status = result.status ? result.status : !(o.dir == 'min' ? newPos > limit : !(newPos > limit));
+        result.status = result.status || dirStatus.over;
         result.status = result.status && !(pos.y > e[1].y);
+        // result.status = result.status || c.under;
       })
     return !result.status ? result.pos : false;
   }

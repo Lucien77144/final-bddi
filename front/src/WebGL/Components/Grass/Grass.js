@@ -117,19 +117,14 @@ export class GrassGeometry extends THREE.BufferGeometry {
         const newPos = getNewPos(offset);
         const border = limits[edge.dir][edge.axe];
 
-        const overLimit = newPos.start > border;
-        const lowerLimit = newPos.end > border;
+        const overLimit = toDir( newPos.start > border );
+        const lowerLimit = !toDir( !(newPos.end > border) );
+        const isYTooLow = !(pos.y > e[1].y);
 
-        const dirStatus = {
-          over : toDir(!overLimit),
-          lower : toDir(lowerLimit),
-        }
-
-        result.status = result.status || dirStatus.lower;
-        result.status = result.status && !(pos.y > e[1].y);
-        result.status = !dirStatus.over ? true : result.status;
+        // if lowerLimit is reached, y is too low or overLimit is reached, we don't print
+        result.status ||= lowerLimit && isYTooLow || overLimit; // false = print
       })
-    return !result.status ? result.pos : false;
+    return !result.status && result.pos;
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl

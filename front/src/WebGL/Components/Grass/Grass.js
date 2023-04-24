@@ -83,43 +83,46 @@ export class GrassGeometry extends THREE.BufferGeometry {
       pos: { ...pos },
     };
 
+    let edge;
     const getEdge = (e) => {
       return {
         axe: (e == 'right' || e == 'left') ? 'z' : 'x',
         dir: (e == 'right' || e == 'top') ? 'min' : 'max',
       }
     }
-    const getOffset = (o, e) => {
-      const factor = squareSize[o.axe] / 100 * (o.dir == 'min' ? -1 : 1);
+    const getOffset = (e) => {
+      const factor = squareSize[edge.axe] / 100 * (edge.dir == 'min' ? -1 : 1);
       return {
         start: factor * e.offset_start,
         end: factor * (e.offset_start + e.offset_end),
       };
     }
-    const getNewPos = (edge, offset) => {
+    const getNewPos = (offset) => {
       return {
         start: pos[edge.axe] + offset.start,
         end: pos[edge.axe] + offset.end,
       };
     }
-    const toDir = (dir, val) => {
-      return dir == 'min' ? !val : val;
+    const toDir = (val) => {
+      return edge.dir == 'min' ? !val : val;
     }
 
     Object.entries(limits.params)
       .filter(([_, { offset_start }]) => (offset_start >= 0) && (offset_start < 100))
       .forEach((e) => {
-        const edge = getEdge(e[0]);
-        const offset = getOffset(edge, e[1]);
-        const newPos = getNewPos(edge, offset);
+        edge = getEdge(e[0]);
+        if (!edge) return;
+
+        const offset = getOffset(e[1]);
+        const newPos = getNewPos(offset);
         const border = limits[edge.dir][edge.axe];
 
         const overLimit = newPos.start > border;
         const lowerLimit = newPos.start > border;
 
         const dirStatus = {
-          over : toDir(edge.dir, overLimit),
-          lower : toDir(edge.dir, !lowerLimit),
+          over : toDir(overLimit),
+          lower : toDir(!lowerLimit),
         }
 
         result.status = result.status || dirStatus.over;

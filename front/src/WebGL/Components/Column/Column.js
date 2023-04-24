@@ -34,6 +34,8 @@ export default class Column {
     this.model.name = this.name;
     this.model.children.forEach((child) => {
       child.interactive = true;
+      child.dialogue = `I'm the column ${child.name}!`;
+      child.dialogGroup = "test"
     });
     console.log(this.model);
     if (this.debug.active) {

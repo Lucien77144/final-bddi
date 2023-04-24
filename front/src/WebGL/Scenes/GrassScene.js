@@ -7,6 +7,7 @@ import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
+import DialogueBox from "../Components/DialogueBox.js";
 
 export default class GrassScene {
   constructor() {
@@ -35,11 +36,13 @@ export default class GrassScene {
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.cube = new Cube(new Vector3(-2.7, 3, -.4));
     this.column = new Column(new Vector3(0, 0, 0));
+    this.dialogueBox = new DialogueBox();
   }
 
   update() {
     if (this.fairyDust) this.fairyDust.update();
     if (this.floor) this.floor.update();
     if (this.urma) this.urma.update();
+    if (this.dialogueBox) this.dialogueBox.update();
   }
 }

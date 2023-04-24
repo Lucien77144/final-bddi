@@ -5,7 +5,8 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
 import { LuminosityHighPassShader } from 'three/examples/jsm/shaders/LuminosityHighPassShader';
-import { CSS3DObject } from 'three/examples/jsm/renderers/CSS3DRenderer';
+import DialogueBox from '../Components/DialogueBox';
+
 
 export default class OutlineModule {
     constructor() {
@@ -13,7 +14,8 @@ export default class OutlineModule {
         this.scene = this.experience.scene;
         this.renderer = this.experience.renderer;
         this.camera = this.experience.camera;
-        this.grassScene = this.experience.activeScene
+        this.grassScene = this.experience.activeScene;
+        this.dialogueBox = undefined
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
         this.composer = new EffectComposer(this.renderer.instance);
@@ -62,10 +64,13 @@ export default class OutlineModule {
             this.outlinePass.selectedObjects = [object];
             const interactText = document.querySelector('.interact-text');
             interactText.classList.remove('hidden');
-            const cssObject = new CSS3DObject(interactText);
-            cssObject.position.set(object.position.x, object.position.y + 1, object.position.z);
-            this.scene.add(cssObject);
-            console.log(cssObject);
+            // Translate interact text on top of object position
+            const screenPosition = object.position.clone();
+            screenPosition.project(this.camera.instance);
+            screenPosition.x = (screenPosition.x + 1)  * window.innerWidth / 2;
+            screenPosition.y = -(screenPosition.y - 1)  * window.innerHeight / 2;
+            // Translate interact text on top of object position
+            interactText.style.transform = `translate3d(${screenPosition.x}px, ${screenPosition.y}px, 0)`;            
 
         } else {
             this.outlinePass.selectedObjects = [];

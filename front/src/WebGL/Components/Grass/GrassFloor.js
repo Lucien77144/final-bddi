@@ -81,28 +81,28 @@ export default class GrassFloor {
 
     let limitBlend = {
       right: {
-        y: 0.5,
-        offset_start: 10, // %, -1 = disabled,
-        offset_end: 20,
-        fade_density: 15,
+        y: -100, // y coordinates (under is not printed)
+        offset_start: 0, // %, -1 = disabled,
+        offset_end: 50, // %
+        fade_density: 25, // %
       },
       // left: {
-      //   y: 0.15,
+      //   y: 0.15, // y coordinates (under is not printed)
       //   offset_start: 20, // %, -1 = disabled
-      //   offset_end: 20,
-      //   fade_density: 25,
+      //   offset_end: 20, // %
+      //   fade_density: 25, // %
       // },
       // top: {
-      //   y: 0.15,
-      //   offset_start: 15, // %, -1 = disabled
-      //   offset_end: 25,
-      //   fade_density: 25,
+      //   y: -100, // y coordinates (under is not printed)
+      //   offset_start: 0, // %, -1 = disabled
+      //   offset_end: 25, // %
+      //   fade_density: 25, // %
       // },
       // bottom: {
-      //   y: -1,
+      //   y: -1, // y coordinates (under is not printed)
       //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 50,
-      //   fade_density: 25,
+      //   offset_end: 50, // %
+      //   fade_density: 25, // %
       // },
     };
 

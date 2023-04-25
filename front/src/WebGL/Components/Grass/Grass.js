@@ -85,59 +85,71 @@ export class GrassGeometry extends THREE.BufferGeometry {
       pos: { ...pos },
     };
 
-    let edge;
-    const getEdge = (e) => {
-      return {
-        axe: (e == 'right' || e == 'left') ? 'z' : 'x',
-        dir: (e == 'right' || e == 'top') ? 'min' : 'max',
-      }
-    }
-    const getOffset = (e) => {
-      const factor = squareSize[edge.axe] / 100 * (edge.dir == 'min' ? -1 : 1);
-      return {
+    /**
+     * Get the current edge infos
+     * @param {*} e Params of the edge
+     * @returns { Object } Edge infos { axe, dir, border, offset }
+     */
+    const getCurrEdge = (e) => {
+      const axe = e.dir === 'right' || e.dir === 'left' ? 'z' : 'x';
+      const dir = e.dir === 'right' || e.dir === 'top' ? 'min' : 'max';
+      const border = limits[dir][axe];
+      const factor = squareSize[axe] / 100 * (dir === 'min' ? -1 : 1);
+      const fixedOffsetEnd = e.offset_end + e.offset_start > 100 ? 100 - e.offset_start : e.offset_end;
+      const offset = {
         start: factor * e.offset_start,
-        end: factor * (e.offset_start + e.offset_end),
+        end: factor * (e.offset_start + fixedOffsetEnd)
       };
-    }
-    const getPosFromOffsets = (offset) => {
+      return { axe, dir, border, offset };
+    };    
+
+    /**
+     * Get the 2 limits of the grass on the plane
+     * @param {*} edge Edge informations
+     * @returns { Object } Limits infos { over, lower }
+     */
+    const getLimits = (edge) => {
+      const toDir = (val) => edge.dir == 'min' ? !val : val;
       return {
-        start: pos[edge.axe] + offset.start,
-        end: pos[edge.axe] + offset.end,
+        over: toDir(pos[edge.axe] + edge.offset.start > edge.border),
+        lower: toDir((pos[edge.axe] + edge.offset.end > edge.border)),
       };
     }
-    const toDir = (val) => {
-      return edge.dir == 'min' ? !val : val;
+
+    /**
+     * Get the Y position of the grass from offsets
+     * @param {*} edge Edge informations
+     * @returns { number } Y position
+     */
+    const getPosYFromOffsets = (edge) => {
+      const { axe, border, offset } = edge;
+      const delta = (pos[axe] - (border - offset.end)) / (offset.end - offset.start);
+      return Math.min(0, -delta * (BLADE_HEIGHT + BLADE_HEIGHT_VARIATION));
+    };
+
+    /**
+     * Randomise the print of grass from density factor provided and Y position
+     * @param {*} posY Y position of the grass
+     * @param {*} factor Fade density factor
+     * @returns { boolean } True to print, false to not print
+     */
+    const unStackTransition = (posY, factor) => {
+      return Math.random() * posY > -(BLADE_HEIGHT + BLADE_HEIGHT_VARIATION) * (factor/100);
     }
 
     Object.entries(limits.params)
       .filter(([_, { offset_start }]) => (offset_start >= 0) && (offset_start < 100))
+      .map((e) => { return { ...e[1], dir: e[0] } })
       .forEach((e) => {
-        if (e[1].offset_end + e[1].offset_start > 100) {
-          e[1].offset_end = 100 - e[1].offset_start;
-        }
-        edge = getEdge(e[0]);
-        if (!edge) return;
+        const edge = getCurrEdge(e);
+        const limits = getLimits(edge);
+        const isYTooLow = !(pos.y > e.y);
 
-        const offset = getOffset(e[1]);
-        const posOffset = getPosFromOffsets(offset);
-        const border = limits[edge.dir][edge.axe];
-
-        const overLimit = toDir( posOffset.start > border );
-        const lowerLimit = !toDir( !(posOffset.end > border) );
-        const isYTooLow = !(pos.y > e[1].y);
-
-        result.status ||= lowerLimit && isYTooLow || overLimit; // false = print
+        result.status ||= limits.lower && isYTooLow || limits.over; // false = print
 
         if(!result.status) {
-          const currPos = pos[edge.axe];
-          const min = border - offset.end;
-          const max = border - offset.start;
-          
-          const delta = (currPos-min) / (max - min);
-          const maxHeight = BLADE_HEIGHT + BLADE_HEIGHT_VARIATION;
-          const newY = Math.min(0 - delta * maxHeight, 0);
-
-          result.pos.y = Math.min(newY, result.pos.y);
+          result.pos.y = getPosYFromOffsets(edge);
+          result.status = !unStackTransition(result.pos.y, e.fade_density);
         }
       });
     return !result.status && result.pos;

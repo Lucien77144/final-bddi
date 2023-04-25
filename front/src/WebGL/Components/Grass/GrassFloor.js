@@ -84,21 +84,25 @@ export default class GrassFloor {
         y: 0.5,
         offset_start: 10, // %, -1 = disabled,
         offset_end: 20,
+        fade_density: 15,
       },
       // left: {
       //   y: 0.15,
       //   offset_start: 20, // %, -1 = disabled
       //   offset_end: 20,
+      //   fade_density: 25,
       // },
       // top: {
       //   y: 0.15,
       //   offset_start: 15, // %, -1 = disabled
       //   offset_end: 25,
+      //   fade_density: 25,
       // },
       // bottom: {
       //   y: -1,
       //   offset_start: 0, // %, -1 = disabled
       //   offset_end: 50,
+      //   fade_density: 25,
       // },
     };
 

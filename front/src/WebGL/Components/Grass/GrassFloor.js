@@ -11,8 +11,8 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 500,
-      size: 3,
+      count: 1750,
+      size: 4,
     };
     this.grassGroups = [];
 
@@ -25,6 +25,9 @@ export default class GrassFloor {
   }
 
   setGrass(mesh, limitBlend) {
+    mesh.material = this.material;
+    mesh.ignoreEnvironment = true;
+
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
@@ -71,43 +74,28 @@ export default class GrassFloor {
   }
 
   setGround() {
-    this.ground = this.resources.items.groundModel.scene;
+    this.ground = this.resources.items.groundModel.scenes[0];
 
-    const groundMesh = this.ground.children[0];
     this.ground.position.set(0, 0, 0);
-    groundMesh.material = this.material;
-    groundMesh.ignoreEnvironment = true;
     this.scene.add(this.ground);
 
-    let limitBlend = {
-      right: {
-        y: -100, // y coordinates (under is not printed)
-        offset_start: 0, // %, -1 = disabled,
-        offset_end: 50, // %
+    this.setGrass(this.ground.children[0], {
+      left: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
         fade_density: 25, // %
       },
-      // left: {
-      //   y: 0.15, // y coordinates (under is not printed)
-      //   offset_start: 20, // %, -1 = disabled
-      //   offset_end: 20, // %
-      //   fade_density: 25, // %
-      // },
-      // top: {
-      //   y: -100, // y coordinates (under is not printed)
-      //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 25, // %
-      //   fade_density: 25, // %
-      // },
-      // bottom: {
-      //   y: -1, // y coordinates (under is not printed)
-      //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 50, // %
-      //   fade_density: 25, // %
-      // },
-    };
-
-    this.setGrass(groundMesh, limitBlend);
-    this.setGrassDebug();
+    });
+    this.setGrass(this.ground.children[2], {
+      right: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
+        fade_density: 50, // %
+      },
+    });
+    // this.setGrassDebug();
   }
 
   setMaterials() {

@@ -7,6 +7,7 @@ import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
+import River from "../Components/River/River.js";
 
 export default class GrassScene {
   constructor() {
@@ -29,6 +30,7 @@ export default class GrassScene {
     this.environment = new Environment();
     this.floor = new GrassFloor();
     this.fairyDust = new FairyDust();
+    this.river = new River(new Vector3(-6, 2, -11));
     // this.rock1 = new Rock(new Vector3(0, 3, 0))
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))
@@ -41,5 +43,6 @@ export default class GrassScene {
     if (this.fairyDust) this.fairyDust.update();
     if (this.floor) this.floor.update();
     if (this.urma) this.urma.update();
+    if (this.river) this.river.update();
   }
 }

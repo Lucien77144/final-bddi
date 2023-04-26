@@ -5,7 +5,7 @@ import CubeScene from "scenes/CubeScene";
 import WaterScene from "./WaterScene";
 
 export default {
-  main: WaterScene,
+  main: GrassScene,
   "cube": CubeScene,
   "fairy": FairyScene,
   "grass": GrassScene,

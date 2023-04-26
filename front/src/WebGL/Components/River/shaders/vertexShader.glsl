@@ -1,6 +1,9 @@
 #include <fog_pars_vertex>
 
 varying vec2 vUv;
+uniform float uTime;  // temps depuis le début de la scène
+uniform sampler2D tNoise;
+
 
 void main() {
 

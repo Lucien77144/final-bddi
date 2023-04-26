@@ -5,7 +5,7 @@ import Experience from "@/WebGL/Experience";
 import * as THREE from "three";
 
 export default class River {
-    constructor() {
+    constructor(position) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
@@ -27,7 +27,7 @@ export default class River {
 
         this.setUniforms();
         this.setMaterial();
-        this.setWater();
+        this.setWater(position);
     }
 
     setUniforms() {
@@ -40,6 +40,8 @@ export default class River {
             topLightColor : { value: new THREE.Color(0xb0f7e9) },
             bottomLightColor : { value: new THREE.Color(0x14c6a5) },
             foamColor : { value: new THREE.Color(0xffffff) },
+            uWaveFrequency : { value: 0.5 },
+            uWaveAmplitude : { value: 0.5 },
         }
     }
 
@@ -57,13 +59,14 @@ export default class River {
         });
     }
 
-    setWater() {
-        this.geometry = new THREE.PlaneGeometry(4, 8, 8, 16, 1, true)
+    setWater(position) {
+        this.geometry = new THREE.PlaneGeometry(8, 16, 8, 16, 1, true)
         this.water = new THREE.Mesh(this.geometry, this.material);
-        this.water.position.set(-2, 3, 0);
+        // this.water.position.set(-2, 3, 0);
+        this.water.position.set(position.x, position.y, position.z);
         this.water.rotation.x = -Math.PI / 2;
         this.water.rotation.y = 0.2;
-        this.water.rotation.z = -1.5
+        this.water.rotation.z = 1.5
 
         this.scene.add(this.water);
 

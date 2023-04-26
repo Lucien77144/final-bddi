@@ -8,15 +8,18 @@ uniform vec3 uColor;
 
 void main()
 {
-    float life = 1. - min((uTime - vLife) / 1000., 1.);
+    float fadeLife = (uTime - vLife) / 2000.;
+    float lifeIn = 1. - min(fadeLife / uFadeIn, 1.);
+    float lifeOut = 1. - min(fadeLife, 1.);
 
-    float fadeIn = clamp(life / uFadeIn, 0.0, 1.0);
-    float fadeOut = clamp((1.0 - life) / uFadeOut, 0.0, 1.0);
+    float fadeIn = 1. - clamp(lifeIn, 0.0, 1.0) / uFadeIn;
+    float fadeOut = clamp(lifeOut / uFadeOut, 0.0, 1.0);
 
-    float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
-    float strength = .05 / distanceToCenter - .1;
+    float distanceToCenter = distance(gl_PointCoord, vec2(0.5)) * 2.;
+    float strength = .1 / distanceToCenter;
 
-    strength *= min(fadeIn, fadeOut);
+    strength *= min(fadeOut, fadeIn) * min(fadeLife * 2., 1.) / 1.2;
+    strength *= (uTime - vLife) / 1000.;
 
-    gl_FragColor = vec4(uColor, strength / 1.2);
+    gl_FragColor = vec4(uColor, strength);
 }

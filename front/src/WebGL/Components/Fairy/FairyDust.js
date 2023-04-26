@@ -22,9 +22,10 @@ export default class FairyDust {
       // blending: THREE.AdditiveBlending,
       uniforms: {
         uTime: { value: 0 },
-        uColor: { value: new THREE.Color('#f7eb8b') },
-        uFadeIn: { value: 0.5 },
-        uFadeOut: { value: 0.3 },
+        uGravity: { value: .5 },
+        uColor: { value: new THREE.Color('#faf2af') },
+        uFadeIn: { value: .1 },
+        uFadeOut: { value: 0.5 },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
       },
@@ -47,9 +48,9 @@ export default class FairyDust {
       posArray[i * 3 + 1] = this.fairy.model.position.y;
       posArray[i * 3 + 2] = this.fairy.model.position.z;
 
-      coordsMax[i * 3 + 0] = Math.random()-.5;
-      coordsMax[i * 3 + 1] = Math.random()-.5;
-      coordsMax[i * 3 + 2] = Math.random()-.5;
+      coordsMax[i * 3 + 0] = (Math.random()-.5) * .5;
+      coordsMax[i * 3 + 1] = (Math.random()-.5) * .5;
+      coordsMax[i * 3 + 2] = (Math.random()-.5) * .5;
 
       scaleArray[i] = Math.random();
 
@@ -112,7 +113,7 @@ export default class FairyDust {
 
   updateParticles() {
     this.particles.children.forEach((el, cur) => {
-      if (el.life > 75) {
+      if (el.life > 150) {
         const object = this.particles.children[cur];
 
         object.geometry.dispose();

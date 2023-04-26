@@ -1,6 +1,7 @@
 uniform float uPixelRatio;
 uniform float uSize;
 uniform float uTime;
+uniform float uGravity;
 
 attribute float aScale;
 attribute vec3 aCoordsMax;
@@ -29,8 +30,8 @@ void main()
     float speed = 0.001;
     vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
-    modelPosition.y -= speed * lifeTime;
-    modelPosition.x -= speed * lifeTime;
+    modelPosition.y -= speed * (lifeTime * uGravity);
+    modelPosition.x -= speed * (lifeTime * uGravity);
 
     vec4 viewPosition = viewMatrix * modelPosition;
     vec4 projectionPosition = projectionMatrix * viewPosition;

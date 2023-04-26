@@ -29,10 +29,7 @@ export default class MouseMove {
       });
     }
 
-    this.cursor = {};
-    this.cursor.x = 0;
-    this.cursor.y = 0;
-    this.cursor.z = 0;
+    this.cursor = new THREE.Vector3();
   }
 
   buildEvent() {

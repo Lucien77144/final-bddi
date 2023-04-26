@@ -1,10 +1,22 @@
 uniform float uTime;
+uniform float uFadeIn;
+uniform float uDelay;
+uniform float uFadeOut;
 varying float vLife;
+
+uniform vec3 uColor;
 
 void main()
 {
-    float distanceToCenter = distance(gl_PointCoord, vec2(0.5)) + ((uTime - vLife) * 0.00018);
-    float strength = 0.05 / distanceToCenter - 0.1 ;
+    float life = 1. - min((uTime - vLife) / 1000., 1.);
 
-    gl_FragColor = vec4(1.0, 0.99, 0.3, strength);
+    float fadeIn = clamp(life / uFadeIn, 0.0, 1.0);
+    float fadeOut = clamp((1.0 - life) / uFadeOut, 0.0, 1.0);
+
+    float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+    float strength = .05 / distanceToCenter - .1;
+
+    strength *= min(fadeIn, fadeOut);
+
+    gl_FragColor = vec4(uColor, strength / 1.2);
 }

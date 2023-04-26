@@ -1,6 +1,6 @@
 export default [
   // --------------------
-  // Models : 
+  // Models :
   // --------------------
 
   // gltf :
@@ -26,9 +26,14 @@ export default [
     type: "glb",
     path: "models/Column/Column.glb",
   },
-  
+  {
+    name: "fairyModel",
+    type: "glb",
+    path: "models/Fairy/Fairy.glb",
+  },
+
   // --------------------
-  // Textures : 
+  // Textures :
   // --------------------
 
   // png :
@@ -59,9 +64,9 @@ export default [
     type: "texture",
     path: "img/cloud.jpg",
   },
-  
+
   // --------------------
-  // Cube Textures : 
+  // Cube Textures :
   // --------------------
   {
     name: "environmentMapTexture",

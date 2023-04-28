@@ -5,6 +5,7 @@ import {
   MeshStandardMaterial,
   sRGBEncoding,
 } from "three";
+import * as THREE from "three";
 
 export default class Environment {
   constructor() {
@@ -20,6 +21,7 @@ export default class Environment {
 
     this.setSunLight();
     this.setEnvironmentMap();
+    this.setCloudBackground();
   }
 
   setSunLight() {
@@ -73,5 +75,32 @@ export default class Environment {
         })
         .on("change", this.environmentMap.updateMaterials);
     }
+  }
+
+  setCloudBackground() {
+    // set video
+    this.video = document.getElementById("myVideo");
+
+    this.videoTexture = new THREE.VideoTexture(this.video);
+    this.videoTexture.encoding = sRGBEncoding;
+    this.videoTexture.minFilter = THREE.LinearFilter;
+    this.videoTexture.magFilter = THREE.LinearFilter;
+
+    // set plane with texture
+    this.geometry = new THREE.PlaneGeometry(30, 10);
+    this.material = new THREE.MeshBasicMaterial({
+      map: this.videoTexture,
+      side : THREE.DoubleSide,
+      
+    });
+    this.mesh = new THREE.Mesh(this.geometry, this.material);
+    this.mesh.name = "cloudBackground";
+    this.mesh.material.depthTest = false;
+    this.mesh.material.depthWrite = false;
+    this.mesh.position.set(-50, 8, -10);
+    this.mesh.rotation.set(0, 1.5, 0);
+
+    this.scene.add(this.mesh);
+    console.log(this.scene.children);
   }
 }

@@ -1,6 +1,6 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "utils/EventEmitter.js";
-import { Cache, CubeTextureLoader, TextureLoader } from "three";
+import { Cache, CubeTextureLoader, TextureLoader, VideoTexture } from "three";
 import Experience from "webgl/Experience.js";
 
 export default class Resources extends EventEmitter {
@@ -79,6 +79,12 @@ export default class Resources extends EventEmitter {
           this.loaders.cubeTextureLoader.load(source.path, (file) => {
             this.sourceLoaded(source, file);
           });
+          break;
+        case "video":
+          this.video = document.createElement("video");
+          this.video.src = source.path;
+          this.videoTexture = new VideoTexture(this.video);
+          this.sourceLoaded(source, this.videoTexture);
           break;
         default:
           console.error(source.type + " is not a valid source type");

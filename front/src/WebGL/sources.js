@@ -11,10 +11,15 @@ export default [
   },
 
   // glb :
+  // {
+  //   name: "groundModel",
+  //   type: "glb",
+  //   path: "models/Ground/Ground.glb",
+  // },
   {
     name: "groundModel",
     type: "glb",
-    path: "models/Ground/Ground.glb",
+    path: "models/Ground/Ground_V3.glb",
   },
   {
     name: "stoneModel",

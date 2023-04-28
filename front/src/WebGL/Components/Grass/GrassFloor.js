@@ -11,8 +11,8 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 500,
-      size: 3,
+      count: 1750,
+      size: 4,
     };
     this.grassGroups = [];
 
@@ -25,6 +25,9 @@ export default class GrassFloor {
   }
 
   setGrass(mesh, limitBlend) {
+    mesh.material = this.material;
+    mesh.ignoreEnvironment = true;
+
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
@@ -71,35 +74,32 @@ export default class GrassFloor {
   }
 
   setGround() {
-    this.ground = this.resources.items.groundModel.scene;
+    this.grounds = this.resources.items.groundModel.scenes[0];
+    this.ground = [
+      this.grounds.children[0],
+      this.grounds.children[2]
+    ]
 
-    const groundMesh = this.ground.children[0];
-    this.ground.position.set(0, 0, 0);
-    groundMesh.material = this.material;
-    groundMesh.ignoreEnvironment = true;
-    this.scene.add(this.ground);
+    this.grounds.position.set(0, 0, 0);
+    this.scene.add(this.grounds);
 
-    let limitBlend = {
-      right: {
-        y: 0.2,
-        offset: 25, // %, 0 = disabled
+    this.setGrass(this.ground[0], {
+      left: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
+        fade_density: 25, // %
       },
-      // left: {
-      //   y: 0.15,
-      //   offset: 15, // %, 0 = disabled
-      // },
-      // top: {
-      //   y: 0.15,
-      //   offset: 15, // %, 0 = disabled
-      // },
-      // bottom: {
-      //   y: 0.5,
-      //   offset: 15, // %, 0 = disabled
-      // },
-    };
-
-    this.setGrass(groundMesh, limitBlend);
-    this.setGrassDebug();
+    });
+    this.setGrass(this.ground[1], {
+      right: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
+        fade_density: 50, // %
+      },
+    });
+    // this.setGrassDebug();
   }
 
   setMaterials() {

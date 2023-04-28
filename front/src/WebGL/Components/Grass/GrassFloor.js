@@ -108,29 +108,29 @@ export default class GrassFloor {
     });
   }
 
-  setGrassDebug() {
-    if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
-        .on("change", () => {
-          this.grassGroups.forEach((group) => {
-            group.children.forEach((e) => {
-              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
-            });
-          })
-        });
+  // setGrassDebug() {
+  //   if (this.debug.active) {
+  //     this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
+  //       .on("change", () => {
+  //         this.grassGroups.forEach((group) => {
+  //           group.children.forEach((e) => {
+  //             e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+  //           });
+  //         })
+  //       });
 
-      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
-        .on("change", () => {
-          this.grassGroups.forEach((group) => {
-            group.children.forEach((e) => {
-              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
-            });
-          })
-        });
+  //     this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
+  //       .on("change", () => {
+  //         this.grassGroups.forEach((group) => {
+  //           group.children.forEach((e) => {
+  //             e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+  //           });
+  //         })
+  //       });
 
-      this.debugFolder.addInput(this.material, "wireframe");
-    }
-  }
+  //     this.debugFolder.addInput(this.material, "wireframe");
+  //   }
+  // }
 
   update() {
     this.grassGroups.forEach((group) => {

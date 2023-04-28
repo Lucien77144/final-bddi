@@ -74,12 +74,16 @@ export default class GrassFloor {
   }
 
   setGround() {
-    this.ground = this.resources.items.groundModel.scenes[0];
+    this.grounds = this.resources.items.groundModel.scenes[0];
+    this.ground = [
+      this.grounds.children[0],
+      this.grounds.children[2]
+    ]
 
-    this.ground.position.set(0, 0, 0);
-    this.scene.add(this.ground);
+    this.grounds.position.set(0, 0, 0);
+    this.scene.add(this.grounds);
 
-    this.setGrass(this.ground.children[0], {
+    this.setGrass(this.ground[0], {
       left: {
         y: 0.2, // y coordinates (under is not printed)
         offset_start: 15, // %, -1 = disabled,
@@ -87,7 +91,7 @@ export default class GrassFloor {
         fade_density: 25, // %
       },
     });
-    this.setGrass(this.ground.children[2], {
+    this.setGrass(this.ground[1], {
       right: {
         y: 0.2, // y coordinates (under is not printed)
         offset_start: 15, // %, -1 = disabled,

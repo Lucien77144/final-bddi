@@ -46,7 +46,7 @@ export default class MouseMove {
     vector.unproject(this.camera);
     var dir = vector.sub(this.camera.position).normalize();
     var distance =
-      -this.camera.position.x / dir.x + this.path.position.x / dir.x;
+      -this.camera.position.x / dir.x + (this.path.position.x - 1) / dir.x;
     var pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
     this.cursor = pos;
   }

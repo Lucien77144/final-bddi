@@ -1,4 +1,12 @@
-import * as THREE from "three";
+import {
+  Group,
+  ShaderMaterial,
+  Points,
+  Vector3,
+  Color,
+  BufferGeometry,
+  BufferAttribute,
+} from "three";
 import Experience from "webgl/Experience.js";
 import vertexShader from "./shaders/vertexShader.glsl";
 import fragmentShader from "./shaders/fragmentShader.glsl";
@@ -9,22 +17,22 @@ export default class FairyDust {
     this.experience = new Experience();
     this.time = this.experience.time;
     this.scene = this.experience.scene;
-    this.fairy = new Fairy(new THREE.Vector3(0, 5, 12));
+    this.fairy = new Fairy(new Vector3(0, 5, 12));
 
     console.log(this.fairy);
 
-    this.particles = new THREE.Group();
+    this.particles = new Group();
     this.scene.add(this.particles);
 
-    this.particlesMaterial = new THREE.ShaderMaterial({
+    this.particlesMaterial = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
-      // blending: THREE.AdditiveBlending,
+      // blending: AdditiveBlending,
       uniforms: {
         uTime: { value: 0 },
-        uGravity: { value: .5 },
-        uColor: { value: new THREE.Color('#faf2af') },
-        uFadeIn: { value: .1 },
+        uGravity: { value: 0.5 },
+        uColor: { value: new Color("#faf2af") },
+        uFadeIn: { value: 0.1 },
         uFadeOut: { value: 0.5 },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
@@ -35,7 +43,7 @@ export default class FairyDust {
   }
 
   addParticles() {
-    const particlesGeometry = new THREE.BufferGeometry();
+    const particlesGeometry = new BufferGeometry();
     const particlesCnt = 15;
 
     const posArray = new Float32Array(particlesCnt * 3);
@@ -48,9 +56,9 @@ export default class FairyDust {
       posArray[i * 3 + 1] = this.fairy.model.position.y;
       posArray[i * 3 + 2] = this.fairy.model.position.z;
 
-      coordsMax[i * 3 + 0] = (Math.random()-.5) * .5;
-      coordsMax[i * 3 + 1] = (Math.random()-.5) * .5;
-      coordsMax[i * 3 + 2] = (Math.random()-.5) * .5;
+      coordsMax[i * 3 + 0] = (Math.random() - 0.5) * 0.5;
+      coordsMax[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
+      coordsMax[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
 
       scaleArray[i] = Math.random();
 
@@ -59,35 +67,32 @@ export default class FairyDust {
 
     particlesGeometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(posArray, 3)
+      new BufferAttribute(posArray, 3)
     );
 
     particlesGeometry.setAttribute(
       "aScale",
-      new THREE.BufferAttribute(scaleArray, 1)
+      new BufferAttribute(scaleArray, 1)
     );
 
     particlesGeometry.setAttribute(
       "aCoordsMax",
-      new THREE.BufferAttribute(coordsMax, 3)
+      new BufferAttribute(coordsMax, 3)
     );
 
     particlesGeometry.setAttribute(
       "life",
-      new THREE.BufferAttribute(this.lifeArray, 1)
+      new BufferAttribute(this.lifeArray, 1)
     );
 
-    const particlesMesh = new THREE.Points(
-      particlesGeometry,
-      this.particlesMaterial
-    );
+    const particlesMesh = new Points(particlesGeometry, this.particlesMaterial);
 
     particlesMesh.life = 0;
     this.particles.add(particlesMesh);
   }
 
   /**
-   * 
+   *
    * @param {number} mean La moyenne de la distribution
    * @param {number} stdDev L'écart-type de la distribution
    * @returns {number} Coordonnée y selon la distribution aléatoire gaussienne
@@ -107,38 +112,44 @@ export default class FairyDust {
    * @returns {number} angle
    */
   getAngleFactor(axis) {
-    const getFactor = (angle = Math.random() * 2) => Math.random() * angle * 2 * 0.2;
-    return Math[axis == "sin" ? "sin" : "cos"](getFactor(Math.PI)) * getFactor() * (1 + Math.random())
+    const getFactor = (angle = Math.random() * 2) =>
+      Math.random() * angle * 2 * 0.2;
+    return (
+      Math[axis == "sin" ? "sin" : "cos"](getFactor(Math.PI)) *
+      getFactor() *
+      (1 + Math.random())
+    );
   }
 
   updateParticles() {
-    this.particles.children.forEach((el, cur) => {
-      if (el.life > 150) {
-        const object = this.particles.children[cur];
-
-        object.geometry.dispose();
-        this.particles.remove(object);
+    const particles = this.particles.children;
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const particle = particles[i];
+      if (particle.life > 150) {
+        particle.geometry.dispose();
+        this.particles.remove(particle);
       } else {
-        el.life++;
+        particle.life++;
       }
-    });
+    }
   }
 
   update() {
-    if (this.fairy) {
-      this.fairy.update();
+    if (!this.fairy) return;
 
-      if (this.particlesMaterial) {
-        this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
-      }
+    this.fairy.update();
 
-      if (Math.floor(this.time.elapsed / 10) != this.timeElapsed) {
-        this.timeElapsed = Math.floor(this.time.elapsed / 10);
-        if (this.fairy.isFairyMoving()) {
-          this.addParticles();
-        }
-        this.updateParticles();
+    if (this.particlesMaterial) {
+      this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
+    }
+
+    const timeElapsedFloor = Math.floor(this.time.elapsed / 10);
+    if (timeElapsedFloor !== this.timeElapsed) {
+      this.timeElapsed = timeElapsedFloor;
+      if (this.fairy.isFairyMoving()) {
+        this.addParticles();
       }
+      this.updateParticles();
     }
   }
 }

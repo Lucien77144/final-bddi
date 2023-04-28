@@ -10,8 +10,15 @@ import {
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 
+let instance = null;
 export default class Fairy {
   constructor(position = new Vector3(0, 0, 0)) {
+    // Singleton
+    if (instance) {
+      return instance;
+    }
+    instance = this;
+
     const { scene, resources, debug, time } = new Experience();
     this.scene = scene;
     this.resources = resources;
@@ -20,7 +27,7 @@ export default class Fairy {
     this.position = position;
 
     // Resource
-    this.resource = resources.items.fairyModel;
+    this.resource = this.resources.items.fairyModel;
 
     this.mouseMove = new MouseMove();
 
@@ -29,6 +36,7 @@ export default class Fairy {
   }
 
   setModel() {
+    console.log(this.resource);
     this.model = cloneGltf(this.resource).scene;
 
     this.model.scale.set(0.2, 0.2, 0.2);
@@ -83,7 +91,8 @@ export default class Fairy {
     if (!this.model) return false;
 
     return (
-      Math.round(this.model.position.z * 10) !== Math.round(this.mouseMove.cursor.z * 10)
+      Math.round(this.model.position.z * 10) !==
+      Math.round(this.mouseMove.cursor.z * 10)
     );
   }
 

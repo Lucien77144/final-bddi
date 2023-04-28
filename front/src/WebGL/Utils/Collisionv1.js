@@ -1,8 +1,7 @@
 import * as THREE from "three";
-// import * as CANNON from "cannon";
 
 import Experience from "webgl/Experience.js";
-import FairyPosition from "components/Fairy/FairyPosition";
+import Fairy from "components/Fairy/Fairy";
 import Urma from "components/Urma/Urma";
 
 export default class Collision {
@@ -10,8 +9,10 @@ export default class Collision {
     this.experience = new Experience();
     this.scene = this.experience.scene;
 
-    this.fairyPosition = new FairyPosition();
+    this.fairy = new Fairy();
     this.urma = new Urma();
+
+    console.log('here', this.fairy)
 
     // this.world = new CANNON.World();
 
@@ -44,7 +45,7 @@ export default class Collision {
   }
 
   update() {
-    this.rayOrigin = this.fairyPosition.fairy.mesh.position;
+    this.rayOrigin = this.fairy.model.position;
 
     // Met à jour les raycasters et aides associées
     for (let i = 0; i < 3; i++) {

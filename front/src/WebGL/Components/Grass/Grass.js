@@ -42,20 +42,20 @@ export class GrassGeometry extends THREE.BufferGeometry {
         y: brushPos.y,
         z: brushPos.z + z,
       }
-      
-      if (
-        this.getSquareLimits(convPos, limits)
-        &&
-        this.buildBlendLimits(convPos, limits)
-      ) {
+
+      const blendLimits = this.buildBlendLimits(convPos, limits);
+      // console.log(blendLimits);
+      // debugger
+
+      if (this.getSquareLimits(convPos, limits) && blendLimits) {
         uvs.push(
           ...Array.from({ length: BLADE_VERTEX_COUNT }).flatMap(() => [
-            interpolate(x, surfaceMin, surfaceMax, 0, 1),
-            interpolate(z, surfaceMin, surfaceMax, 0, 1)
+            interpolate(blendLimits.x - brushPos.x, surfaceMin, surfaceMax, 0, 1),
+            interpolate(blendLimits.z - brushPos.z, surfaceMin, surfaceMax, 0, 1)
           ])
         )
   
-        const blade = this.computeBlade([x, 0, z], i);
+        const blade = this.computeBlade([x, blendLimits.y, z], i);
         positions.push(...blade.positions)
         indices.push(...blade.indices)
       }
@@ -80,28 +80,86 @@ export class GrassGeometry extends THREE.BufferGeometry {
       z: limits.max.z - limits.min.z,
     }
 
-    let result = false;
+    let result = {
+      status: false,
+      pos: { ...pos },
+    };
+
+    /**
+     * Get the current edge infos
+     * @param {*} e Params of the edge
+     * @returns { Object } Edge infos { axe, dir, border, offset }
+     */
+    const getCurrEdge = (e) => {
+      const axe = e.dir === 'right' || e.dir === 'left' ? 'z' : 'x';
+      const dir = e.dir === 'right' || e.dir === 'top' ? 'min' : 'max';
+      const border = limits[dir][axe];
+      const factor = squareSize[axe] / 100 * (dir === 'min' ? -1 : 1);
+      const fixedOffsetEnd = e.offset_end + e.offset_start > 100 ? 100 - e.offset_start : e.offset_end;
+      const offset = {
+        start: factor * e.offset_start,
+        end: factor * (e.offset_start + fixedOffsetEnd)
+      };
+      return { axe, dir, border, offset };
+    };    
+
+    /**
+     * Get the 2 limits of the grass on the plane
+     * @param {*} edge Edge informations
+     * @returns { Object } Limits infos { over, lower }
+     */
+    const getLimits = (edge) => {
+      const toDir = (val) => edge.dir == 'min' ? !val : val;
+      return {
+        over: toDir(pos[edge.axe] + edge.offset.start > edge.border),
+        lower: toDir((pos[edge.axe] + edge.offset.end > edge.border)),
+      };
+    }
+
+    /**
+     * Get the Y position of the grass from offsets
+     * @param {*} edge Edge informations
+     * @returns { number } Y position
+     */
+    const getPosYFromOffsets = (edge) => {
+      const { axe, border, offset } = edge;
+      const delta = (pos[axe] - (border - offset.end)) / (offset.end - offset.start);
+      return Math.min(0, -delta * (BLADE_HEIGHT + BLADE_HEIGHT_VARIATION));
+    };
+
+    /**
+     * Randomise the print of grass from density factor provided and Y position
+     * @param {*} posY Y position of the grass
+     * @param {*} factor Fade density factor
+     * @returns { boolean } True to print, false to not print
+     */
+    const unStackTransition = (posY, factor) => {
+      return Math.random() * posY > -(BLADE_HEIGHT + BLADE_HEIGHT_VARIATION) * (factor/100);
+    }
+
     Object.entries(limits.params)
-      .filter(([_, { offset }]) => offset > 0)
+      .filter(([_, { offset_start }]) => (offset_start >= 0) && (offset_start < 100))
+      .map((e) => { return { ...e[1], dir: e[0] } })
       .forEach((e) => {
-        const axe = (e[0] == 'right' || e[0] == 'left'); // true = z, false = x
-        const dir = (e[0] == 'right' || e[0] == 'top') ? -1 : 1; 
-        const offset = (axe ? squareSize.z / 100 * e[1].offset : squareSize.x / 100 * e[1].offset) * dir;
+        const edge = getCurrEdge(e);
+        const limits = getLimits(edge);
+        const isYTooLow = !(pos.y > e.y);
 
-        const limit = limits[dir > 0 ? 'max' : 'min'][axe ? 'z' : 'x'];
-        const newPos = pos[axe ? 'z' : 'x'] + offset;
+        result.status ||= limits.lower && isYTooLow || limits.over; // false = print
 
-        result = result ? result : !(dir < 0 ? newPos > limit : !(newPos > limit));
-        result = result && !(pos.y > e[1].y);
-      })
-    return !result;
+        if(!result.status) {
+          result.pos.y = getPosYFromOffsets(edge);
+          result.status = !unStackTransition(result.pos.y, e.fade_density);
+        }
+      });
+    return !result.status && result.pos;
   }
 
   // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
   // TODO: reduce vertex count, optimize & possibly move to GPU
   computeBlade(center, index = 0) {
-    const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION
-    const vIndex = index * BLADE_VERTEX_COUNT
+    const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION;
+    const vIndex = index * BLADE_VERTEX_COUNT;
 
     // Randomize blade orientation and tip angle
     const yaw = Math.random() * Math.PI * 2

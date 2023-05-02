@@ -58,30 +58,25 @@ export default class Collision {
   getIntersect(direction) {
     this.arrowHelpers[direction].position.copy(this.fairy.model.position);
 
-    const directionVector = new Vector3();
-    switch (direction) {
-      case "down":
-        directionVector.set(0, -1, 0);
-        break;
-      case "left":
-        directionVector.set(0, 0, -1);
-        break;
-      case "right":
-        directionVector.set(0, 0, 1);
-        break;
-    }
-
-    this.raycaster.set(this.fairy.model.position.clone(), directionVector);
+    this.raycaster.set(
+      this.fairy.model.position.clone(),
+      new Vector3(
+        0,
+        direction == "down" ? -1 : 0,
+        direction == "left" ? 1 : direction == "right" ? -1 : 0
+      )
+    );
 
     this.grassFloor.grounds.children.forEach((floor) => {
       const intersections = this.raycaster.intersectObject(floor);
 
       if (intersections.length > 0) {
-        const distance = intersections[0].distance;
-        this.distances[direction] = distance;
-        this.collisions[direction].push({
-          floor,
-          distance,
+        intersections.forEach((intersection) => {
+          this.distances[direction] = intersection.distance;
+          this.collisions[direction].push({
+            floor,
+            distance: this.distances[direction],
+          });
         });
       }
     });
@@ -92,12 +87,8 @@ export default class Collision {
     this.getIntersect("left");
     this.getIntersect("right");
 
-    const leftCollisions = this.collisions.left.sort(
-      (a, b) => a.distance - b.distance
-    );
-    const rightCollisions = this.collisions.right.sort(
-      (a, b) => a.distance - b.distance
-    );
+    const leftCollisions = this.collisions.left.sort((a, b) => a.distance - b.distance);
+    const rightCollisions = this.collisions.right.sort((a, b) => a.distance - b.distance);
 
     this.fairy.canGoDown = !(this.distances.down < 0.2);
     this.fairy.canGoLeft = !(leftCollisions[0]?.distance < 0.6);

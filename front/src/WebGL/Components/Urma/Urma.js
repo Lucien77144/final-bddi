@@ -5,7 +5,7 @@ import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 
-const SIZE_FACTOR = 2;
+const SIZE_FACTOR = 1.25;
 const OPTIONS = {
   SPEED: 90,
   SPEEDEASE: 1000,

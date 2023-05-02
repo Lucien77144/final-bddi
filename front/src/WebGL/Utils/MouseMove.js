@@ -29,10 +29,7 @@ export default class MouseMove {
       });
     }
 
-    this.cursor = {};
-    this.cursor.x = 0;
-    this.cursor.y = 0;
-    this.cursor.z = 0;
+    this.cursor = new THREE.Vector3();
   }
 
   buildEvent() {
@@ -45,12 +42,11 @@ export default class MouseMove {
     this.cursor.x = (event.clientX / this.sizes.width) * 2 - 1;
     this.cursor.y = -(event.clientY / this.sizes.height) * 2 + 1;
 
-    var vector = new THREE.Vector3(this.cursor.x, this.cursor.y, this.cursor.z);
+    let vector = new THREE.Vector3(this.cursor.x, this.cursor.y, this.cursor.z);
     vector.unproject(this.camera);
-    var dir = vector.sub(this.camera.position).normalize();
-    var distance =
-      -this.camera.position.x / dir.x + this.path.position.x / dir.x;
-    var pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
+    let dir = vector.sub(this.camera.position).normalize();
+    let distance = -this.camera.position.x / dir.x + (this.path.position.x + .35) / dir.x;
+    let pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
     this.cursor = pos;
   }
 }

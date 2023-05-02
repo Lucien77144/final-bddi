@@ -1,25 +1,36 @@
-import * as THREE from "three";
+import {
+  Group,
+  ShaderMaterial,
+  Points,
+  Vector3,
+  Color,
+  BufferGeometry,
+  BufferAttribute,
+} from "three";
 import Experience from "webgl/Experience.js";
 import vertexShader from "./shaders/vertexShader.glsl";
 import fragmentShader from "./shaders/fragmentShader.glsl";
-import FairyPosition from "./FairyPosition.js";
+import Fairy from "./Fairy.js";
 
 export default class FairyDust {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
     this.scene = this.experience.scene;
-    this.fairyPosition = new FairyPosition();
-
-    this.particles = new THREE.Group();
+    this.fairy = new Fairy(new Vector3(0, 5, 12));
+    
+    this.particles = new Group();
     this.scene.add(this.particles);
 
-    this.particlesMaterial = new THREE.ShaderMaterial({
+    this.particlesMaterial = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
       uniforms: {
         uTime: { value: 0 },
+        uGravity: { value: 0.5 },
+        uColor: { value: new Color("#faf2af") },
+        uFadeIn: { value: 0.1 },
+        uFadeOut: { value: 0.5 },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
       },
@@ -29,31 +40,22 @@ export default class FairyDust {
   }
 
   addParticles() {
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCnt = 10;
+    const particlesGeometry = new BufferGeometry();
+    const particlesCnt = 15;
 
     const posArray = new Float32Array(particlesCnt * 3);
     const scaleArray = new Float32Array(particlesCnt);
+    const coordsMax = new Float32Array(particlesCnt * 3);
     this.lifeArray = new Float32Array(particlesCnt);
 
-    const radius = Math.random() * 2;
-
     for (let i = 0; i < particlesCnt; i++) {
-      posArray[i * 3 + 0] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 3] -
-        Math.pow(Math.random(), 5) *
-          (Math.random() < 0.5 ? 1 : -1) *
-          0.2 *
-          radius;
-      posArray[i * 3 + 1] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 2];
+      posArray[i * 3 + 0] = this.fairy.model.position.x;
+      posArray[i * 3 + 1] = this.fairy.model.position.y;
+      posArray[i * 3 + 2] = this.fairy.model.position.z;
 
-      posArray[i * 3 + 2] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 1] +
-        Math.pow(Math.random(), 5) *
-          (Math.random() < 0.5 ? 1 : -1) *
-          0.2 *
-          radius;
+      coordsMax[i * 3 + 0] = (Math.random() - 0.5) * 0.5;
+      coordsMax[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
+      coordsMax[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
 
       scaleArray[i] = Math.random();
 
@@ -62,56 +64,89 @@ export default class FairyDust {
 
     particlesGeometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(posArray, 3)
+      new BufferAttribute(posArray, 3)
     );
 
     particlesGeometry.setAttribute(
       "aScale",
-      new THREE.BufferAttribute(scaleArray, 1)
+      new BufferAttribute(scaleArray, 1)
+    );
+
+    particlesGeometry.setAttribute(
+      "aCoordsMax",
+      new BufferAttribute(coordsMax, 3)
     );
 
     particlesGeometry.setAttribute(
       "life",
-      new THREE.BufferAttribute(this.lifeArray, 1)
+      new BufferAttribute(this.lifeArray, 1)
     );
 
-    const particlesMesh = new THREE.Points(
-      particlesGeometry,
-      this.particlesMaterial
-    );
+    const particlesMesh = new Points(particlesGeometry, this.particlesMaterial);
 
     particlesMesh.life = 0;
     this.particles.add(particlesMesh);
   }
 
-  updateParticles() {
-    this.particles.children.forEach((el, cur) => {
-      if (el.life > 50) {
-        const object = this.particles.children[cur];
+  /**
+   *
+   * @param {number} mean La moyenne de la distribution
+   * @param {number} stdDev L'écart-type de la distribution
+   * @returns {number} Coordonnée y selon la distribution aléatoire gaussienne
+   */
+  gaussianRandom(mean, stdDev) {
+    let u = 0,
+      v = 0;
+    while (u === 0) u = Math.random(); // Éviter la valeur 0 pour éviter les problèmes de log
+    while (v === 0) v = Math.random();
+    const rand = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+    return mean + stdDev * rand;
+  }
 
-        object.geometry.dispose();
-        this.particles.remove(object);
+  /**
+   * Get the angle randomly
+   * @param {string} axis set if cos or sin.
+   * @returns {number} angle
+   */
+  getAngleFactor(axis) {
+    const getFactor = (angle = Math.random() * 2) =>
+      Math.random() * angle * 2 * 0.2;
+    return (
+      Math[axis == "sin" ? "sin" : "cos"](getFactor(Math.PI)) *
+      getFactor() *
+      (1 + Math.random())
+    );
+  }
+
+  updateParticles() {
+    const particles = this.particles.children;
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const particle = particles[i];
+      if (particle.life > 150) {
+        particle.geometry.dispose();
+        this.particles.remove(particle);
       } else {
-        el.life++;
+        particle.life++;
       }
-    });
+    }
   }
 
   update() {
-    if (this.fairyPosition) this.fairyPosition.update();
+    if (!this.fairy) return;
+
+    this.fairy.update();
 
     if (this.particlesMaterial) {
       this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
     }
 
-    if (this.fairyPosition.positions) {
-      if (Math.floor(this.time.elapsed / 50) != this.timeElapsed) {
-        this.timeElapsed = Math.floor(this.time.elapsed / 50);
-        if (this.fairyPosition.isFairyMoving()) {
-          this.addParticles();
-        }
-        this.updateParticles();
+    const timeElapsedFloor = Math.floor(this.time.elapsed / 10);
+    if (timeElapsedFloor !== this.timeElapsed) {
+      this.timeElapsed = timeElapsedFloor;
+      if (this.fairy.isFairyMoving()) {
+        this.addParticles();
       }
+      this.updateParticles();
     }
   }
 }

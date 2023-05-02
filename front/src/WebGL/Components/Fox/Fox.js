@@ -24,9 +24,11 @@ export default class Fox {
     // Resource
     this.resource = this.resources.items.foxModel;
 
+    console.log("here", this.resource);
+
     this.setModel();
-    this.setAnimation();
     this.setInputs();
+    this.setAnimation();
   }
 
   setModel() {
@@ -37,7 +39,7 @@ export default class Fox {
     this.model.name = "fox";
 
     this.scene.add(this.model);
-    
+
     this.model.traverse((child) => {
       if (child instanceof Mesh) {
         child.castShadow = true;
@@ -125,6 +127,6 @@ export default class Fox {
   }
 
   update() {
-    this.animation.mixer.update(this.time.delta * 0.001);
+    this.animation?.mixer.update(this.time.delta * 0.001);
   }
 }

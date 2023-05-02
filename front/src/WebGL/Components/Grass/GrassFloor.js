@@ -2,8 +2,16 @@ import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
 import * as THREE from "three";
 
+let instance = null;
+
 export default class GrassFloor {
   constructor() {
+    // Singleton
+    if (instance) {
+      return instance;
+    }
+    instance = this;
+
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
@@ -11,13 +19,16 @@ export default class GrassFloor {
     this.debug = this.experience.debug;
 
     this.grassParameters = {
-      count: 500,
-      size: 3,
+      count: 1750,
+      size: 4,
     };
     this.grassGroups = [];
 
     if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder({ title: "grass", expanded: false });
+      this.debugFolder = this.debug.ui.addFolder({
+        title: "grass",
+        expanded: false,
+      });
     }
 
     this.setMaterials();
@@ -25,6 +36,9 @@ export default class GrassFloor {
   }
 
   setGrass(mesh, limitBlend) {
+    mesh.material = this.material;
+    mesh.ignoreEnvironment = true;
+
     const group = new THREE.Group();
     const positions = mesh.geometry.attributes.position.array;
     const normals = mesh.geometry.attributes.normal.array;
@@ -40,8 +54,8 @@ export default class GrassFloor {
         y: mesh.geometry.boundingBox.max.y * mesh.scale.y,
         z: mesh.geometry.boundingBox.max.z * mesh.scale.z,
       },
-      params : limitBlend,
-    }
+      params: limitBlend,
+    };
 
     for (var i = 0; i < positions.length; i += 3) {
       const x = positions[i];
@@ -49,20 +63,24 @@ export default class GrassFloor {
       const z = positions[i + 2];
 
       const anglePower = 0.75;
-      const normal = new THREE.Vector3(normals[i], normals[i+1], normals[i+2]);
-      const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
+      const normal = new THREE.Vector3(
+        normals[i],
+        normals[i + 1],
+        normals[i + 2]
+      );
+      const angleX = -Math.atan2(normal.y, normal.z) + Math.PI / 2;
       const angleZ = -Math.atan2(normal.x, normal.y);
 
       this.grass = new Grass(
         mesh,
         this.grassParameters.size,
         this.grassParameters.count,
-        {x, y, z},
+        { x, y, z },
         limits
       );
       this.grass.rotation.x = angleX * anglePower;
       this.grass.rotation.z = angleZ * anglePower;
-  
+
       group.add(this.grass);
     }
     group.position.copy(mesh.position);
@@ -71,43 +89,29 @@ export default class GrassFloor {
   }
 
   setGround() {
-    this.ground = this.resources.items.groundModel.scene;
+    this.grounds = this.resources.items.groundModel.scenes[0];
+    this.ground = [this.grounds.children[0], this.grounds.children[2]];
 
-    const groundMesh = this.ground.children[0];
-    this.ground.position.set(0, 0, 0);
-    groundMesh.material = this.material;
-    groundMesh.ignoreEnvironment = true;
-    this.scene.add(this.ground);
+    this.grounds.position.set(0, 0, 0);
+    this.scene.add(this.grounds);
 
-    let limitBlend = {
-      right: {
-        y: -100, // y coordinates (under is not printed)
-        offset_start: 0, // %, -1 = disabled,
-        offset_end: 50, // %
+    this.setGrass(this.ground[0], {
+      left: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
         fade_density: 25, // %
       },
-      // left: {
-      //   y: 0.15, // y coordinates (under is not printed)
-      //   offset_start: 20, // %, -1 = disabled
-      //   offset_end: 20, // %
-      //   fade_density: 25, // %
-      // },
-      // top: {
-      //   y: -100, // y coordinates (under is not printed)
-      //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 25, // %
-      //   fade_density: 25, // %
-      // },
-      // bottom: {
-      //   y: -1, // y coordinates (under is not printed)
-      //   offset_start: 0, // %, -1 = disabled
-      //   offset_end: 50, // %
-      //   fade_density: 25, // %
-      // },
-    };
-
-    this.setGrass(groundMesh, limitBlend);
-    this.setGrassDebug();
+    });
+    this.setGrass(this.ground[1], {
+      right: {
+        y: 0.2, // y coordinates (under is not printed)
+        offset_start: 15, // %, -1 = disabled,
+        offset_end: 25, // %
+        fade_density: 50, // %
+      },
+    });
+    // this.setGrassDebug();
   }
 
   setMaterials() {
@@ -118,22 +122,34 @@ export default class GrassFloor {
 
   setGrassDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.grassParameters, "count", { min: 0, max: 10000, step : 50 })
+      this.debugFolder
+        .addInput(this.grassParameters, "count", {
+          min: 0,
+          max: 10000,
+          step: 50,
+        })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
             group.children.forEach((e) => {
-              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+              e.updateGrass(
+                this.grassParameters.size,
+                this.grassParameters.count
+              );
             });
-          })
+          });
         });
 
-      this.debugFolder.addInput(this.grassParameters, "size", { min: 1, max: 10, step : 1 })
+      this.debugFolder
+        .addInput(this.grassParameters, "size", { min: 1, max: 10, step: 1 })
         .on("change", () => {
           this.grassGroups.forEach((group) => {
             group.children.forEach((e) => {
-              e.updateGrass(this.grassParameters.size, this.grassParameters.count)
+              e.updateGrass(
+                this.grassParameters.size,
+                this.grassParameters.count
+              );
             });
-          })
+          });
         });
 
       this.debugFolder.addInput(this.material, "wireframe");
@@ -145,6 +161,6 @@ export default class GrassFloor {
       group.children.forEach((e) => {
         e.update(this.time.elapsed);
       });
-    })
+    });
   }
 }

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
-import vertexShader from './shaders/vertexShader.glsl';
-import fragmentShader from './shaders/fragmentShader.glsl';
+import vertexShader from './shaders/Grass/vertexShader.glsl';
+import fragmentShader from './shaders/Grass/fragmentShader.glsl';
 
 const BLADE_WIDTH = 0.05
 const BLADE_HEIGHT = 0.005

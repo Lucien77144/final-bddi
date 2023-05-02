@@ -1,10 +1,12 @@
 import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
-import { DoubleSide, Group, Mesh, MeshBasicMaterial, Plane, Vector3 } from "three";
+import { DoubleSide, Group, Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
+import vertexShader from "./shaders/Displacement/vertexShader.glsl";
+import fragmentShader from "./shaders/Displacement/fragmentShader.glsl";
 
 export default class newGrassFloor {
   constructor(
-    _position = new Vector3(8, 4, 0),
+    _position = new Vector3(0, 0, 0),
     _displacement = "displacementMap"
   ) {
     this.experience = new Experience();
@@ -82,22 +84,26 @@ export default class newGrassFloor {
   }
 
   setGeometry() {
-    this.geometry = new Plane(1, 1, 1, 1);
+    this.geometry = new PlaneGeometry(10, 10, 100, 100);
   }
 
   setMaterials() {
-    this.material = new MeshBasicMaterial({
-      color: 0xff0000,
+    this.material = new ShaderMaterial({
+      uniforms: {
+        uDisplacement: { value: this.resources.items[this.displacement] },
+      },
       side: DoubleSide,
+      transparent: true,
+      vertexShader,
+      fragmentShader,
       // map: this.resources.items[this.displacement],
     });
   }
 
   setGround() {
-    console.log(this.geometry);
-    console.log(this.material);
     this.mesh = new Mesh(this.geometry, this.material);
-    // this.mesh.position.copy(this.position);
+    this.mesh.position.copy(this.position);
+    this.mesh.rotation.x = -Math.PI / 2;
     this.mesh.name = this.name;
     this.scene.add(this.mesh);
   }

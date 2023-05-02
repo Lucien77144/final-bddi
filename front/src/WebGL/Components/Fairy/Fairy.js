@@ -36,7 +36,6 @@ export default class Fairy {
   }
 
   setModel() {
-    console.log(this.resource);
     this.model = cloneGltf(this.resource).scene;
 
     this.model.scale.set(0.2, 0.2, 0.2);

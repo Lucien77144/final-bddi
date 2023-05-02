@@ -9,7 +9,7 @@ import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
 import Fairy from "../Components/Fairy/Fairy.js";
 // import Collision from "@/WebGL/Utils/Collision.js";
-import CollisionV1 from "@/WebGL/Utils/CollisionV1.js";
+import CollisionV1 from "../Components/Fairy/Collisionv1.js";
 
 export default class GrassScene {
   constructor() {
@@ -35,7 +35,7 @@ export default class GrassScene {
 
     // this.collision = new Collision();
     this.collisionV1 = new CollisionV1();
-    
+
     // this.rock1 = new Rock(new Vector3(0, 3, 0))
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))

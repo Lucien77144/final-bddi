@@ -1,7 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Vector3 } from "three";
-import GrassFloor from "components/Grass/GrassFloor.js";
 import Urma from "components/Urma/Urma.js";
 import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
@@ -11,6 +10,7 @@ import River from "../Components/River/River.js";
 import Fairy from "../Components/Fairy/Fairy.js";
 // import Collision from "@/WebGL/Utils/Collision.js";
 import CollisionV1 from "@/WebGL/Utils/CollisionV1.js";
+import GrassFloor from "../Components/Grass/GrassFloor.js";
 
 export default class GrassScene {
   constructor() {

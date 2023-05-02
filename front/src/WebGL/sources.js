@@ -69,6 +69,11 @@ export default [
     type: "texture",
     path: "img/cloud.jpg",
   },
+  {
+    name: "displacementMap",
+    type: "texture",
+    path: "textures/grass/displacement.jpg",
+  },
 
   // --------------------
   // Cube Textures :

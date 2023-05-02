@@ -9,7 +9,7 @@ import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
 import Fairy from "../Components/Fairy/Fairy.js";
 // import Collision from "@/WebGL/Utils/Collision.js";
-import CollisionV1 from "../Components/Fairy/Collisionv1.js";
+import CollisionV1 from "../Components/Fairy/Collision.js";
 
 export default class GrassScene {
   constructor() {

@@ -86,21 +86,21 @@ export default class Environment {
     this.videoTexture.minFilter = THREE.LinearFilter;
     this.videoTexture.magFilter = THREE.LinearFilter;
 
+
     // set plane with texture
-    this.geometry = new THREE.PlaneGeometry(30, 10);
+    this.geometry = new THREE.PlaneGeometry(150, 50);
     this.material = new THREE.MeshBasicMaterial({
       map: this.videoTexture,
       side : THREE.DoubleSide,
-      
+      transparent: false,
     });
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.name = "cloudBackground";
-    this.mesh.material.depthTest = false;
-    this.mesh.material.depthWrite = false;
-    this.mesh.position.set(-50, 8, -10);
-    this.mesh.rotation.set(0, 1.5, 0);
+    this.mesh.material.depthTest = true;
+    this.mesh.material.depthWrite = true;
+    this.mesh.position.set(-50, 8, 0);
+    this.mesh.rotation.set(0, Math.PI/2, 0);
 
     this.scene.add(this.mesh);
-    console.log(this.scene.children);
   }
 }

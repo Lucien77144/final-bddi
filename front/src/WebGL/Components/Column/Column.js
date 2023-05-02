@@ -40,7 +40,8 @@ export default class Column {
     this.scene.add(this.model);
   }
 
-  setMaterial() { }
+  setMaterial() { 
+  }
 
   update() { }
 }

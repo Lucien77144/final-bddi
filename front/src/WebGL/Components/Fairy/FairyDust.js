@@ -18,16 +18,13 @@ export default class FairyDust {
     this.time = this.experience.time;
     this.scene = this.experience.scene;
     this.fairy = new Fairy(new Vector3(0, 5, 12));
-
-    console.log(this.fairy);
-
+    
     this.particles = new Group();
     this.scene.add(this.particles);
 
     this.particlesMaterial = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
-      // blending: AdditiveBlending,
       uniforms: {
         uTime: { value: 0 },
         uGravity: { value: 0.5 },

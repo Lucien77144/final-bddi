@@ -13,7 +13,6 @@ import MouseMove from "utils/MouseMove.js";
 let instance = null;
 export default class Fairy {
   constructor(position = new Vector3(0, 0, 0)) {
-    // Singleton
     if (instance) {
       return instance;
     }
@@ -26,7 +25,6 @@ export default class Fairy {
     this.time = time;
     this.position = position;
 
-    // Resource
     this.resource = this.resources.items.fairyModel;
 
     this.mouseMove = new MouseMove();
@@ -75,16 +73,30 @@ export default class Fairy {
       lerpFactor
     );
 
-    let newpos = new Vector3()
+    const resPos = new Vector3().copy(this.model.position);
+
+    const newPos = new Vector3()
       .copy(this.model.position)
       .add(fairyDir.multiplyScalar(0.25));
 
-    // Calcule la vitesse de l'animation en fonction de la distance entre la fée et le curseur
-    const logDist = Math.log(this.distFairyToMouse + 1);
-    // La vitesse est de 0.8 (valeur maximale) lorsque la distance est de 0, et diminue à mesure que la distance augmente
-    const speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
+    const moveY = this.canGoDown || this.model.position.y < newPos.y;
+    const right = this.canGoRight || this.model.position.z < newPos.z;
+    const left = this.canGoLeft || newPos.z < this.model.position.z;
 
-    this.model.position.lerp(newpos, speed);
+    if (moveY) {
+      resPos.y = newPos.y;
+    } else {
+      resPos.y += 0.01;
+    }
+    if ((this.canGoLeft || left) && (this.canGoRight || right)) {
+      resPos.z = newPos.z;
+    }
+
+    resPos.x = newPos.x;
+
+    const logDist = Math.log(this.distFairyToMouse + 1);
+    const speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
+    this.model.position.lerp(resPos, speed);
   }
 
   isFairyMoving() {
@@ -111,8 +123,6 @@ export default class Fairy {
   }
 
   update() {
-    this.moveFairy();
-    // Multiplie le temps delta par la vitesse pour accélérer l'animation lorsque la fée est plus loin du curseur
     this.animation.mixer.update(
       this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
     );

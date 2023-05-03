@@ -4,8 +4,6 @@ uniform vec3 uSize;
 
 varying vec3 vBasePosition;
 varying vec3 vPosition;
-varying vec2 vUv;
-varying vec3 vNormal;
 
 float wave(float tipDistance) {
   // Tip is the fifth vertex drawn per blade
@@ -15,22 +13,23 @@ float wave(float tipDistance) {
   return sin(vPosition.z + uTime / 1500.) * waveDistance;
 }
 
+float getWind() {
+  float windFactor = uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.;
+  return -(cos(windFactor) + sin(windFactor) + 1.) / 20.;
+}
+
+vec4 getTexture2D(sampler2D map) {
+  vec2 posScale = vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5;
+	return texture2D(map, posScale);
+}
+
 void main() {
   vPosition = position;
   vBasePosition = position;
-  vUv = uv;
   
-  vNormal = normalize(normalMatrix * normal);
-
-  vec2 posScale = vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5;
-	vec4 displacement = texture2D(uDisplacement, posScale);
-
-  float windFactor = cos(uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.) + sin(uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.);
-  float wind = -(windFactor + 1.) / 20.;
-
-  vPosition.y += displacement.r * uSize.y + wind;
+  float wind = getWind();
+  vPosition.y += getTexture2D(uDisplacement).r * uSize.y + wind;
   vBasePosition.y += wind;
-
   vPosition.z += wave(wind);
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);

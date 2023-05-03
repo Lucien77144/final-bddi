@@ -1,9 +1,11 @@
 uniform float uTime;
 uniform sampler2D uDisplacement;
+uniform sampler2D uMask;
 uniform vec3 uSize;
 
 varying vec3 vBasePosition;
 varying vec3 vPosition;
+varying float vMask;
 
 float wave(float tipDistance) {
   // Tip is the fifth vertex drawn per blade
@@ -19,8 +21,7 @@ float getWind() {
 }
 
 vec4 getTexture2D(sampler2D map) {
-  vec2 posScale = vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5;
-	return texture2D(map, posScale);
+	return texture2D(map, vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5);
 }
 
 void main() {
@@ -31,6 +32,9 @@ void main() {
   vPosition.y += getTexture2D(uDisplacement).r * uSize.y + wind;
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
+
+  vMask = 1. - (getTexture2D(uMask).r * uSize.y);
+  vPosition.y *= vMask;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);
 }

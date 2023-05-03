@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshStandardMaterial, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
 import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
@@ -11,7 +11,11 @@ export default class newGrassFloor {
     _position = new Vector3(0, 0, 0),
     _size = new Vector3(10, 1, 20),
     _count = 100000,
-    _displacement = "displacementMap"
+    _maps = {
+      displacementMap: "displacementMap",
+      mask: "mask",
+      baseTexture: "dirtTexture",
+    }
   ) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -25,7 +29,9 @@ export default class newGrassFloor {
     this.grassParameters = {
       count: _count,
       size: _size,
-      displacementMap: this.resources.items[_displacement],
+      baseTexture: this.resources.items[_maps.baseTexture],
+      displacementMap: this.resources.items[_maps.displacementMap],
+      mask: this.resources.items[_maps.mask],
       colors : {
         base: new Color('#11382a'),
       }
@@ -40,9 +46,15 @@ export default class newGrassFloor {
   }
 
   setGroundMaterial() {
+    this.grassParameters.baseTexture.generateMipmaps = false;
+    this.grassParameters.baseTexture.minFilter = NearestFilter;
+    this.grassParameters.baseTexture.magFilter = NearestFilter;
+
     this.groundMaterial = new ShaderMaterial({
       uniforms: {
+        uBaseTexture: { value: this.grassParameters.baseTexture },
         uDisplacement: { value: this.grassParameters.displacementMap },
+        uMask: { value: this.grassParameters.mask },
         uSize: { value: this.grassParameters.size },
         uBaseColor: { value: this.grassParameters.colors.base },
       },
@@ -91,11 +103,13 @@ export default class newGrassFloor {
       uniforms: {
         uTime: { value: 0 },
         uDisplacement: { value: this.grassParameters.displacementMap },
+        uMask: { value: this.grassParameters.mask },
         uSize: { value: this.grassParameters.size },
         uMaxBladeSize: { value: this.grassGeometry.maxHeight },
         uBaseColor: { value: this.grassParameters.colors.base },
       },
       side: DoubleSide,
+      transparent: true,
       alphaTest: 0,
       vertexShader: grassVertex,
       fragmentShader: grassFragment,

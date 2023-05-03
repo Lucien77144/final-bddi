@@ -47,11 +47,6 @@ export default [
     type: "texture",
     path: "textures/transitions/transition.png",
   },
-  {
-    name: "grassDisplacementTexture",
-    type: "texture",
-    path: "textures/grass/Map.png",
-  },
 
   // jpg :
   {
@@ -70,9 +65,19 @@ export default [
     path: "img/cloud.jpg",
   },
   {
+    name: "dirtTexture",
+    type: "texture",
+    path: "textures/grass/dirt.jpg",
+  },
+  {
     name: "displacementMap",
     type: "texture",
     path: "textures/grass/displacement.jpg",
+  },
+  {
+    name: "mask",
+    type: "texture",
+    path: "textures/grass/mask.jpg",
   },
 
   // --------------------

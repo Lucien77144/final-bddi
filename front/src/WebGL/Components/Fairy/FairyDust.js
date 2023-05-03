@@ -231,7 +231,7 @@ export default class FairyDust {
   fillPositions(textureData) {
     const posArr = textureData.image.data;
 
-    // console.log("pos", posArr);
+     console.log("pos", posArr);
     for (let i = 0; i < posArr.length; i = i + 4) {
       //const x = Math.random() * 1 - 0.5;
       const x =

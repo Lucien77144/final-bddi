@@ -9,7 +9,7 @@ import GrassGeometry from "./Grass";
 export default class newGrassFloor {
   constructor(
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(20, 3, 20),
+    _size = new Vector3(20, 1, 20),
     _count = 100000,
     _displacement = "displacementMap"
   ) {
@@ -61,6 +61,7 @@ export default class newGrassFloor {
     this.ground.position.copy(this.position);
     this.ground.rotation.x = -Math.PI / 2;
     this.ground.name = this.name;
+
     this.scene.add(this.ground);
   }
 

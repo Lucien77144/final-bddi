@@ -12,6 +12,8 @@ import { socket } from './socket.js';
 
 export let room;
 export let currentPlayer;
+export let roomIdText;
+
 
 /**
  * Page Sections
@@ -20,8 +22,14 @@ export let currentPlayer;
 
 const landingPage = document.querySelector('#landingPage');
 const roleSelection = document.querySelector('#roleSelection');
+const waitingRoom = document.querySelector('#waitingRoom');
 const scene = document.querySelector('#scene');
 const roomInfo = document.querySelector('#roomInfo');
+const joinRoomSection = document.querySelector('#joinRoom');
+
+
+// Copy room id to clipboard
+
 
 /**
  * Room Selection
@@ -30,6 +38,7 @@ const roomInfo = document.querySelector('#roomInfo');
 
 const createRoomButton = document.querySelector('#create');
 const joinRoomButton = document.querySelector('#join');
+const confirmJoinRoomButton = document.querySelector('#confirmRoom');
 const roomInput = document.querySelector('#roomInput');
 const showRoomId = document.querySelector('.showRoomId');
 
@@ -39,14 +48,23 @@ createRoomButton.addEventListener('click', () => {
 });
 
 joinRoomButton.addEventListener('click', () => {
+    landingPage.classList.add('hidden');
+    joinRoomSection.classList.remove('hidden');
+});
+
+confirmJoinRoomButton.addEventListener('click', () => {
     console.log('Join room');
     socket.emit('joinRoom', roomInput.value);
 });
 
 // On createRoom
 socket.on('createRoom', (roomId) => {
+    roomIdText = roomId;
     console.log('Create room', roomId);
-    showRoomId.innerHTML = `Room ID : ${roomId}`;
+    showRoomId.innerHTML = `${roomId}`;
+    console.log(showRoomId);
+    waitingRoom.classList.remove('hidden');
+    landingPage.classList.add('hidden');
 });
 
 // On joinRoom

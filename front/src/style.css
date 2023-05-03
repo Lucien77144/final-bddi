@@ -1,3 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Amatic+SC&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Jost&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Urbanist&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,8 +9,10 @@
 
 html,
 body {
-  overflow: hidden;
+  overflow-x: hidden;
   font-family: sans-serif;
+  overscroll-behavior: none;
+
 }
 
 #webgl {
@@ -14,10 +20,6 @@ body {
   top: 0;
   left: 0;
   outline: none;
-}
-
-.hidden {
-  display: none;
 }
 
 .text-white {
@@ -32,17 +34,27 @@ body {
 }
 
 section {
-  background: linear-gradient(82.36deg, #C0E1EC 9.76%, #81CDE6 86.58%);
+  /* background: linear-gradient(82.36deg, #C0E1EC 9.76%, #81CDE6 86.58%); */
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('img/background.png');
+  background-size: cover;
 }
 
 #landingPage {
+  height : 200vh;
+  overflow-y : scroll;
+  color : #fff;
+  background : url('img/background.png');
+  background-size : cover;
+  background-repeat : no-repeat;
+  
+}
 
+#waitingRoom {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #roleSelectionCanvas {
@@ -55,4 +67,184 @@ section {
   display: flex;
   width : 100vw;
   justify-content: space-around;
+}
+
+.button-1 {
+  width: 196px;
+  height: 66px;
+  background: #F3F7F9;
+  border: 0.5px solid #19608D;
+  /* border-radius: 5px; */
+  position : relative;
+  margin: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Amatic SC';
+  color: #19608D;
+  font-size: 1.5rem;
+  cursor : pointer;
+}
+
+
+.button-1:focus {
+  outline: none;
+}
+
+.button-1::before {
+  content: attr(aria-label);
+  display: inline-block;
+  width: 98%;
+  height: 92%;
+  border: 0.5px solid #19608D;
+  box-sizing: border-box;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+
+}
+
+.button-1:hover::before,
+.button-1:focus::before {
+  opacity: 1;
+}
+
+.button-1 .text {
+  position: relative;
+  z-index: 20;
+}
+
+.button-1 svg {
+  position : absolute;
+}
+
+.button-1 svg path {
+  fill: #F3F7F9;
+  transition: fill 0.3s ease-in-out;
+}
+
+.button-1:hover svg path {
+  fill: rgba(25, 96, 141, 0.8);
+}
+
+.b2 {
+  background-color: #19608D;
+  border : 0.5px solid #F3F7F9;
+  color : #F3F7F9;
+}
+
+.b2::before {
+  border: 0.5px solid #F3F7F9;
+}
+
+.b2 svg path {
+  fill: #19608D;
+  transition: fill 0.3s ease-in-out;
+}
+
+.b2:hover svg path {
+  fill: rgba(243, 247, 249, 0.8);
+}
+
+.button-group {
+  display : flex;
+}
+
+.jost {
+  font-family: 'Jost', sans-serif;
+}
+
+.title {
+  height : 100vh;
+  width : 100vw;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  flex-direction: column;
+}
+
+.subtitle {
+  font-size : 1.25rem;
+  margin-top : 1rem;
+}
+
+.subpage {
+  height : 100vh;
+  width : 100vw;
+  display : flex;
+  justify-content : center;
+  align-items : center;
+  flex-direction: column;
+}
+
+.paragraph {
+  font-size : 1.25rem;
+
+  width : 50%;
+  text-align : center;
+}
+
+.card {
+  width : 20rem;
+  /* height : 30.6rem; */
+  background : #fff;
+  border-radius : 8px;
+  display : flex;
+  /* justify-content : center; */
+  /* align-items : center; */
+  flex-direction: column;
+  box-shadow: 0px 0px 16px rgba(6, 37, 57, 0.12);
+  font-family: 'Urbanist';
+  padding : 1.5rem;
+}
+
+.card .legend {
+  color : #51616C;
+  margin-top : 0.5rem;
+  margin-bottom : 2rem;
+}
+
+.code-input {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  gap: 10px;
+
+  width: 296px;
+  height: 52px;
+
+  font-family: 'Amatic SC';
+  font-size : 2rem;
+
+  background: #E8EFF4;
+  /* Primaires/Azul/800 */
+
+  border-bottom: 2px solid #4780A4;
+  border-radius: 2px 2px 0px 0px;
+
+}
+
+.hidden {
+  display: none !important;
+}
+
+.card button {
+  margin-left : auto;
+  margin-right : auto;
+}
+
+.card button:disabled {
+  background-color: #E8EFF4;
+  color: #7693a4;
+  border: 2px solid #4780A4;
+  cursor: not-allowed;
+}
+
+.card button:disabled svg {
+  fill: #7693a4;
 }

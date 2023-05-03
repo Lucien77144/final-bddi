@@ -10,5 +10,5 @@ void main()
     
     float strength = 0.02 / distanceToCenter - 0.1 ;
 
-   gl_FragColor = vec4(1.0, 0.99, 0.3, strength);
+   gl_FragColor = vec4(1.0, 0., 0., strength);
 }

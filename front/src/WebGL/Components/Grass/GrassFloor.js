@@ -95,22 +95,22 @@ export default class GrassFloor {
     this.grounds.position.set(0, 0, 0);
     this.scene.add(this.grounds);
 
-    this.setGrass(this.ground[0], {
-      left: {
-        y: 0.2, // y coordinates (under is not printed)
-        offset_start: 15, // %, -1 = disabled,
-        offset_end: 25, // %
-        fade_density: 25, // %
-      },
-    });
-    this.setGrass(this.ground[1], {
-      right: {
-        y: 0.2, // y coordinates (under is not printed)
-        offset_start: 15, // %, -1 = disabled,
-        offset_end: 25, // %
-        fade_density: 50, // %
-      },
-    });
+    // this.setGrass(this.ground[0], {
+    //   left: {
+    //     y: 0.2, // y coordinates (under is not printed)
+    //     offset_start: 15, // %, -1 = disabled,
+    //     offset_end: 25, // %
+    //     fade_density: 25, // %
+    //   },
+    // });
+    // this.setGrass(this.ground[1], {
+    //   right: {
+    //     y: 0.2, // y coordinates (under is not printed)
+    //     offset_start: 15, // %, -1 = disabled,
+    //     offset_end: 25, // %
+    //     fade_density: 50, // %
+    //   },
+    // });
     // this.setGrassDebug();
   }
 

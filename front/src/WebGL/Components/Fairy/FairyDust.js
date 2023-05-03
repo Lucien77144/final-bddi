@@ -3,7 +3,7 @@ import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRe
 
 import Experience from "../../Experience";
 
-import FairyPosition from "./FairyPosition.js";
+import Fairy from "./Fairy.js";
 
 import fairyDustVertexShader from "./shaders/vertexShader.glsl";
 import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
@@ -16,25 +16,10 @@ export default class FairyDust {
     this.scene = this.experience.scene;
     this.sizes = this.experience.sizes;
     this.renderer = this.experience.renderer.instance;
-    this.fairyPosition = new FairyPosition();
+    this.fairy = new Fairy();
 
     this.particles = new THREE.Group();
     this.scene.add(this.particles);
-
-    this.particlesMaterial = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-        uSize: { value: 100 }
-      },
-      vertexShader: fairyDustVertexShader,
-      fragmentShader: fairyDustFragmentShader,
-    });
-
-    console.log(this.experience);
 
     this._options = {
       width: 100,
@@ -46,65 +31,7 @@ export default class FairyDust {
     this._setMesh();
 
     this.initGPGPU();
-    // this.addParticles();
   }
-
-  // addParticles() {
-  //   const particlesGeometry = new THREE.BufferGeometry();
-  //   const particlesCnt = 10;
-
-  //   const posArray = new Float32Array(particlesCnt * 3);
-  //   const scaleArray = new Float32Array(particlesCnt);
-  //   this.lifeArray = new Float32Array(particlesCnt);
-
-  //   const radius = Math.random() * 2;
-
-  //   for (let i = 0; i < particlesCnt; i++) {
-  //     posArray[i * 3 + 0] =
-  //       this.fairyPosition.positions[this.fairyPosition.positions.length - 3] -
-  //       Math.pow(Math.random(), 5) *
-  //         (Math.random() < 0.5 ? 1 : -1) *
-  //         0.2 *
-  //         radius;
-  //     posArray[i * 3 + 1] =
-  //       this.fairyPosition.positions[this.fairyPosition.positions.length - 2];
-
-  //     posArray[i * 3 + 2] =
-  //       this.fairyPosition.positions[this.fairyPosition.positions.length - 1] +
-  //       Math.pow(Math.random(), 5) *
-  //         (Math.random() < 0.5 ? 1 : -1) *
-  //         0.2 *
-  //         radius;
-
-  //     scaleArray[i] = Math.random();
-
-  //     this.lifeArray[i] = this.time.elapsed;
-  //   }
-
-  //   particlesGeometry.setAttribute(
-  //     "position",
-  //     new THREE.BufferAttribute(posArray, 3)
-  //   );
-
-  //   particlesGeometry.setAttribute(
-  //     "aScale",
-  //     new THREE.BufferAttribute(scaleArray, 1)
-  //   );
-
-  //   particlesGeometry.setAttribute(
-  //     "life",
-  //     new THREE.BufferAttribute(this.lifeArray, 1)
-  //   );
-
-  //   const particlesMesh = new THREE.Points(
-  //     particlesGeometry,
-  //     this.particlesMaterial
-  //   );
-
-  //   particlesMesh.life = 0;
-
-  //   this.particles.add(particlesMesh);
-  // }
 
   _setGeometry() {
     this._geometry = new THREE.BufferGeometry();
@@ -159,7 +86,6 @@ export default class FairyDust {
     this._material = new THREE.ShaderMaterial({
       transparent: true,
       depthWrite: false,
-      blending: THREE.AdditiveBlending,
       uniforms: {
         time: { value: 0 },
         positionTexture: { value: null },
@@ -207,12 +133,12 @@ export default class FairyDust {
 
     this.positionVariable.material.uniforms = {
       time: { value: 0 },
-      fairyPosition: { value: new THREE.Vector2(0, 0) },
+      fairyPosition: { value: new THREE.Vector3(0, 0, 0) },
     };
 
-    this.fairyPosition.on("moveFairy", (x, y) => {
+    this.fairy.on("moveFairy", (x, y, z) => {
       this.positionVariable.material.uniforms.fairyPosition.value =
-        new THREE.Vector2(x, y);
+        new THREE.Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT =
@@ -231,19 +157,13 @@ export default class FairyDust {
   fillPositions(textureData) {
     const posArr = textureData.image.data;
 
-     console.log("pos", posArr);
     for (let i = 0; i < posArr.length; i = i + 4) {
       //const x = Math.random() * 1 - 0.5;
-      const x =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 3] -
-        Math.pow(Math.random(), 5) * (Math.random() < 0.5 ? 1 : -1) * 0.2;
+      const x = this.fairy.model.position.x;
       // const y = Math.random() * 1 - 0.5;
-      const y =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 2];
+      const y = this.fairy.model.position.y;
       // const z = Math.random() * 0.1 - 0.05 + 0.1;
-      const z =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 1] +
-        Math.pow(Math.random(), 5) * (Math.random() < 0.5 ? 1 : -1) * 0.2;
+      const z = this.fairy.model.position.z;
 
       posArr[i] = x;
       posArr[i + 1] = y;
@@ -253,7 +173,7 @@ export default class FairyDust {
   }
 
   update() {
-    if (this.fairyPosition) this.fairyPosition.update();
+    if (this.fairy) this.fairy.update();
 
     // if (this.particlesMaterial) {
     //   this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;

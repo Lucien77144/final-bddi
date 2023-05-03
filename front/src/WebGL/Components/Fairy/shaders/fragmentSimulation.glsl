@@ -1,4 +1,4 @@
-uniform float time;
+uniform float uTime;
 uniform vec3 fairyPosition;
 
 vec3 move(vec3 position, float time) {
@@ -13,10 +13,10 @@ void main() {
 
 	vec3 target;
 
-	if (mod(time + uv.x * 1000. + uv.y * 1000., 1000.0) <= 100.0) { 
+	if (mod(uTime + uv.x * 1000. + uv.y * 1000., 1000.0) <= 100.0) { 
 		target = vec3(fairyPosition.x, fairyPosition.y, fairyPosition.z);
 	}else {
-		target = move(position, time);
+		target = move(position, uTime);
 	}
 
 	gl_FragColor = vec4(target, 0.);

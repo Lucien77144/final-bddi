@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import { BufferAttribute, BufferGeometry, Color, Group, Points, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
 import Experience from "../../Experience";
@@ -18,7 +18,7 @@ export default class FairyDust {
     this.renderer = this.experience.renderer.instance;
     this.fairy = new Fairy();
 
-    this.particles = new THREE.Group();
+    this.particles = new Group();
     this.scene.add(this.particles);
 
     this._options = {
@@ -34,7 +34,7 @@ export default class FairyDust {
   }
 
   _setGeometry() {
-    this._geometry = new THREE.BufferGeometry();
+    this._geometry = new BufferGeometry();
 
     const positions = new Float32Array(
       this._options.width * this._options.width * 3
@@ -64,41 +64,57 @@ export default class FairyDust {
 
     this._geometry.setAttribute(
       "position",
-      new THREE.BufferAttribute(positions, 3)
+      new BufferAttribute(positions, 3)
     );
     this._geometry.setAttribute(
       "reference",
-      new THREE.BufferAttribute(reference, 2)
+      new BufferAttribute(reference, 2)
     );
 
     this._geometry.setAttribute(
       "aScale",
-      new THREE.BufferAttribute(scaleArray, 1)
+      new BufferAttribute(scaleArray, 1)
     );
 
     this._geometry.setAttribute(
       "life",
-      new THREE.BufferAttribute(lifeArray, 1)
+      new BufferAttribute(lifeArray, 1)
     );
   }
 
   _setMaterial() {
-    this._material = new THREE.ShaderMaterial({
+    this._material = new ShaderMaterial({
       transparent: true,
       depthWrite: false,
       uniforms: {
-        time: { value: 0 },
         positionTexture: { value: null },
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
+        uColor: { value: new Color("#faf2af") },
       },
       vertexShader: fairyDustVertexShader,
       fragmentShader: fairyDustFragmentShader,
     });
+
+    // this.particlesMaterial = new ShaderMaterial({
+    //   transparent: true,
+    //   depthWrite: false,
+    //   uniforms: {
+    //     uTime: { value: 0 },
+    //     uGravity: { value: 0.5 },
+    //     uColor: { value: new Color("#faf2af") },
+    //     uFadeIn: { value: 0.1 },
+    //     uFadeOut: { value: 0.5 },
+    //     uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+    //     uSize: { value: 100 },
+    //   },
+    //   vertexShader,
+    //   fragmentShader,
+    // });
   }
 
   _setMesh() {
-    this._mesh = new THREE.Points(this._geometry, this._material);
+    this._mesh = new Points(this._geometry, this._material);
     this._mesh.name = "Dust";
     this.scene.add(this._mesh);
   }
@@ -132,17 +148,17 @@ export default class FairyDust {
     );
 
     this.positionVariable.material.uniforms = {
-      time: { value: 0 },
-      fairyPosition: { value: new THREE.Vector3(0, 0, 0) },
+      uTime: { value: 0 },
+      fairyPosition: { value: new Vector3(0, 0, 0) },
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
       this.positionVariable.material.uniforms.fairyPosition.value =
-        new THREE.Vector3(x, y, z);
+        new Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT =
-      THREE.RepeatWrapping;
+      RepeatWrapping;
     this.gpuCompute.setVariableDependencies(this.positionVariable, [
       this.positionVariable,
     ]);
@@ -175,21 +191,7 @@ export default class FairyDust {
   update() {
     if (this.fairy) this.fairy.update();
 
-    // if (this.particlesMaterial) {
-    //   this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
-    // }
-
-    // if (this.fairyPosition.positions) {
-    //   if (Math.floor(this.time.elapsed / 50) != this.timeElapsed) {
-    //     this.timeElapsed = Math.floor(this.time.elapsed / 50);
-    //     if (this.fairyPosition.isFairyMoving()) {
-    //       this.addParticles();
-    //     }
-    //     this.updateParticles();
-    //   }
-    // }
-
-    this.positionVariable.material.uniforms.time.value += this.time.delta;
+    this.positionVariable.material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
     this._material.uniforms.positionTexture.value =

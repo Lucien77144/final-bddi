@@ -82,7 +82,7 @@ export default class newGrassFloor {
   }
 
   setGrassGeometry() {
-    this.grassGeometry = new GrassGeometry(this.grassParameters.size, this.grassParameters.count);
+    this.grassGeometry = new GrassGeometry(this.grassParameters);
   }
 
   setGrassMaterial() {
@@ -91,7 +91,7 @@ export default class newGrassFloor {
         uTime: { value: 0 },
         uDisplacement: { value: this.grassParameters.displacementMap },
         uSize: { value: this.grassParameters.size },
-        uMaxBladeSize: { value: .505 },
+        uMaxBladeSize: { value: this.grassGeometry.maxHeight },
         uBaseColor: { value: this.grassParameters.colors.base },
       },
       side: DoubleSide,

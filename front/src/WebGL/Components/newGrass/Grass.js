@@ -7,14 +7,15 @@ const BLADE_VERTEX_COUNT = 5;
 const BLADE_TIP_OFFSET = 0.1;
 
 export class GrassGeometry extends THREE.BufferGeometry {
-  constructor(size, count) {
-    super()
+  constructor(params) {
+    super();
+    this.maxHeight = BLADE_HEIGHT_VARIATION + BLADE_HEIGHT;
 
     const positions = [];
     const indices = [];
 
-    const getRandomCoord = (axe) => { return (size[axe] / 2) * (Math.random() - .5) * 2 };
-    for (let i = 0; i < count; i++) {
+    const getRandomCoord = (axe) => { return (params.size[axe] / 2) * (Math.random() - .5) * 2 };
+    for (let i = 0; i < params.count; i++) {
       const x = getRandomCoord('x');
       const z = getRandomCoord('z');
       

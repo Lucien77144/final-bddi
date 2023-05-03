@@ -4,7 +4,6 @@ uniform vec3 uSize;
 
 varying vec3 vBasePosition;
 varying vec3 vPosition;
-varying float vWind;
 varying vec2 vUv;
 varying vec3 vNormal;
 
@@ -24,16 +23,15 @@ void main() {
   float random = fract(sin(dot(vec3(uTime, 0.0, 0.0), vec3(12.9898, 78.233, 98.422)) * 43758.5453));
 
   vNormal = normalize(normalMatrix * normal);
-  vec2 posScale = vec2(vBasePosition.x, -vBasePosition.z) / uSize.x + .5;
+  vec2 posScale = vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5;
 	vec4 displacement = texture2D(uDisplacement, posScale);
 
 	vPosition.y += displacement.r * uSize.y;
 
   float windFactor = cos(uTime / 2500. + (vPosition.x + vPosition.z * 2.) / 6.) + sin(uTime / 2500. + (vPosition.x + vPosition.z * 2.) / 6.);
-  // float windFactor = cos(uTime / 2000. + vPosition.x / 9.) + sin(uTime / 2000. + vPosition.z / 3.);
-  vWind = -abs(windFactor) / 10.;
-  vPosition.y += vWind;
-  vBasePosition.y += vWind;
+  float wind = -abs(windFactor) / 10.;
+  vPosition.y += wind;
+  vBasePosition.y += wind;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);
 }

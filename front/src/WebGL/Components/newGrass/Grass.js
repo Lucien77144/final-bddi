@@ -1,6 +1,4 @@
 import * as THREE from 'three';
-import vertexShader from './shaders/Grass/vertexShader.glsl';
-import fragmentShader from './shaders/Grass/fragmentShader.glsl';
 
 const BLADE_WIDTH = 0.05;
 const BLADE_HEIGHT = 0.005;
@@ -20,9 +18,9 @@ export class GrassGeometry extends THREE.BufferGeometry {
       const x = getRandomCoord('x');
       const z = getRandomCoord('z');
       
-      const blade = this.computeBlade([x, 0, z], i);
-      positions.push(...blade.positions)
-      indices.push(...blade.indices)
+      const blade = this.computeBlade([x, 0, z], i * BLADE_VERTEX_COUNT);
+      positions.push(...blade.positions);
+      indices.push(...blade.indices);
     }
 
     this.setAttribute(
@@ -30,79 +28,58 @@ export class GrassGeometry extends THREE.BufferGeometry {
       new THREE.BufferAttribute(new Float32Array(new Float32Array(positions)), 3)
     );
 
-    this.setIndex(indices)
-    this.computeVertexNormals()
+    this.setIndex(indices);
+    this.computeVertexNormals();
   }
 
-  // Grass blade generation, covered in https://smythdesign.com/blog/stylized-grass-webgl
-  // TODO: reduce vertex count, optimize & possibly move to GPU
+  getRandomCoords() {
+    const res = new Array(2);
+    for (let i = 0; i < 2; i++) {
+      const rdm = Math.random() * Math.PI * 2;
+      res[i] = [Math.sin(rdm), 0, -Math.cos(rdm)];
+    }
+    return res;
+  };
+
+  // Grass blade generation, modified from https://smythdesign.com/blog/stylized-grass-webgl
   computeBlade(center, index = 0) {
     const height = BLADE_HEIGHT + Math.random() * BLADE_HEIGHT_VARIATION;
-    const vIndex = index * BLADE_VERTEX_COUNT;
 
     // Randomize blade orientation and tip angle
-    const yaw = Math.random() * Math.PI * 2;
-    const yawVec = [Math.sin(yaw), 0, -Math.cos(yaw)];
-    const bend = Math.random() * Math.PI * 2;
-    const bendVec = [Math.sin(bend), 0, -Math.cos(bend)];
+    const bladeData = this.getRandomCoords();
 
     // Calc bottom, middle, and tip vertices
-    const bl = yawVec.map((n, i) => n * (BLADE_WIDTH / 2) * 1 + center[i])
-    const br = yawVec.map((n, i) => n * (BLADE_WIDTH / 2) * -1 + center[i])
-    const tl = yawVec.map((n, i) => n * (BLADE_WIDTH / 4) * 1 + center[i])
-    const tr = yawVec.map((n, i) => n * (BLADE_WIDTH / 4) * -1 + center[i])
-    const tc = bendVec.map((n, i) => n * BLADE_TIP_OFFSET + center[i])
+    const bl = bladeData[0].map((n, i) => n * (BLADE_WIDTH / 2) * 1 + center[i]);   // bottom left
+    const br = bladeData[0].map((n, i) => n * (BLADE_WIDTH / 2) * -1 + center[i]);  // bottom right
+    const tl = bladeData[0].map((n, i) => n * (BLADE_WIDTH / 4) * 1 + center[i]);   // top left
+    const tr = bladeData[0].map((n, i) => n * (BLADE_WIDTH / 4) * -1 + center[i]);  // top right
+    const tc = bladeData[1].map((n, i) => n * BLADE_TIP_OFFSET + center[i]);        // top center
 
     // Attenuate height
-    tl[1] += height / 2;
-    tr[1] += height / 2;
-    tc[1] += height;
+    tl[1] += height / 2;  // top left
+    tr[1] += height / 2;  // top right
+    tc[1] += height;      // top center
 
     return {
-      positions: [...bl, ...br, ...tr, ...tl, ...tc],
+      positions: [
+        ...bl,
+        ...br,
+        ...tr,
+        ...tl,
+        ...tc
+      ],
       indices: [
-        vIndex,
-        vIndex + 1,
-        vIndex + 2,
-        vIndex + 2,
-        vIndex + 4,
-        vIndex + 3,
-        vIndex + 3,
-        vIndex,
-        vIndex + 2
+        index,
+        index + 1,
+        index + 2,
+        index + 2,
+        index + 4,
+        index + 3,
+        index + 3,
+        index,
+        index + 2
       ]
     }
   }
 }
-
-class Grass extends THREE.Mesh {
-  constructor(params) {
-    const geometry = new GrassGeometry(params.size, params.count);
-    console.log(params.displacementMap);
-    const material = new THREE.ShaderMaterial({
-      uniforms: {
-        uTime: { value: 0 },
-        uDisplacement: { value: params.displacementMap },
-        uSize: { value: params.size },
-        uMaxBladeSize: { value: BLADE_HEIGHT + BLADE_HEIGHT_VARIATION },
-        uBaseColor: { value: new THREE.Color(grassColors.baseColor) },
-      },
-      side: THREE.DoubleSide,
-      alphaTest: 0,
-      vertexShader,
-      fragmentShader,
-    });
-    super(geometry, material);
-  }
-
-  update(time) {
-    this.material.uniforms.uTime.value = time;
-  };
-
-  updateGrass(size, count) {
-    // this.material.uniforms.uTime.value = 0;
-    // this.geometry.dispose();
-    // this.geometry = new GrassGeometry(size, count);
-  }
-}
-export default Grass;
+export default GrassGeometry;

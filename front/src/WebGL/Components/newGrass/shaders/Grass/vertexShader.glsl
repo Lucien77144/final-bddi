@@ -1,6 +1,6 @@
 uniform float uTime;
 uniform sampler2D uDisplacement;
-uniform vec2 uSize;
+uniform vec3 uSize;
 
 varying vec3 vBasePosition;
 varying vec3 vPosition;
@@ -26,7 +26,7 @@ void main() {
   
   vec2 posScale = vec2(vPosition.x, -vPosition.z) / uSize.x + .5;
 	vec4 displacement = texture2D(uDisplacement, posScale);
-	vPosition.y += displacement.r;
+	vPosition.y += displacement.r * uSize.y;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
 }

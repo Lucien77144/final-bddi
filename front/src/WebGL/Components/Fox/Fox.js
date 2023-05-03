@@ -1,7 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { AnimationMixer, Mesh, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
-import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import cloneGltf from "@/WebGL/Utils/GltfClone";
 
 export default class Fox {
   constructor(_position = new Vector3(0, 0, 0)) {
@@ -24,20 +24,22 @@ export default class Fox {
     // Resource
     this.resource = this.resources.items.foxModel;
 
+    console.log("here", this.resource);
+
     this.setModel();
-    this.setAnimation();
     this.setInputs();
+    this.setAnimation();
   }
 
   setModel() {
-    this.model = SkeletonUtils.clone(this.resource.scene);
+    this.model = cloneGltf(this.resource).scene;
 
     this.model.scale.set(0.02, 0.02, 0.02);
     this.model.position.copy(this.position);
     this.model.name = "fox";
 
     this.scene.add(this.model);
-    
+
     this.model.traverse((child) => {
       if (child instanceof Mesh) {
         child.castShadow = true;
@@ -125,6 +127,6 @@ export default class Fox {
   }
 
   update() {
-    this.animation.mixer.update(this.time.delta * 0.001);
+    this.animation?.mixer.update(this.time.delta * 0.001);
   }
 }

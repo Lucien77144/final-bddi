@@ -1,6 +1,6 @@
 export default [
   // --------------------
-  // Models : 
+  // Models :
   // --------------------
 
   // gltf :
@@ -11,19 +11,34 @@ export default [
   },
 
   // glb :
+  // {
+  //   name: "groundModel",
+  //   type: "glb",
+  //   path: "models/Ground/Ground.glb",
+  // },
   {
     name: "groundModel",
     type: "glb",
-    path: "models/Ground/Ground_V02.glb",
+    path: "models/Ground/Ground_V3.glb",
   },
   {
     name: "stoneModel",
     type: "glb",
     path: "models/Rock/Stone.glb",
   },
-  
+  {
+    name: "columnModel",
+    type: "glb",
+    path: "models/Column/Column.glb",
+  },
+  {
+    name: "fairyModel",
+    type: "glb",
+    path: "models/Fairy/Fairy.glb",
+  },
+
   // --------------------
-  // Textures : 
+  // Textures :
   // --------------------
 
   // png :
@@ -54,9 +69,9 @@ export default [
     type: "texture",
     path: "img/cloud.jpg",
   },
-  
+
   // --------------------
-  // Cube Textures : 
+  // Cube Textures :
   // --------------------
   {
     name: "environmentMapTexture",

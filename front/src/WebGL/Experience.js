@@ -1,12 +1,12 @@
 import Debug from "utils/Debug.js";
 import Sizes from "utils/Sizes.js";
 import Time from "utils/Time.js";
-import Camera from "./Camera.js";
-import Renderer from "./Renderer.js";
+import Camera from "webgl/Camera.js";
+import Renderer from "webgl/Renderer.js";
 import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
-import sources from "./sources.js";
+import sources from "webgl/sources.js";
 
 let instance = null;
 
@@ -48,8 +48,10 @@ export default class Experience {
   switchScene(nextName) {
     this.scene = new Scene();
     this.debug = new Debug();
+    this.camera = new Camera();
     this.activeScene = new SceneManager(nextName);
     this.renderer.scene = this.scene;
+    this.renderer.camera = this.camera;
     this.update();
   }
 
@@ -60,8 +62,8 @@ export default class Experience {
 
   update() {
     this.camera.instance && this.camera.update();
-    this.renderer.update();
     this.activeScene.update();
+    this.renderer.update();
     this.debug.update();
   }
 

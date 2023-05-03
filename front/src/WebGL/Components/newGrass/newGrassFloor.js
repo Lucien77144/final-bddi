@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Grass from "./Grass.js";
-import { DoubleSide, Group, Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
 import vertexShader from "./shaders/Displacement/vertexShader.glsl";
 import fragmentShader from "./shaders/Displacement/fragmentShader.glsl";
 
@@ -16,12 +16,16 @@ export default class newGrassFloor {
     this.debug = this.experience.debug;
 
     this.position = _position;
-    this.displacement = _displacement;
     this.name = `grassFloor-${this.experience.scene.children.filter((child) => child.name.includes("rock")).length}`;
 
     this.grassParameters = {
-      count: 1000,
-      size: 3,
+      count: 75000,
+      size: { 
+        x: 20, 
+        z: 20
+      },
+      displacementMap: this.resources.items[_displacement],
+
     };
     this.grassGroups = [];
 
@@ -32,71 +36,24 @@ export default class newGrassFloor {
     this.setGeometry();
     this.setMaterials();
     this.setGround();
-  }
 
-  setGrass(mesh, limitBlend) {
-    mesh.material = this.material;
-    mesh.ignoreEnvironment = true;
-
-    const group = new Group();
-    const positions = mesh.geometry.attributes.position.array;
-    const normals = mesh.geometry.attributes.normal.array;
-
-    const limits = {
-      min: {
-        x: mesh.geometry.boundingBox.min.x * mesh.scale.x,
-        y: mesh.geometry.boundingBox.min.y * mesh.scale.y,
-        z: mesh.geometry.boundingBox.min.z * mesh.scale.z,
-      },
-      max: {
-        x: mesh.geometry.boundingBox.max.x * mesh.scale.x,
-        y: mesh.geometry.boundingBox.max.y * mesh.scale.y,
-        z: mesh.geometry.boundingBox.max.z * mesh.scale.z,
-      },
-      params : limitBlend,
-    }
-
-    for (var i = 0; i < positions.length; i += 3) {
-      const x = positions[i];
-      const y = positions[i + 1];
-      const z = positions[i + 2];
-
-      const anglePower = 0.75;
-      const normal = new Vector3(normals[i], normals[i+1], normals[i+2]);
-      const angleX = -Math.atan2(normal.y, normal.z) + Math.PI/2;
-      const angleZ = -Math.atan2(normal.x, normal.y);
-
-      this.grass = new Grass(
-        mesh,
-        this.grassParameters.size,
-        this.grassParameters.count,
-        {x, y, z},
-        limits
-      );
-      this.grass.rotation.x = angleX * anglePower;
-      this.grass.rotation.z = angleZ * anglePower;
-  
-      group.add(this.grass);
-    }
-    group.position.copy(mesh.position);
-    this.grassGroups.push(group);
-    this.scene.add(group);
+    this.setGrass();
   }
 
   setGeometry() {
-    this.geometry = new PlaneGeometry(10, 10, 100, 100);
+    this.geometry = new PlaneGeometry(this.grassParameters.size.x, this.grassParameters.size.z, 100, 100);
   }
 
   setMaterials() {
     this.material = new ShaderMaterial({
       uniforms: {
-        uDisplacement: { value: this.resources.items[this.displacement] },
+        uDisplacement: { value: this.grassParameters.displacementMap },
+        uBaseColor: { value: new Color('#11382a') },
       },
       side: DoubleSide,
       transparent: true,
       vertexShader,
       fragmentShader,
-      // map: this.resources.items[this.displacement],
     });
   }
 
@@ -106,6 +63,22 @@ export default class newGrassFloor {
     this.mesh.rotation.x = -Math.PI / 2;
     this.mesh.name = this.name;
     this.scene.add(this.mesh);
+  }
+
+  setGrass() {
+    // let grassColors = {
+    //   color1: '#0a9044',
+    //   color2: '#0ca855',
+    //   color3: '#148538',
+    //   color4: '#15293b',
+    //   color5: '#348bd9',
+    //   baseColor: '#11382a',
+    // }
+
+    this.grass = new Grass(this.grassParameters);
+    this.grass.position.copy(this.mesh.position);
+
+    this.scene.add(this.grass);
   }
 
   update() {

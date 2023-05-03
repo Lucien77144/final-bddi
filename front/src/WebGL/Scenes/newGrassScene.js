@@ -25,7 +25,7 @@ export default class NewGrassScene {
     // Setup
     this.environment = new Environment();
     this.floor = new newGrassFloor();
-    this.fairyDust = new FairyDust();
+    // this.fairyDust = new FairyDust();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
   }

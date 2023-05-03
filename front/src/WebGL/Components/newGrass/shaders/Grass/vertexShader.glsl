@@ -12,7 +12,7 @@ float wave(float tipDistance) {
   bool isTip = (gl_VertexID + 1) % 5  == 0;
 
   float waveDistance = isTip ? tipDistance : 0.;
-  return sin((vPosition.z + uTime) / 1000.) * waveDistance;
+  return sin(vPosition.z + uTime / 1500.) * waveDistance;
 }
 
 void main() {
@@ -25,8 +25,8 @@ void main() {
   vec2 posScale = vec2(vBasePosition.x / uSize.x, -vBasePosition.z / uSize.z) + .5;
 	vec4 displacement = texture2D(uDisplacement, posScale);
 
-  float windFactor = cos(uTime / 2500. + (vPosition.x + vPosition.z * 2.) / 6.) + sin(uTime / 2500. + (vPosition.x + vPosition.z * 2.) / 6.);
-  float wind = -abs(windFactor) / 10.;
+  float windFactor = cos(uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.) + sin(uTime / 1500. + (vPosition.x + vPosition.z * 2.) / 3.);
+  float wind = -(windFactor + 1.) / 20.;
 
   vPosition.y += displacement.r * uSize.y + wind;
   vBasePosition.y += wind;

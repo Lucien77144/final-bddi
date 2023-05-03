@@ -14,21 +14,17 @@ export class GrassGeometry extends THREE.BufferGeometry {
     const positions = [];
     const indices = [];
 
-    const getRandomCoord = (axe) => { return (params.size[axe] / 2) * (Math.random() - .5) * 2 };
+    const getRdmCoordFromAxe = (axe) => { return (params.size[axe] / 2) * (Math.random() - .5) * 2 };
     for (let i = 0; i < params.count; i++) {
-      const x = getRandomCoord('x');
-      const z = getRandomCoord('z');
+      const x = getRdmCoordFromAxe('x');
+      const z = getRdmCoordFromAxe('z');
       
       const blade = this.computeBlade([x, 0, z], i * BLADE_VERTEX_COUNT);
       positions.push(...blade.positions);
       indices.push(...blade.indices);
     }
 
-    this.setAttribute(
-      'position',
-      new THREE.BufferAttribute(new Float32Array(new Float32Array(positions)), 3)
-    );
-
+    this.setAttribute('position', new THREE.BufferAttribute(new Float32Array(new Float32Array(positions)), 3) );
     this.setIndex(indices);
     this.computeVertexNormals();
   }

@@ -32,6 +32,7 @@ export default class NewGrassScene {
 
   update() {
     if (this.fairyDust) this.fairyDust.update();
+    if (this.floor) this.floor.update();
     if (this.urma) this.urma.update();
   }
 }

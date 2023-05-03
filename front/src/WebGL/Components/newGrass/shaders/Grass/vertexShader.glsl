@@ -12,7 +12,7 @@ float wave(float waveSize, float tipDistance, float centerDistance) {
   bool isTip = (gl_VertexID + 1) % 5  == 0;
 
   float waveDistance = isTip ? tipDistance : centerDistance;
-  return sin((uTime / 500.0) + waveSize) * waveDistance;
+  return sin((vPosition.x + uTime) / 1000. + waveSize) * waveDistance;
 }
 
 void main() {
@@ -21,12 +21,11 @@ void main() {
   vUv = uv;
 
   vNormal = normalize(normalMatrix * normal);
-
-  vPosition.x += wave(vUv.x * 10.0, 0.1, 0.04); 
-  
-  vec2 posScale = vec2(vPosition.x, -vPosition.z) / uSize.x + .5;
+  vec2 posScale = vec2(vBasePosition.x, -vBasePosition.z) / uSize.x + .5;
 	vec4 displacement = texture2D(uDisplacement, posScale);
+  
+  vPosition.x += wave(1., .1, .04);
 	vPosition.y += displacement.r * uSize.y;
   
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);
 }

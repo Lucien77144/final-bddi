@@ -9,8 +9,8 @@ import GrassGeometry from "./Grass";
 export default class newGrassFloor {
   constructor(
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(20, 2, 20),
-    _count = 75000,
+    _size = new Vector3(20, 3, 20),
+    _count = 100000,
     _displacement = "displacementMap"
   ) {
     this.experience = new Experience();
@@ -102,6 +102,6 @@ export default class newGrassFloor {
   }
 
   update() {
-    this.grassMaterial.uniforms.uTime.value = time;
+    this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
   }
 }

@@ -9,7 +9,7 @@ import GrassGeometry from "./Grass";
 export default class newGrassFloor {
   constructor(
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, 1, 20),
+    _size = new Vector3(10, .5, 20),
     _count = 100000,
     _maps = {
       displacementMap: "displacementMap",
@@ -90,6 +90,7 @@ export default class newGrassFloor {
     this.grass = new Mesh(this.grassGeometry, this.grassMaterial);
     this.grass.position.copy(this.ground.position);
     this.grass.name = this.name + "-blades";
+    this.grass.ignoreEnvironment = true;
 
     this.scene.add(this.grass);
   }
@@ -107,6 +108,10 @@ export default class newGrassFloor {
         uSize: { value: this.grassParameters.size },
         uMaxBladeSize: { value: this.grassGeometry.maxHeight },
         uBaseColor: { value: this.grassParameters.colors.base },
+        uColor1: { value: new Color('#0a9044') },
+        uColor2: { value: new Color('#0ca855') },
+        uColor3: { value: new Color('#148538') },
+        uColor4: { value: new Color('#15293b') },
       },
       side: DoubleSide,
       transparent: true,
@@ -117,6 +122,6 @@ export default class newGrassFloor {
   }
 
   update() {
-    this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+    if(this.grassMaterial) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
   }
 }

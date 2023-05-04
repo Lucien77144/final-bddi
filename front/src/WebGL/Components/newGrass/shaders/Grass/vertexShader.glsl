@@ -3,6 +3,7 @@ uniform sampler2D uDisplacement;
 uniform sampler2D uMask;
 uniform vec3 uSize;
 
+varying vec2 vUv;
 varying vec3 vBasePosition;
 varying vec3 vPosition;
 varying float vMask;
@@ -27,13 +28,14 @@ vec4 getTexture2D(sampler2D map) {
 void main() {
   vPosition = position;
   vBasePosition = position;
+  vUv = uv;
   
   float wind = getWind();
   vPosition.y += getTexture2D(uDisplacement).r * uSize.y + wind;
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
 
-  vMask = 1. - (getTexture2D(uMask).r * uSize.y);
+  vMask = 1. - (getTexture2D(uMask).r);
   vPosition.y *= vMask;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);

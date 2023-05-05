@@ -34,6 +34,14 @@ export default class newGrassFloor {
       mask: this.resources.items[_maps.mask],
       colors : {
         base: new Color('#11382a'),
+        set: [ // 4 colors to set, only the first not commented set is used
+          {
+            uColor1: { value: new Color('#15945d') },
+            uColor2: { value: new Color('#0a9044') },
+            uColor3: { value: new Color('#14857c') },
+            uColor4: { value: new Color('#0ca87e') },
+          },
+        ]
       }
     };
 
@@ -78,12 +86,6 @@ export default class newGrassFloor {
   }
 
   setGrass() {
-    //   '#0a9044',
-    //   '#0ca855',
-    //   '#148538',
-    //   '#15293b',
-    //   '#348bd9',
-    //   '#11382a',
     this.setGrassGeometry();
     this.setGrassMaterial();
 
@@ -108,10 +110,7 @@ export default class newGrassFloor {
         uSize: { value: this.grassParameters.size },
         uMaxBladeSize: { value: this.grassGeometry.maxHeight },
         uBaseColor: { value: this.grassParameters.colors.base },
-        uColor1: { value: new Color('#0a9044') },
-        uColor2: { value: new Color('#0ca855') },
-        uColor3: { value: new Color('#148538') },
-        uColor4: { value: new Color('#15293b') },
+        ...this.grassParameters.colors.set[0],
       },
       side: DoubleSide,
       transparent: true,

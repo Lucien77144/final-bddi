@@ -55,27 +55,14 @@ float cnoise(vec2 P) {
 }
 // ------
 
-float getNoise() {
-  return step(0.0, cnoise(vPosition.xz));
+float getNoise(float i) {
+  return cnoise((vPosition.xz + i * max(uSize.x, uSize.z)) / 5.) / 1.;
 }
 
 void main() {
-  // vec3 color = uBaseColor;
-  vec3 color = vec3(1., .0, .0);
-  // color = mix(color, uColor1, getNoise());
-  // color = mix(color, uColor2, getNoise());
-  // color = mix(color, uColor3, getNoise());
-  color = mix(color, uColor1, step(0.0, cnoise(vPosition.xz / 2.)));
-  color = mix(color, uColor2, step(0.0, cnoise(-vPosition.xz / 2.)));
-  color = mix(color, uColor3, 1.-step(0.0, cnoise(vPosition.xz / 2.)));
-  color = mix(color, uColor4, 1.-step(0.0, cnoise(-vPosition.xz / 2.)));
-  // n = rdm();
-  // color = mix(color, uColor2, getNoise(n) / (n*2.));
-  // n = rdm();
-  // color = mix(color, uColor3, getNoise(n) / (n*2.));
-  // n = rdm();
-  // color = mix(color, uColor4, getNoise(n) / (n*2.));
+  vec3  color = mix(uColor1,  uColor2,  getNoise(1.));
+        color = mix(color,    uColor3,  getNoise(2.));
+        color = mix(color,    uColor4,  getNoise(3.));
 
-  // gl_FragColor = vec4(mix(uBaseColor, color, vBasePosition.y / uMaxBladeSize), 1. * vMask);
-  gl_FragColor = vec4(color, 1. * vMask);
+  gl_FragColor = vec4(mix(uBaseColor, color, vBasePosition.y / uMaxBladeSize), 1. * vMask);
 }

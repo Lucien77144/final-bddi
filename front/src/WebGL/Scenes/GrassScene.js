@@ -2,14 +2,12 @@ import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
-import Rock from "../Components/Rock/Rock.js";
-import Cube from "../Components/Cube/Cube.js";
-import River from "../Components/River/River.js";
-import Fairy from "../Components/Fairy/Fairy.js";
-// import Collision from "@/WebGL/Utils/Collision.js";
+import Column from "../Components/Column/Column";
+import River from "../Components/River/River";
 import CollisionV1 from "../Components/Fairy/Collision.js";
+import GrassFloor from "../Components/GrassFloor/GrassFloor";
+import Fairy from "../Components/Fairy/Fairy";
 
 export default class GrassScene {
   constructor() {
@@ -30,31 +28,36 @@ export default class GrassScene {
   buildScene() {
     // Setup
     this.environment = new Environment();
-    this.floor = new GrassFloor();
-    this.fairyDust = new FairyDust();
+
+    this.floors = [
+      new GrassFloor({
+        _position: new Vector3(-3, -4, 0),
+        // _count: 5,
+      }),
+    ];
     this.river = new River(new Vector3(-6, 2, -11));
-
-    // this.collision = new Collision();
-    this.collisionV1 = new CollisionV1();
-
-    // this.rock1 = new Rock(new Vector3(0, 3, 0))
-    // this.rock2 = new Rock(new Vector3(3, 3, 3))
-    // this.rock3 = new Rock(new Vector3(6, 3, 6))
-    this.urma = new Urma(new Vector3(0, 5, 8));
-    // this.cube = new Cube(new Vector3(6.36, 0, 10));
-
     this.column = new Column(new Vector3(0, 0, 0));
 
-    // this.fairy = new Fairy(new Vector3(0, 5, 12));
+    this.fairy = new Fairy(new Vector3(0, 5, 12));
+    this.fairyDust = new FairyDust();
+    this.collisionV1 = new CollisionV1();
+
+    this.urma = new Urma(new Vector3(0, 5, 8));
+    // this.cube = new Cube(new Vector3(6.36, 0, 10));
   }
 
   update() {
-    // if (this.collision) this.collision.update();
-    if (this.collisionV1) this.collisionV1.update();
-    if (this.fairyDust) this.fairyDust.update();
-    if (this.floor) this.floor.update();
+
     if (this.urma) this.urma.update();
+
+    if (this.fairy) this.fairy.update();
+    if (this.fairyDust) this.fairyDust.update();
+    if (this.collision) this.collision.update();
+    if (this.collisionV1) this.collisionV1.update();
+
+    this.floors?.forEach((floor) => {
+      floor.update();
+    })
     if (this.river) this.river.update();
-    // if (this.fairy) this.fairy.update();
   }
 }

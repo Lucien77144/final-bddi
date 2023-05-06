@@ -19,6 +19,7 @@ export default class MouseMove {
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.path = new PathUrma();
+    this.cursor = new THREE.Vector3();
 
     // Wait for resources
     if (this.resources.loaded == this.resources.toLoad) {
@@ -28,8 +29,6 @@ export default class MouseMove {
         this.buildEvent();
       });
     }
-
-    this.cursor = new THREE.Vector3();
   }
 
   buildEvent() {

@@ -6,8 +6,8 @@ import grassVertex from "./shaders/Grass/vertexShader.glsl";
 import grassFragment from "./shaders/Grass/fragmentShader.glsl";
 import GrassGeometry from "./Grass";
 
-export default class newGrassFloor {
-  constructor(
+export default class GrassFloor {
+  constructor({
     _position = new Vector3(0, 0, 0),
     _size = new Vector3(10, .5, 20),
     _count = 100000,
@@ -15,8 +15,19 @@ export default class newGrassFloor {
       displacementMap: "displacementMap",
       mask: "mask",
       baseTexture: "dirtTexture",
-    }
-  ) {
+    },
+    _colors = {
+      base: new Color('#11382a'),
+      set: [ // 4 colors to set, only the first not commented set is used
+        {
+          uColor1: { value: new Color('#15945d') },
+          uColor2: { value: new Color('#0a9044') },
+          uColor3: { value: new Color('#14857c') },
+          uColor4: { value: new Color('#0ca87e') },
+        },
+      ]
+    },
+  } = {}) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
@@ -32,21 +43,11 @@ export default class newGrassFloor {
       baseTexture: this.resources.items[_maps.baseTexture],
       displacementMap: this.resources.items[_maps.displacementMap],
       mask: this.resources.items[_maps.mask],
-      colors : {
-        base: new Color('#11382a'),
-        set: [ // 4 colors to set, only the first not commented set is used
-          {
-            uColor1: { value: new Color('#15945d') },
-            uColor2: { value: new Color('#0a9044') },
-            uColor3: { value: new Color('#14857c') },
-            uColor4: { value: new Color('#0ca87e') },
-          },
-        ]
-      }
+      colors : _colors,
     };
 
     this.setGround();
-    this.setGrass();
+    // this.setGrass();
   }
 
   setGroundGeometry() {
@@ -71,6 +72,7 @@ export default class newGrassFloor {
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
     });
+    this.groundMaterial.wireframe = true;
   }
 
   setGround() {

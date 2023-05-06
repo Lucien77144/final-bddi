@@ -85,7 +85,7 @@ export default class Fairy {
     if (moveY) {
       resPos.y = newPos.y;
     } else {
-      resPos.y += 0.01;
+      // resPos.y += 0.01;
     }
     if ((this.canGoLeft || left) && (this.canGoRight || right)) {
       resPos.z = newPos.z;

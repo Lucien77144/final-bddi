@@ -47,7 +47,7 @@ export default class GrassFloor {
     };
 
     this.setGround();
-    // this.setGrass();
+    this.setGrass();
   }
 
   setGroundGeometry() {
@@ -72,7 +72,6 @@ export default class GrassFloor {
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
     });
-    this.groundMaterial.wireframe = true;
   }
 
   setGround() {

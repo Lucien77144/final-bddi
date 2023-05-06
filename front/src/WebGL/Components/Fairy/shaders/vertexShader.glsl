@@ -2,9 +2,6 @@ uniform float uPixelRatio;
 uniform float uSize;
 
 attribute float aScale;
-attribute float life;
-
-varying float vLife;
 
 varying vec2 vUv;
 uniform sampler2D positionTexture;
@@ -15,8 +12,6 @@ void main()
     vUv = reference;
 
 	vec3 pos = texture(positionTexture, vUv).xyz;
-
-    vLife = life;
     
     vec4 modelPosition = modelMatrix * vec4(pos, 1.0);
 

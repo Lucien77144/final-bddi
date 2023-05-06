@@ -1,4 +1,13 @@
-import { BufferAttribute, BufferGeometry, Color, Group, Points, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  Group,
+  Points,
+  RepeatWrapping,
+  ShaderMaterial,
+  Vector3,
+} from "three";
 import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
 
 import Experience from "../../Experience";
@@ -22,7 +31,7 @@ export default class FairyDust {
     this.scene.add(this.particles);
 
     this._options = {
-      width: 100,
+      width: 50,
     };
 
     this._setGeometry();
@@ -30,7 +39,7 @@ export default class FairyDust {
 
     this._setMesh();
 
-    this.initGPGPU();
+    this.initGPU();
   }
 
   _setGeometry() {
@@ -62,24 +71,12 @@ export default class FairyDust {
       reference.set([xx, yy], i * 2);
     }
 
-    this._geometry.setAttribute(
-      "position",
-      new BufferAttribute(positions, 3)
-    );
-    this._geometry.setAttribute(
-      "reference",
-      new BufferAttribute(reference, 2)
-    );
+    this._geometry.setAttribute("position", new BufferAttribute(positions, 3));
+    this._geometry.setAttribute("reference", new BufferAttribute(reference, 2));
 
-    this._geometry.setAttribute(
-      "aScale",
-      new BufferAttribute(scaleArray, 1)
-    );
+    this._geometry.setAttribute("aScale", new BufferAttribute(scaleArray, 1));
 
-    this._geometry.setAttribute(
-      "life",
-      new BufferAttribute(lifeArray, 1)
-    );
+    this._geometry.setAttribute("life", new BufferAttribute(lifeArray, 1));
   }
 
   _setMaterial() {
@@ -91,26 +88,14 @@ export default class FairyDust {
         uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
         uSize: { value: 100 },
         uColor: { value: new Color("#faf2af") },
+        uFadeIn: { value: 0.1 },
+        uFadeOut: { value: 0.5 },
+        uTime: { value: 0 },
+        isFairyMoving: { value: false },
       },
       vertexShader: fairyDustVertexShader,
       fragmentShader: fairyDustFragmentShader,
     });
-
-    // this.particlesMaterial = new ShaderMaterial({
-    //   transparent: true,
-    //   depthWrite: false,
-    //   uniforms: {
-    //     uTime: { value: 0 },
-    //     uGravity: { value: 0.5 },
-    //     uColor: { value: new Color("#faf2af") },
-    //     uFadeIn: { value: 0.1 },
-    //     uFadeOut: { value: 0.5 },
-    //     uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-    //     uSize: { value: 100 },
-    //   },
-    //   vertexShader,
-    //   fragmentShader,
-    // });
   }
 
   _setMesh() {
@@ -119,19 +104,7 @@ export default class FairyDust {
     this.scene.add(this._mesh);
   }
 
-  updateParticles() {
-    this.particles.children.forEach((el, cur) => {
-      if (el.life > 50) {
-        const object = this.particles.children[cur];
-        object.geometry.dispose();
-        this.particles.remove(object);
-      } else {
-        el.life++;
-      }
-    });
-  }
-
-  initGPGPU() {
+  initGPU() {
     this.gpuCompute = new GPUComputationRenderer(
       this._options.width,
       this._options.width,
@@ -139,7 +112,6 @@ export default class FairyDust {
     );
     this.dtPosition = this.gpuCompute.createTexture();
     this.fillPositions(this.dtPosition);
-    console.log(this.dtPosition);
 
     this.positionVariable = this.gpuCompute.addVariable(
       "positionTexture",
@@ -153,12 +125,14 @@ export default class FairyDust {
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
-      this.positionVariable.material.uniforms.fairyPosition.value =
-        new Vector3(x, y, z);
+      this.positionVariable.material.uniforms.fairyPosition.value = new Vector3(
+        x,
+        y,
+        z
+      );
     });
 
-    this.positionVariable.wrapS = this.positionVariable.wrapT =
-      RepeatWrapping;
+    this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
     this.gpuCompute.setVariableDependencies(this.positionVariable, [
       this.positionVariable,
     ]);
@@ -192,9 +166,12 @@ export default class FairyDust {
     if (this.fairy) this.fairy.update();
 
     this.positionVariable.material.uniforms.uTime.value += this.time.delta;
+    this._material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
     this._material.uniforms.positionTexture.value =
       this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+
+    this._material.uniforms.isFairyMoving.value = this.fairy.isFairyMoving();
   }
 }

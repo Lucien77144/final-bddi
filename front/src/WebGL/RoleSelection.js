@@ -1,137 +1,61 @@
-import * as THREE from 'three'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
-import * as ROOM from '../scripts/room.js'
+import * as THREE from 'three';
+import Resources from './Utils/Resources';
+import sources from './sources';
+import Sizes from './Utils/Sizes';
+import Time from './Utils/Time';
+import Camera from './Camera';
+import Renderer from './Renderer';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { roleSelectionEvent } from '../scripts/room';
+
+let instance = null
 
 export default class RoleSelection {
-  constructor() {
-    /**
-     * Base
-     */
-    // Canvas
-    this.canvas = document.querySelector('canvas#roleSelectionCanvas')
-    
-    console.log(this.canvas);
-    
-    // Scene
+  constructor(_canvas) {
+
+    this.swipeButton = document.querySelector('#swipeButton');
+    this.roleDescription = document.querySelector('.roleDescription');
+    this.selectionRoleContinue = document.querySelector('#selectionRoleContinue');
+    this.roleDescription.innerHTML = "urma"
+    this.selectedRole = 'urma';
+
+    this.swipeButton.addEventListener('click', () => {
+      this.switchRole();
+    });
+
+    this.selectionRoleContinue.addEventListener('click', () => {
+      roleSelectionEvent(this.selectedRole);
+    });
+
+    this.canvas = _canvas;
     this.scene = new THREE.Scene()
-    
-    // Image
-    this.urmaCadre = new Image()
-    this.urmaCadre.src = '/img/urma-cadre.png'
-    // Make the image a 3d object
-    // load the texture
 
-    
-    this.texture = new THREE.Texture(this.urmaCadre)
-    this.texture.needsUpdate = true
-    // this.texture.minFilter = THREE.LinearFilter
-    // this.texture.magFilter = THREE.LinearFilter
-    // this.texture.format = THREE.RGBFormat
-    // this.texture.encoding = THREE.sRGBEncoding
-    // this.texture.flipY = false
+    // Cube
+    const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
+    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
+    const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial)
+    this.scene.add(cubeMesh)
 
+    // Cube 2
 
+    const cubeGeometry2 = new THREE.BoxGeometry(1, 1, 1)
+    const cubeMaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+    const cubeMesh2 = new THREE.Mesh(cubeGeometry2, cubeMaterial2)
+    cubeMesh2.position.x = 8
+    this.scene.add(cubeMesh2)
 
-
-    // object
-    this.geometry = new THREE.PlaneGeometry(2, 3, 1, 1)
-    this.material = new THREE.MeshBasicMaterial({ 
-        map: this.texture,
-        side: THREE.DoubleSide })
-    this.urmaCadre = new THREE.Mesh(this.geometry, this.material)
-    this.urmaCadre.name = "urma"
-    this.urmaCadre.position.set(-3.5, 0, 0)
-    
-    this.scene.add(this.urmaCadre)
-
-    this.hedaCadre = new THREE.Mesh(this.geometry, this.material)
-    // flip the image
-    this.hedaCadre.scale.x = -1
-    this.hedaCadre.name = "heda"
-    this.hedaCadre.position.set(3.5, 0, 0)
-
-    this.scene.add(this.hedaCadre)
-
-  
-    // Make the urmaCadre move with the mouse
-    this.mouse = new THREE.Vector2()
-    this.raycaster = new THREE.Raycaster()
-    this.intersects = []
-    
-    this.onMouseMove = (event) =>
-    {
-        // Update the mouse variable
-        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1
-        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1
-
-        // Update the raycaster
-        this.raycaster.setFromCamera(this.mouse, this.camera)
-
-        // Calculate objects intersecting the picking ray
-        this.intersects = this.raycaster.intersectObjects(this.scene.children)
-
-        // console.log(this.intersects);
-        
-        if (this.intersects.length > 0) {
-          const objectToMove = this.intersects[0].object
-            // rotate the urmaCadre in the direction of the mouse
-            // console.log(this.mouse);
-            objectToMove.rotation.x = (this.mouse.y * 0.1) 
-            objectToMove.rotation.y = (this.mouse.x * 0.1)
-            objectToMove.scale.x = 1.1
-            objectToMove.scale.y = 1.1
-        } else {
-            this.urmaCadre.rotation.x = 0
-            this.urmaCadre.rotation.y = 0
-            this.urmaCadre.scale.x = 1
-            this.urmaCadre.scale.y = 1
-
-            this.hedaCadre.rotation.x = 0
-            this.hedaCadre.rotation.y = 0
-            this.hedaCadre.scale.x = 1
-            this.hedaCadre.scale.y = 1
-        }
-    }
-
-    window.addEventListener('mousemove', this.onMouseMove)
-
-    // Click event
-    this.onClick = () =>
-    {
-        if (this.intersects.length > 0) {
-            console.log(this.intersects);
-            ROOM.roleSelectionEvent(this.intersects[0].object.name)
-        }
-    }
-
-    window.addEventListener('click', this.onClick)
- 
-    // Sizes
     this.sizes = {
-        width: window.innerWidth,
-        height: window.innerHeight / 2
+      width: window.innerWidth / 2,
+      height: window.innerHeight / 2
     }
-    
-    window.addEventListener('resize', () =>
-    {
-        // Update sizes
-        this.sizes.width = window.innerWidth 
-        this.sizes.height = window.innerHeight / 2
-    
-        // Update camera
-        this.camera.aspect = this.sizes.width / this.sizes.height
-        this.camera.updateProjectionMatrix()
-    
-        // Update renderer
-        this.renderer.setSize(this.sizes.width, this.sizes.height)
-        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    })
-    
-    // Camera
+
     this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
     this.camera.position.z = 3
     this.scene.add(this.camera)
-    
+
+    this.controls = new OrbitControls(this.camera, this.canvas)
+    this.controls.enableDamping = true
+
     // Controls
     this.controls = new OrbitControls(this.camera, this.canvas)
     this.controls.enableDamping = true
@@ -142,6 +66,9 @@ export default class RoleSelection {
         // Anti-aliasing
         antialias: true
     })
+
+    
+
     this.renderer.setSize(this.sizes.width, this.sizes.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     
@@ -151,7 +78,11 @@ export default class RoleSelection {
     // Make background transparent
     this.renderer.setClearColor(0x000000, 0);
 
+    this.swipeButton.addEventListener('click', () => {
+    })
+
     
+
     this.tick = () =>
     {
         this.elapsedTime = this.clock.getElapsedTime()
@@ -168,4 +99,15 @@ export default class RoleSelection {
     
     this.tick()
   }
+
+  switchRole() {
+    if (this.selectedRole === 'urma') {
+      this.selectedRole = 'heda';
+      this.roleDescription.innerHTML = "heda"
+    } else {
+      this.selectedRole = 'urma';
+      this.roleDescription.innerHTML = "urma"
+    }
+  }
 }
+

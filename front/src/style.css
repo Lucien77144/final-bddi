@@ -33,7 +33,7 @@ body {
   left : 1%;
 }
 
-section {
+section:not(#scene) {
   /* background: linear-gradient(82.36deg, #C0E1EC 9.76%, #81CDE6 86.58%); */
   width: 100vw;
   height: 100vh;
@@ -336,4 +336,8 @@ input[type="text"] {
   outline: none;
   padding : 4px;
   margin-top : 1rem;
+}
+
+#scene {
+
 }

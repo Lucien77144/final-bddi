@@ -24,4 +24,4 @@ function copyToClipboard() {
   
 
 const roleSelection = new RoleSelection(document.querySelector('#roleSelectionCanvas'));
-const experience = new Experience(document.querySelector("canvas#roleSelectionCanvas"));
+// const experience = new Experience(document.querySelector("canvas#roleSelectionCanvas"));

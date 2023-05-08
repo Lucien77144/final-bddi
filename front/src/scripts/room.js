@@ -139,7 +139,7 @@ socket.on('role', (playerRole) => {
         <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
-    const experience = new Experience();
+    const experience = new Experience(document.querySelector("canvas#webgl"));
     experience.setUp();
     scene.classList.remove('hidden');
 });

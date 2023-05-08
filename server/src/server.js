@@ -154,6 +154,9 @@ function joinRoom(clientSocket, roomId) {
       io.to(player1Id).emit('joinRoom', {success : room});
       io.to(player2Id).emit('joinRoom', {success : room});
 
+      io.to(player1Id).emit('player2Joined');
+      io.to(player2Id).emit('displayWaitingRoom');
+
       // Emit role selection to player 1
       io.to(player1Id).emit('selectRole');
     } else {

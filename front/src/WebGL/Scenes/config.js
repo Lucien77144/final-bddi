@@ -4,7 +4,7 @@ import Main from "scenes/Main.js";
 import CubeScene from "scenes/CubeScene";
 
 export default {
-  main: GrassScene,
+  main: CubeScene,
   "cube": CubeScene,
   "fairy": FairyScene,
   "grass": GrassScene,

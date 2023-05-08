@@ -36,14 +36,16 @@
         </div>
         <div class="button-group">
           <div class="create-room">
-              <button class="button-1 b2" id="create">
-                <svg width="198" height="68" viewBox="0 0 198 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" stroke-width="0.5"/>
-                </svg>
-                <span class="text">
-                  Créez une partie
-                </span>
-              </button>
+            <button class="button-1 b2" id="create">
+              <svg width="198" height="68" viewBox="0 0 198 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" />
+                <animate xlink:href="#my-path" attributeName="stroke-dashoffset" from="200" to="0" dur="2s" begin="0s" fill="freeze"/>
+                <animate xlink:href="#my-path" attributeName="stroke" from="#000" to="#f00" dur="2s" begin="0s" fill="freeze"/>
+              </svg>
+              <span class="text">
+                Continuer
+              </span>
+            </button>
             <!-- <div class="showRoomId"></div> -->
           </div>
           <div class="join-room">
@@ -59,7 +61,7 @@
         </div>
       </div>
     </section>
-    <section id="waitingRoom" class="hidden">
+    <section id="waitingRoom" class="hidden center">
       <div class="card">
         <h1>
           Invite une personne à rejoindre la partie
@@ -80,12 +82,14 @@
           </div>
             
         </div>
-        <p>
+        <p class="waiting-player-text">
           En attente d'un autre joueur...
         </p>
-        <button disabled class="button-1 b2" id="create">
+        <button disabled class="button-1 b2 continue-button" id="create">
           <svg width="198" height="68" viewBox="0 0 198 68" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" stroke-width="0.5"/>
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" />
+            <animate xlink:href="#my-path" attributeName="stroke-dashoffset" from="200" to="0" dur="2s" begin="0s" fill="freeze"/>
+            <animate xlink:href="#my-path" attributeName="stroke" from="#000" to="#f00" dur="2s" begin="0s" fill="freeze"/>
           </svg>
           <span class="text">
             Continuer
@@ -93,24 +97,71 @@
         </button>
       </div>
     </section>
-    <section class="hidden" id="joinRoom">
-        <input type="text" id="roomInput" placeholder="Entrez le code de la partie" />
-        <button id="confirmRoom">
-          Confirmer
-        </button>
+    <section class="hidden center" id="joinRoom">
+      <div id="enterCode" class=" ">
+        <div class="card">
+          <h1>Entrer le code de la partie</h1>
+          <input class="" type="text" id="roomInput" placeholder="Saisir le code" />
+          <button class="button-1 b2 continue-button" id="confirmRoom">
+            <svg width="198" height="68" viewBox="0 0 198 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" />
+              
+            </svg>
+            <span class="text">
+              Continuer
+            </span>
+          </button>
+        </div>
+      </div>
+      <div id="waitSelection" class="hidden">
+        attendez que l'autre joueur choisisse son personnage
+      </div>
     </section>
-    <section class="hidden" id="roleSelection">
-      <div class="title">
+    <section class="hidden center" id="roleSelection">
+      <!-- <div class="">
         Choisissez votre personnage
       </div>
       <div class="roles">
-        <button class="hidden" id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
-        <button class="hidden" id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
+        <button class="" id="selectionUrma">Urma (joueur 2 incarnera heda)</button>
+        <button class="" id="selectionHeda">Heda (joueur 2 incarnera urma)</button>
         <div class="d-flex">
           <p>Urma</p>
           <p>Heda</p>
         </div>
         <canvas id="roleSelectionCanvas"></canvas>
+      </div> -->
+      <div class="d-flex flex-center">
+        <div class="card mr-1">
+          <h1>Choisissez votre personnage</h1>
+          <p class="legend">
+            En tant que “Joueur1”, vous pouvez choisir votre personnage. L’autre joueur aura l’autre personnage par défaut
+          </p>
+          <p class="roleDescription">
+
+          </p>
+          <button class="button-1 b2" id="selectionRoleContinue">
+            <svg width="198" height="68" viewBox="0 0 198 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M1 67C1.00007 19 2.11356 1 97.3296 1H197C197 55 189.761 67 97.3296 67L1 67ZM97.3865 4C5.41651 4 4.34098 20.3636 4.34091 64L97.3865 64C186.667 64 193.659 53.0909 193.659 4H97.3865Z" fill="#307098" stroke="white" />
+              <animate xlink:href="#my-path" attributeName="stroke-dashoffset" from="200" to="0" dur="2s" begin="0s" fill="freeze"/>
+              <animate xlink:href="#my-path" attributeName="stroke" from="#000" to="#f00" dur="2s" begin="0s" fill="freeze"/>
+            </svg>
+            <span class="text">
+              Continuer
+            </span>
+          </button>
+        </div>
+        <div class="roleCanvas">
+          <canvas width="631" height="373" id="roleSelectionCanvas"></canvas>
+          <svg id="swipeButton" width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M33 17C33 25.8366 25.8366 33 17 33C8.16344 33 1 25.8366 1 17C1 11.9472 3.34215 7.4415 7 4.50926C9.7392 2.31344 13.2162 1 17 1C24.2741 1 30.4145 5.85421 32.3585 12.5C32.776 13.9275 33 15.4376 33 17Z" fill="#E8EFF4"/>
+            <path id="secondPath" d="M7 4.50926C3.34215 7.4415 1 11.9472 1 17C1 25.8366 8.16344 33 17 33C25.8366 33 33 25.8366 33 17C33 15.4376 32.776 13.9275 32.3585 12.5M7 4.50926C9.7392 2.31344 13.2162 1 17 1C24.2741 1 30.4145 5.85421 32.3585 12.5M7 4.50926C10.5093 1 27.217 3 32.3585 12.5M26.9884 29.5C23.4792 33.0093 6.77145 31.0093 1.62994 21.5093" stroke="#19608D" stroke-width="0.5"/>
+            <g id="rightArrow">
+              <path d="M9.83041 17.8366C9.61232 17.8366 9.4194 17.7771 9.25164 17.6581C9.08388 17.5242 9 17.368 9 17.1895C9 17.0109 9.20131 16.8547 9.60393 16.7208C10.1743 16.5274 21.0126 16.4233 22.4218 16.3489C22.9586 16.3191 23.3025 16.3043 23.4535 16.3043C23.6716 16.3043 23.8645 16.3712 24.0323 16.5051C24.2 16.6241 24.2839 16.7729 24.2839 16.9514C24.2839 17.1299 24.0826 17.2861 23.68 17.42C23.1096 17.6134 12.2713 17.7176 10.8621 17.792C10.3253 17.8217 9.98139 17.8366 9.83041 17.8366Z" fill="#19608D"/>
+              <path d="M20.093 25C19.942 25 19.8162 24.948 19.7156 24.8438C19.6149 24.7546 19.5646 24.6356 19.5646 24.4868C19.5646 24.2339 19.8414 23.6165 20.395 22.6346C20.9486 21.6379 21.67 20.4105 22.5591 18.9526C23.2134 17.8517 23.5405 17.2343 23.5405 17.1005C23.5405 16.6988 23.4398 16.2302 23.2385 15.6946C23.0372 15.159 22.7688 14.616 22.4333 14.0656L22.1313 13.53C22.081 13.4259 21.8881 13.0837 21.5525 12.5035C21.217 11.9233 20.9486 11.358 20.7473 10.8076C20.5124 10.2571 20.395 9.78107 20.395 9.3794L21.0744 9.00004V9.02235C21.3932 9.15624 21.8629 9.81082 22.4836 10.9861C23.1211 12.1465 23.7083 13.4036 24.2451 14.7574C24.7148 16.007 24.9664 16.8029 25 17.1451L20.5711 24.9554L20.3195 24.9777C20.2692 24.9926 20.1937 25 20.093 25Z" fill="#19608D"/>
+            </g>
+          </svg>
+            
+        </div>
       </div>
     </section>
     <section class="hidden" id="scene">

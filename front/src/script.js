@@ -2,9 +2,9 @@ import Experience from "webgl/Experience";
 // import './scripts/login';
 import './scripts/room';
 import './scripts/movement';
-import RoleSelection from "./WebGL/RoleSelection";
 
 import { room, roomIdText } from "./scripts/room";
+import RoleSelection from "./WebGL/RoleSelection";
 
 const copyBtn = document.querySelector('#copyBtn');
 copyBtn.addEventListener('click', copyToClipboard);
@@ -20,9 +20,8 @@ function copyToClipboard() {
       .catch((error) => {
         console.error('Erreur lors de la copie dans le presse-papier', error);
       });
-  }
+}
   
 
-
-const experience = new Experience(document.querySelector("canvas#webgl"));
-const roleSelection = new RoleSelection(document.querySelector("canvas#roleSelectionCanvas"));
+const roleSelection = new RoleSelection(document.querySelector('#roleSelectionCanvas'));
+const experience = new Experience(document.querySelector("canvas#roleSelectionCanvas"));

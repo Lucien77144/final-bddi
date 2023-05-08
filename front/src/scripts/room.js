@@ -23,6 +23,8 @@ export let roomIdText;
 const landingPage = document.querySelector('#landingPage');
 const roleSelection = document.querySelector('#roleSelection');
 const waitingRoom = document.querySelector('#waitingRoom');
+const waitSelection = document.querySelector('#waitSelection');
+const enterCode = document.querySelector('#enterCode');
 const scene = document.querySelector('#scene');
 const roomInfo = document.querySelector('#roomInfo');
 const joinRoomSection = document.querySelector('#joinRoom');
@@ -41,6 +43,9 @@ const joinRoomButton = document.querySelector('#join');
 const confirmJoinRoomButton = document.querySelector('#confirmRoom');
 const roomInput = document.querySelector('#roomInput');
 const showRoomId = document.querySelector('.showRoomId');
+
+const continueButton = document.querySelector('.continue-button');
+const waitingPlayerText = document.querySelector('.waiting-player-text');
 
 createRoomButton.addEventListener('click', () => {
     console.log('Create room');
@@ -75,8 +80,22 @@ socket.on('joinRoom', (data) => {
     } else {
         room = data.success;
         currentPlayer = room.players[0].id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
-        landingPage.classList.add('hidden');
+        // landingPage.classList.add('hidden');
+
     }
+})
+
+socket.on('displayWaitingRoom', () => {
+    console.log('Display waiting room');
+    waitSelection.classList.remove('hidden');
+    enterCode.classList.add('hidden');
+});
+
+socket.on('player2Joined', () => {
+    console.log('Player 2 joined');
+    // Remove disable state of the button
+    continueButton.disabled = false;
+    waitingPlayerText.innerHTML = 'Le joueur 2 a rejoint la partie!';
 })
 
 /**
@@ -88,10 +107,20 @@ socket.on('joinRoom', (data) => {
 const selectionUrma = document.querySelector('#selectionUrma');
 const selectionHeda = document.querySelector('#selectionHeda');
 
-socket.on('selectRole', () => {
+continueButton.addEventListener('click', () => {
+    showRoleSelection();
+})
+
+// socket.on('selectRole', () => {
+//     console.log('Select role');
+//     roleSelection.classList.remove('hidden');
+// });
+
+function showRoleSelection() {
     console.log('Select role');
+    waitingRoom.classList.add('hidden');
     roleSelection.classList.remove('hidden');
-});
+}
 
 
 

@@ -62,7 +62,7 @@ export default class Fireflies {
 
     setFireflies() {
         this.fireflies = new THREE.Points(this.firefliesGeometry, this.firefliesMaterial)
-        this.fireflies.position.set(-10, 0, -10)
+        this.fireflies.position.set(-20, 0, -10)
         console.log(this.fireflies);
         this.scene.add(this.fireflies)
     }

@@ -81,7 +81,6 @@ export default class Environment {
   setCloudBackground() {
     // set video
     this.video = document.getElementById("myVideo");
-
     this.videoTexture = new THREE.VideoTexture(this.video);
     this.videoTexture.encoding = sRGBEncoding;
     this.videoTexture.minFilter = THREE.LinearFilter;
@@ -101,7 +100,7 @@ export default class Environment {
     this.mesh.material.depthWrite = true;
     this.mesh.position.set(-50, 8, 0);
     this.mesh.rotation.set(0, Math.PI/2, 0);
-
+    this.mesh.material.ignoreEnvironment = true;
     this.scene.add(this.mesh);
   }
 }

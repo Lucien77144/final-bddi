@@ -28,11 +28,16 @@ export default class GrassScene {
   buildScene() {
     // Setup
     this.environment = new Environment();
+    
+    // this.grounds = this.resources.items.groundModel.scenes[0];
+    // this.grounds.position.set(0, 0, 0);
+    // console.log(this.grounds);
+    // this.scene.add(this.grounds);
 
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-3, -4, 0),
-        // _count: 5,
+        _position: new Vector3(-9, 1, 0),
+        _size: new Vector3(18, .5, 58),
       }),
     ];
     this.river = new River(new Vector3(-6, 2, -11));

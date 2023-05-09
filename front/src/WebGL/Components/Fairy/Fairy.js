@@ -57,9 +57,7 @@ export default class Fairy {
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(
-      this.mouseMove.cursor
-    );
+    this.distFairyToMouse = this.model.position.distanceTo(this.mouseMove.cursor);
 
     this.model.lookAt(this.mouseMove.cursor);
 
@@ -122,6 +120,7 @@ export default class Fairy {
   }
 
   update() {
+    console.log(this.distFairyToMouse);
     this.animation.mixer.update(
       this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
     );

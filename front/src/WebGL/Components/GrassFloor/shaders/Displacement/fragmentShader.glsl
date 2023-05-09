@@ -19,5 +19,5 @@ vec3 getTextureColor() {
 }
 
 void main() {
-	gl_FragColor = vec4(mix(uBaseColor, getTextureColor(), getTexture2D(uMask).r * uSize.y), 1.);
+	gl_FragColor = vec4(mix(uBaseColor, getTextureColor(), getTexture2D(uMask).r), 1.);
 }

@@ -97,7 +97,7 @@ export default class Fairy {
   }
 
   isFairyMoving() {
-    if (!this.model) return false;
+    if (!this.model) return false; 
 
     return (
       Math.round(this.model.position.z * 10) !==

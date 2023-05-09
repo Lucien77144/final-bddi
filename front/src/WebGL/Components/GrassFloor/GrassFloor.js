@@ -10,7 +10,7 @@ export default class GrassFloor {
   constructor({
     _position = new Vector3(0, 0, 0),
     _size = new Vector3(10, .5, 20),
-    _count = 200000,
+    _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
       mask: "mask",

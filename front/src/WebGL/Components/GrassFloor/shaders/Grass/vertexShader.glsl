@@ -35,7 +35,7 @@ void main() {
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
 
-  vMask = 1. - (getTexture2D(uMask).r);
+  vMask = 1. - (getTexture2D(uMask).r + getTexture2D(uMask).b);
   vPosition.y *= vMask;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);

@@ -120,7 +120,6 @@ export default class Fairy {
   }
 
   update() {
-    console.log(this.distFairyToMouse);
     this.animation.mixer.update(
       this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
     );

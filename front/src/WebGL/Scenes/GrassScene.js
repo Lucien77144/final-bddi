@@ -40,12 +40,12 @@ export default class GrassScene {
         _size: new Vector3(18, .5, 58),
       }),
     ];
-    this.river = new River(new Vector3(-6, 2, -11));
+    // this.river = new River(new Vector3(-6, 2, -11));
     this.column = new Column(new Vector3(0, 0, 0));
 
-    this.fairy = new Fairy(new Vector3(0, 5, 12));
-    this.fairyDust = new FairyDust();
-    this.collisionV1 = new CollisionV1();
+    // this.fairy = new Fairy(new Vector3(0, 5, 12));
+    // this.fairyDust = new FairyDust();
+    // this.collisionV1 = new CollisionV1();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
     // this.cube = new Cube(new Vector3(6.36, 0, 10));

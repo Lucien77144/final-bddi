@@ -8,10 +8,10 @@ vec4 getTexture2D(sampler2D map) {
 	return texture2D(map, vUv);
 }
 
-void main(){
+void main() {
 	vUv = uv;
 	vPosition = position;
-	
+
 	vec4 displacement = getTexture2D(uDisplacement);
 	vec3 newPosition = vPosition + normal * displacement.r * uSize.y;
 

@@ -40,6 +40,7 @@ export default class Environment {
       });
     }
   }
+  
 
   setEnvironmentMap() {
     this.environmentMap = {};

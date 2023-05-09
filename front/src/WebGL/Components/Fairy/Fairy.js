@@ -34,7 +34,6 @@ export default class Fairy {
   }
 
   setModel() {
-    console.log(this.resource);
     this.model = cloneGltf(this.resource).scene;
 
     this.model.scale.set(0.2, 0.2, 0.2);
@@ -58,9 +57,7 @@ export default class Fairy {
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(
-      this.mouseMove.cursor
-    );
+    this.distFairyToMouse = this.model.position.distanceTo(this.mouseMove.cursor);
 
     this.model.lookAt(this.mouseMove.cursor);
 
@@ -86,7 +83,7 @@ export default class Fairy {
     if (moveY) {
       resPos.y = newPos.y;
     } else {
-      resPos.y += 0.01;
+      // resPos.y += 0.01;
     }
     if ((this.canGoLeft || left) && (this.canGoRight || right)) {
       resPos.z = newPos.z;

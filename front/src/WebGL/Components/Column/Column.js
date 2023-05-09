@@ -24,7 +24,7 @@ export default class Column {
     // Resource
     this.resource = this.resources.items.columnModel;
 
-    this.setMaterial();
+    // this.setMaterial();
     this.setModel();
   }
 

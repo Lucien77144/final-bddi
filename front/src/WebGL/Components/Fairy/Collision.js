@@ -1,7 +1,6 @@
 import { ArrowHelper, Raycaster, Vector3 } from "three";
 import Experience from "webgl/Experience.js";
 import Fairy from "components/Fairy/Fairy";
-import GrassFloor from "components/Grass/GrassFloor";
 import MouseMove from "utils/MouseMove.js";
 
 export default class Collision {
@@ -11,7 +10,7 @@ export default class Collision {
     this.camera = this.experience.camera.instance;
     this.mouseMove = new MouseMove();
     this.fairy = new Fairy();
-    this.grassFloor = new GrassFloor();
+    this.floors = this.experience.activeScene.floors;
     this.raycaster = new Raycaster();
     this.arrowHelpers = {};
     this.collisions = {};
@@ -67,14 +66,14 @@ export default class Collision {
       )
     );
 
-    this.grassFloor.grounds.children.forEach((floor) => {
-      const intersections = this.raycaster.intersectObject(floor);
+    this.floors?.forEach((e) => {
+      const intersections = this.raycaster.intersectObject(e.ground);
 
       if (intersections.length > 0) {
         intersections.forEach((intersection) => {
           this.distances[direction] = intersection.distance;
           this.collisions[direction].push({
-            floor,
+            floor: e.ground,
             distance: this.distances[direction],
           });
         });

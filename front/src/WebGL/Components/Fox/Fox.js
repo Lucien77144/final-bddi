@@ -23,7 +23,6 @@ export default class Fox {
 
     // Resource
     this.resource = this.resources.items.foxModel;
-
     console.log("here", this.resource);
 
     this.setModel();

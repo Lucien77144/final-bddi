@@ -3,10 +3,6 @@ import Experience from '../Experience';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
-import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
-import { LuminosityHighPassShader } from 'three/examples/jsm/shaders/LuminosityHighPassShader';
-import DialogueBox from '../Components/DialogueBox';
-
 
 export default class OutlineModule {
     constructor() {
@@ -29,7 +25,7 @@ export default class OutlineModule {
 
         window.addEventListener('mousemove', (event) => {
             this.onMouseMove(event);
-          });
+        });
     }
 
     init() {
@@ -41,11 +37,11 @@ export default class OutlineModule {
         this.outlinePass.pulsePeriod = 0;
     
         this.mouse = new THREE.Vector2();
-      }
+    }
 
     onMouseMove(event) {
-    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
     }
 
     update() {
@@ -76,7 +72,5 @@ export default class OutlineModule {
             this.outlinePass.selectedObjects = [];
         }
         this.composer.render();
-
-
     }
 }

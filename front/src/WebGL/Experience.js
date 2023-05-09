@@ -34,8 +34,8 @@ export default class Experience {
     this.camera = new Camera();
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
-    // this.outlineModule = new OutlineModule();
-    // this.outlineModule.init();
+    this.outlineModule = new OutlineModule();
+    this.outlineModule.init();
 
     // Resize event
     this.sizes.on("resize", () => {

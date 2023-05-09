@@ -26,15 +26,15 @@ export default class Experience {
     this.canvas = _canvas;
 
     // Set Ressources
-    this.debug = new Debug();
-    this.resources = new Resources(sources);
   }
-
+  
   setUp() {
     // Setup
     this.sizes = new Sizes();
     this.time = new Time();
     this.scene = new Scene();
+    this.debug = new Debug();
+    this.resources = new Resources(sources);
     this.camera = new Camera();
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();

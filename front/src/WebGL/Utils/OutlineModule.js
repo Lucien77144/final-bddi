@@ -15,7 +15,7 @@ export default class OutlineModule {
         this.renderer = this.experience.renderer;
         this.camera = this.experience.camera;
         this.grassScene = this.experience.activeScene;
-        this.dialogueBox = undefined
+        this.dialogueBox = undefined;
 
         this.renderPass = new RenderPass(this.scene, this.camera.instance);
         this.composer = new EffectComposer(this.renderer.instance);

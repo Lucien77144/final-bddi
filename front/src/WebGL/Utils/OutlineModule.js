@@ -62,15 +62,15 @@ export default class OutlineModule {
         if (intersects.length > 0 && intersects[0].object.interactive === true) {
             const object = intersects[0].object;
             this.outlinePass.selectedObjects = [object];
-            const interactText = document.querySelector('.interact-text');
-            interactText.classList.remove('hidden');
+            // const interactText = document.querySelector('.interact-text');
+            // interactText.classList.remove('hidden');
             // Translate interact text on top of object position
             const screenPosition = object.position.clone();
             screenPosition.project(this.camera.instance);
             screenPosition.x = (screenPosition.x + 1)  * window.innerWidth / 2;
             screenPosition.y = -(screenPosition.y - 1)  * window.innerHeight / 2;
             // Translate interact text on top of object position
-            interactText.style.transform = `translate3d(${screenPosition.x}px, ${screenPosition.y}px, 0)`;            
+            // interactText.style.transform = `translate3d(${screenPosition.x}px, ${screenPosition.y}px, 0)`;            
 
         } else {
             this.outlinePass.selectedObjects = [];

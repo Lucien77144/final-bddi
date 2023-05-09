@@ -37,6 +37,12 @@ export default class MouseMove {
     });
   }
 
+  buildEvent() {
+    window.addEventListener("mousemove", (event) => {
+      this.handleMouseMove(event);
+    });
+  }
+
   handleMouseMove(event) {
     this.cursor.x = (event.clientX / this.sizes.width) * 2 - 1;
     this.cursor.y = -(event.clientY / this.sizes.height) * 2 + 1;

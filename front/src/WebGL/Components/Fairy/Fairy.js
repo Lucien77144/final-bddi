@@ -7,12 +7,14 @@ import {
   Quaternion,
   MathUtils,
 } from "three";
+import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 
 let instance = null;
-export default class Fairy {
+export default class Fairy extends EventEmitter {
   constructor(position = new Vector3(0, 0, 0)) {
+    super();
     if (instance) {
       return instance;
     }
@@ -57,7 +59,9 @@ export default class Fairy {
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(this.mouseMove.cursor);
+    this.distFairyToMouse = this.model.position.distanceTo(
+      this.mouseMove.cursor
+    );
 
     this.model.lookAt(this.mouseMove.cursor);
 
@@ -94,6 +98,12 @@ export default class Fairy {
     const logDist = Math.log(this.distFairyToMouse + 1);
     const speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
     this.model.position.lerp(resPos, speed);
+
+    this.trigger("moveFairy", [
+      this.model.position.x,
+      this.model.position.y,
+      this.model.position.z,
+    ]);
   }
 
   isFairyMoving() {
@@ -120,8 +130,10 @@ export default class Fairy {
   }
 
   update() {
-    this.animation.mixer.update(
-      this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
-    );
+    if (this.distFairyToMouse) {
+      this.animation.mixer.update(
+        this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)
+      );
+    }
   }
 }

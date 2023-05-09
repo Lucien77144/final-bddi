@@ -1,152 +1,177 @@
 import {
-  Group,
-  ShaderMaterial,
-  Points,
-  Vector3,
-  Color,
-  BufferGeometry,
   BufferAttribute,
+  BufferGeometry,
+  Color,
+  Group,
+  Points,
+  RepeatWrapping,
+  ShaderMaterial,
+  Vector3,
 } from "three";
-import Experience from "webgl/Experience.js";
-import vertexShader from "./shaders/vertexShader.glsl";
-import fragmentShader from "./shaders/fragmentShader.glsl";
+import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
+
+import Experience from "../../Experience";
+
 import Fairy from "./Fairy.js";
+
+import fairyDustVertexShader from "./shaders/vertexShader.glsl";
+import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
+import fragmentSimulation from "./shaders/fragmentSimulation.glsl";
 
 export default class FairyDust {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
     this.scene = this.experience.scene;
-    this.fairy = new Fairy(new Vector3(0, 5, 12));
-    
+    this.sizes = this.experience.sizes;
+    this.renderer = this.experience.renderer.instance;
+    this.fairy = new Fairy();
+
     this.particles = new Group();
     this.scene.add(this.particles);
 
-    this.particlesMaterial = new ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      uniforms: {
-        uTime: { value: 0 },
-        uGravity: { value: 0.5 },
-        uColor: { value: new Color("#faf2af") },
-        uFadeIn: { value: 0.1 },
-        uFadeOut: { value: 0.5 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-        uSize: { value: 100 },
-      },
-      vertexShader,
-      fragmentShader,
-    });
+    this._options = {
+      width: 50,
+    };
+
+    this._setGeometry();
+    this._setMaterial();
+
+    this._setMesh();
+
+    this.initGPU();
   }
 
-  addParticles() {
-    const particlesGeometry = new BufferGeometry();
-    const particlesCnt = 15;
+  _setGeometry() {
+    this._geometry = new BufferGeometry();
 
-    const posArray = new Float32Array(particlesCnt * 3);
-    const scaleArray = new Float32Array(particlesCnt);
-    const coordsMax = new Float32Array(particlesCnt * 3);
-    this.lifeArray = new Float32Array(particlesCnt);
+    const positions = new Float32Array(
+      this._options.width * this._options.width * 3
+    );
+    const reference = new Float32Array(
+      this._options.width * this._options.width * 2
+    );
 
-    for (let i = 0; i < particlesCnt; i++) {
-      posArray[i * 3 + 0] = this.fairy.model.position.x;
-      posArray[i * 3 + 1] = this.fairy.model.position.y;
-      posArray[i * 3 + 2] = this.fairy.model.position.z;
+    const scaleArray = new Float32Array(this._options.width ** 2);
 
-      coordsMax[i * 3 + 0] = (Math.random() - 0.5) * 0.5;
-      coordsMax[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
-      coordsMax[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+    const lifeArray = new Float32Array(this._options.width ** 2);
+
+    for (let i = 0; i < this._options.width ** 2; i++) {
+      const x = Math.random();
+      const y = Math.random();
+      const z = Math.random();
+      const xx = (i % this._options.width) / this._options.width;
+      const yy = ~~(i / this._options.width) / this._options.width;
+
+      lifeArray[i] = this.time.elapsed;
 
       scaleArray[i] = Math.random();
 
-      this.lifeArray[i] = this.time.elapsed;
+      positions.set([x, y, z], i * 3);
+      reference.set([xx, yy], i * 2);
     }
 
-    particlesGeometry.setAttribute(
-      "position",
-      new BufferAttribute(posArray, 3)
-    );
+    this._geometry.setAttribute("position", new BufferAttribute(positions, 3));
+    this._geometry.setAttribute("reference", new BufferAttribute(reference, 2));
 
-    particlesGeometry.setAttribute(
-      "aScale",
-      new BufferAttribute(scaleArray, 1)
-    );
+    this._geometry.setAttribute("aScale", new BufferAttribute(scaleArray, 1));
 
-    particlesGeometry.setAttribute(
-      "aCoordsMax",
-      new BufferAttribute(coordsMax, 3)
-    );
-
-    particlesGeometry.setAttribute(
-      "life",
-      new BufferAttribute(this.lifeArray, 1)
-    );
-
-    const particlesMesh = new Points(particlesGeometry, this.particlesMaterial);
-
-    particlesMesh.life = 0;
-    this.particles.add(particlesMesh);
+    this._geometry.setAttribute("life", new BufferAttribute(lifeArray, 1));
   }
 
-  /**
-   *
-   * @param {number} mean La moyenne de la distribution
-   * @param {number} stdDev L'écart-type de la distribution
-   * @returns {number} Coordonnée y selon la distribution aléatoire gaussienne
-   */
-  gaussianRandom(mean, stdDev) {
-    let u = 0,
-      v = 0;
-    while (u === 0) u = Math.random(); // Éviter la valeur 0 pour éviter les problèmes de log
-    while (v === 0) v = Math.random();
-    const rand = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-    return mean + stdDev * rand;
+  _setMaterial() {
+    this._material = new ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        positionTexture: { value: null },
+        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uSize: { value: 100 },
+        uColor: { value: new Color("#faf2af") },
+        uFadeIn: { value: 0.1 },
+        uFadeOut: { value: 0.5 },
+        uTime: { value: 0 },
+        isFairyMoving: { value: false },
+      },
+      vertexShader: fairyDustVertexShader,
+      fragmentShader: fairyDustFragmentShader,
+    });
   }
 
-  /**
-   * Get the angle randomly
-   * @param {string} axis set if cos or sin.
-   * @returns {number} angle
-   */
-  getAngleFactor(axis) {
-    const getFactor = (angle = Math.random() * 2) =>
-      Math.random() * angle * 2 * 0.2;
-    return (
-      Math[axis == "sin" ? "sin" : "cos"](getFactor(Math.PI)) *
-      getFactor() *
-      (1 + Math.random())
+  _setMesh() {
+    this._mesh = new Points(this._geometry, this._material);
+    this._mesh.name = "Dust";
+    this.scene.add(this._mesh);
+  }
+
+  initGPU() {
+    this.gpuCompute = new GPUComputationRenderer(
+      this._options.width,
+      this._options.width,
+      this.renderer
     );
+    this.dtPosition = this.gpuCompute.createTexture();
+    this.fillPositions(this.dtPosition);
+
+    this.positionVariable = this.gpuCompute.addVariable(
+      "positionTexture",
+      fragmentSimulation,
+      this.dtPosition
+    );
+
+    this.positionVariable.material.uniforms = {
+      uTime: { value: 0 },
+      fairyPosition: { value: new Vector3(0, 0, 0) },
+    };
+
+    this.fairy.on("moveFairy", (x, y, z) => {
+      this.positionVariable.material.uniforms.fairyPosition.value = new Vector3(
+        x,
+        y,
+        z
+      );
+    });
+
+    this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
+    this.gpuCompute.setVariableDependencies(this.positionVariable, [
+      this.positionVariable,
+    ]);
+
+    const error = this.gpuCompute.init();
+
+    if (error !== null) {
+      console.error(error);
+    }
   }
 
-  updateParticles() {
-    const particles = this.particles.children;
-    for (let i = particles.length - 1; i >= 0; i--) {
-      const particle = particles[i];
-      if (particle.life > 150) {
-        particle.geometry.dispose();
-        this.particles.remove(particle);
-      } else {
-        particle.life++;
-      }
+  fillPositions(textureData) {
+    const posArr = textureData.image.data;
+
+    for (let i = 0; i < posArr.length; i = i + 4) {
+      //const x = Math.random() * 1 - 0.5;
+      const x = this.fairy.model.position.x;
+      // const y = Math.random() * 1 - 0.5;
+      const y = this.fairy.model.position.y;
+      // const z = Math.random() * 0.1 - 0.05 + 0.1;
+      const z = this.fairy.model.position.z;
+
+      posArr[i] = x;
+      posArr[i + 1] = y;
+      posArr[i + 2] = z;
+      posArr[i + 3] = 1;
     }
   }
 
   update() {
-    if (!this.fairy) return;
+    if (this.fairy) this.fairy.update();
 
-    this.fairy.update();
+    this.positionVariable.material.uniforms.uTime.value += this.time.delta;
+    this._material.uniforms.uTime.value += this.time.delta;
 
-    if (this.particlesMaterial) {
-      this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
-    }
+    this.gpuCompute.compute();
+    this._material.uniforms.positionTexture.value =
+      this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
-    const timeElapsedFloor = Math.floor(this.time.elapsed / 10);
-    if (timeElapsedFloor !== this.timeElapsed) {
-      this.timeElapsed = timeElapsedFloor;
-      if (this.fairy.isFairyMoving()) {
-        this.addParticles();
-      }
-      this.updateParticles();
-    }
+    this._material.uniforms.isFairyMoving.value = this.fairy.isFairyMoving();
   }
 }

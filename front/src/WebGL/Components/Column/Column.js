@@ -11,8 +11,7 @@ export default class Column {
     this.time = this.experience.time;
 
     this.position = _position;
-    this.name = `column-${this.experience.scene.children.filter((child) => child.name.includes("rock")).length}`;
-
+    this.name = `column-${this.experience.scene.children.filter((child) => child.name.includes("rock")).length}`
     // Debug
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
@@ -33,10 +32,16 @@ export default class Column {
 
     this.model.position.copy(this.position);
     this.model.name = this.name;
+    this.model.children.forEach((child) => {
+      child.interactive = true;
+      child.dialogue = `I'm the column ${child.name}!`;
+      child.dialogGroup = "test"
+    });
+    console.log(this.model);
     if (this.debug.active) {
       this.debugFolder.addInput(this.model.children[0].material, "wireframe");
     }
-
+    // this.model.children[0].material = this.material;
     this.scene.add(this.model);
   }
 

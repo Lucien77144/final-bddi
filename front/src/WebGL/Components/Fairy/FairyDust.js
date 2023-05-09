@@ -26,6 +26,10 @@ export default class FairyDust {
     this.sizes = this.experience.sizes;
     this.renderer = this.experience.renderer.instance;
     this.fairy = new Fairy();
+    this.fairyParams = {
+      status: false,
+      time: 0,
+    };
 
     this.particles = new Group();
     this.scene.add(this.particles);
@@ -91,7 +95,7 @@ export default class FairyDust {
         uFadeIn: { value: 0.1 },
         uFadeOut: { value: 0.5 },
         uTime: { value: 0 },
-        isFairyMoving: { value: false },
+        uFairyDistance: { value: 0 },
       },
       vertexShader: fairyDustVertexShader,
       fragmentShader: fairyDustFragmentShader,
@@ -121,15 +125,13 @@ export default class FairyDust {
 
     this.positionVariable.material.uniforms = {
       uTime: { value: 0 },
-      fairyPosition: { value: new Vector3(0, 0, 0) },
+      uFairyPosition: { value: new Vector3(0, 0, 0) },
+      uFairyDistance: { value: 0 },
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
-      this.positionVariable.material.uniforms.fairyPosition.value = new Vector3(
-        x,
-        y,
-        z
-      );
+      this.positionVariable.material.uniforms.uFairyPosition.value =
+        new Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
@@ -172,6 +174,21 @@ export default class FairyDust {
     this._material.uniforms.positionTexture.value =
       this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
-    this._material.uniforms.isFairyMoving.value = this.fairy.isFairyMoving();
+    if (this.fairy.distFairyToMouse > .5 != this.fairyParams.status) {
+      this.fairyParams.status = this.fairy.distFairyToMouse > .5;
+    }
+    if (this.fairyParams.status) {
+      this.fairyParams.time = this.time.elapsed;
+    }
+
+    if(this.fairy.distFairyToMouse > .5 && (this.time.elapsed - this.fairyParams.time)) {
+      this.fairyParams.time = this.time.elapsed;
+    }
+
+    console.log(this.time.elapsed - this.fairyParams.time);
+    const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
+    this.positionVariable.material.uniforms.uFairyDistance.value = time;
+    this._material.uniforms.uFairyDistance.value = time;
+    console.log(time);
   }
 }

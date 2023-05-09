@@ -59,7 +59,9 @@ export default class Fairy extends EventEmitter {
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(this.mouseMove.cursor);
+    this.distFairyToMouse = this.model.position.distanceTo(
+      this.mouseMove.cursor
+    );
 
     this.model.lookAt(this.mouseMove.cursor);
 
@@ -105,7 +107,7 @@ export default class Fairy extends EventEmitter {
   }
 
   isFairyMoving() {
-    if (!this.model) return false; 
+    if (!this.model) return false;
 
     return (
       Math.round(this.model.position.z * 10) !==
@@ -128,9 +130,10 @@ export default class Fairy extends EventEmitter {
   }
 
   update() {
-    console.log(this.distFairyToMouse);
-    this.animation.mixer.update(
-      this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
-    );
+    if (this.distFairyToMouse) {
+      this.animation.mixer.update(
+        this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)
+      );
+    }
   }
 }

@@ -24,7 +24,7 @@ export default class DialogueBox {
         this.mouse = new THREE.Vector2();
         this.intersected = null;
         this.time = this.experience.time;
-        this.initialXCameraPos = this.experience.camera.instance.position.x;
+        // this.initialXCameraPos = this.experience.camera.instance.position.x;
         this.zoomDuration = 500;
         this.zoomElapsedTime = 500;
         this.dezoomElapsedTime = 500;
@@ -97,16 +97,16 @@ export default class DialogueBox {
 
     update() {
         // Camera Zooming
-        if (this.zoomElapsedTime < this.zoomDuration) {
-            this.experience.camera.instance.position.x = THREE.MathUtils.lerp(this.initialXCameraPos, 2, this.zoomElapsedTime / this.zoomDuration);
-            this.experience.camera
-            this.zoomElapsedTime += this.time.delta;
-          }
+        // if (this.zoomElapsedTime < this.zoomDuration) {
+        //     this.experience.camera.instance.position.x = THREE.MathUtils.lerp(this.initialXCameraPos, 2, this.zoomElapsedTime / this.zoomDuration);
+        //     this.experience.camera
+        //     this.zoomElapsedTime += this.time.delta;
+        //   }
 
-        if (this.dezoomElapsedTime < this.zoomDuration) {
-            this.experience.camera.instance.position.x = THREE.MathUtils.lerp(2, this.initialXCameraPos, this.dezoomElapsedTime / this.zoomDuration);
-            this.dezoomElapsedTime += this.time.delta;
-            }
+        // if (this.dezoomElapsedTime < this.zoomDuration) {
+        //     this.experience.camera.instance.position.x = THREE.MathUtils.lerp(2, this.initialXCameraPos, this.dezoomElapsedTime / this.zoomDuration);
+        //     this.dezoomElapsedTime += this.time.delta;
+        //     }
 
 
         this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);

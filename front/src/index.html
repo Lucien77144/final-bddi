@@ -11,6 +11,16 @@
     <noscript>
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
+    <video
+      autoplay
+      muted
+      loop
+      id="myVideo"
+      style="position: absolute; width: 100vw; display: block; z-index: -1;"
+      src="textures/background.mp4"
+    >
+
+    </video>
     <section class="hidden" id="landingPage">
       <div class="title">
         Bienvenue !
@@ -35,6 +45,9 @@
     </section>
     <section id="scene">
       <div class="room-info text-white" id="roomInfo"></div>
+      <div class="interact-text hidden">
+        Intéragir
+      </div>
       <canvas id="webgl"></canvas>
     </section>
   </body>

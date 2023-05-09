@@ -6,8 +6,10 @@ import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
 import River from "../Components/River/River";
 import CollisionV1 from "../Components/Fairy/Collision.js";
+import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
+import DialogueBox from "../Components/DialogueBox.js";
 
 export default class GrassScene {
   constructor() {
@@ -28,6 +30,7 @@ export default class GrassScene {
   buildScene() {
     // Setup
     this.environment = new Environment();
+    this.fireflies = new Fireflies();
     
     // this.grounds = this.resources.items.groundModel.scenes[0];
     // this.grounds.position.set(0, 0, 0);
@@ -48,7 +51,8 @@ export default class GrassScene {
     // this.collisionV1 = new CollisionV1();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
-    // this.cube = new Cube(new Vector3(6.36, 0, 10));
+    this.dialogueBox = new DialogueBox();
+    //this.column = new Column(new Vector3(0, 0, 0));
   }
 
   update() {
@@ -57,6 +61,7 @@ export default class GrassScene {
 
     if (this.fairy) this.fairy.update();
     if (this.fairyDust) this.fairyDust.update();
+    if (this.dialogueBox) this.dialogueBox.update();
     if (this.collision) this.collision.update();
     if (this.collisionV1) this.collisionV1.update();
 
@@ -64,5 +69,6 @@ export default class GrassScene {
       floor.update();
     })
     if (this.river) this.river.update();
+    if (this.fireflies) this.fireflies.update();
   }
 }

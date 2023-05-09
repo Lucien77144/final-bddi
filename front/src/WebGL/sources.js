@@ -90,4 +90,14 @@ export default [
       "textures/environmentMap/nz.jpg",
     ],
   },
+
+  // --------------------
+  // Videos : 
+  // --------------------
+
+  {
+    name: "cloudBackgroundTexture",
+    type: "video",
+    path: "textures/ciel.mp4",
+  }
 ];

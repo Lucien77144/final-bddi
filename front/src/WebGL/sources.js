@@ -50,16 +50,6 @@ export default [
 
   // jpg :
   {
-    name: "grassColorTexture",
-    type: "texture",
-    path: "textures/dirt/color.jpg",
-  },
-  {
-    name: "grassNormalTexture",
-    type: "texture",
-    path: "textures/dirt/normal.jpg",
-  },
-  {
     name: "cloudTexture",
     type: "texture",
     path: "img/cloud.jpg",
@@ -68,6 +58,11 @@ export default [
     name: "dirtTexture",
     type: "texture",
     path: "textures/grass/dirt.jpg",
+  },
+  {
+    name: "mudTexture",
+    type: "texture",
+    path: "textures/grass/mud.jpg",
   },
   {
     name: "displacementMap",

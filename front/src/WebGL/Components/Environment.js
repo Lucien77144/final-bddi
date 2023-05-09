@@ -3,7 +3,6 @@ import {
   AmbientLight,
   Mesh,
   MeshStandardMaterial,
-  sRGBEncoding,
 } from "three";
 import * as THREE from "three";
 
@@ -46,7 +45,7 @@ export default class Environment {
     this.environmentMap = {};
     this.environmentMap.intensity = 1.5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
-    this.environmentMap.texture.encoding = sRGBEncoding;
+    this.environmentMap.texture.encoding = THREE.SRGBColorSpace;
 
     // this.scene.environment = this.environmentMap.texture;
 
@@ -80,9 +79,13 @@ export default class Environment {
 
   setCloudBackground() {
     // set video
-    this.video = document.getElementById("myVideo");
-    this.videoTexture = new THREE.VideoTexture(this.video);
-    this.videoTexture.encoding = sRGBEncoding;
+    this.videoTexture = this.resources.items.cloudBackgroundTexture;
+
+    this.videoTexture.source.data.muted = true;
+    this.videoTexture.source.data.loop = true;
+    this.videoTexture.source.data.play();
+
+    this.videoTexture.SRGBColorSpace = THREE.SRGBColorSpace;
     this.videoTexture.minFilter = THREE.LinearFilter;
     this.videoTexture.magFilter = THREE.LinearFilter;
 
@@ -93,6 +96,7 @@ export default class Environment {
       side : THREE.DoubleSide,
       transparent: false,
     });
+    
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.name = "cloudBackground";
     this.mesh.material.depthTest = true;

@@ -37,7 +37,6 @@ export default class Column {
       child.dialogue = `I'm the column ${child.name}!`;
       child.dialogGroup = "test"
     });
-    console.log(this.model);
     if (this.debug.active) {
       this.debugFolder.addInput(this.model.children[0].material, "wireframe");
     }

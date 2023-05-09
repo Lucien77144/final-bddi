@@ -4,7 +4,7 @@ import {
   LinearFilter,
   PCFSoftShadowMap,
   RGBAFormat,
-  sRGBEncoding,
+  SRGBColorSpace,
   WebGLRenderer,
   WebGLRenderTarget,
 } from "three";
@@ -26,7 +26,7 @@ export default class Renderer {
       powerPreference: "high-performance",
     });
     this.instance.physicallyCorrectLights = true;
-    this.instance.outputEncoding = sRGBEncoding;
+    this.instance.outputColorSpace = SRGBColorSpace;
     this.instance.toneMapping = CineonToneMapping;
     this.instance.toneMappingExposure = 1;
     this.instance.shadowMap.enabled = true;
@@ -52,6 +52,6 @@ export default class Renderer {
         stencilBuffer: false 
       } 	
     );
-    this.instance.render(this.scene, this.camera.instance, this.fbo, true );
+    this.instance.render(this.scene, this.camera.instance, this.fbo, true);
   }
 }

@@ -46,9 +46,9 @@ export default class GrassScene {
     // this.river = new River(new Vector3(-6, 2, -11));
     this.column = new Column(new Vector3(0, 0, 0));
 
-    // this.fairy = new Fairy(new Vector3(0, 5, 12));
-    // this.fairyDust = new FairyDust();
-    // this.collisionV1 = new CollisionV1();
+    this.fairy = new Fairy(new Vector3(0, 5, 12));
+    this.fairyDust = new FairyDust();
+    this.collisionV1 = new CollisionV1();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.dialogueBox = new DialogueBox();
@@ -56,12 +56,11 @@ export default class GrassScene {
   }
 
   update() {
-
     if (this.urma) this.urma.update();
 
     if (this.fairy) this.fairy.update();
     if (this.fairyDust) this.fairyDust.update();
-    if (this.dialogueBox) this.dialogueBox.update();
+    // if (this.dialogueBox) this.dialogueBox.update();
     if (this.collision) this.collision.update();
     if (this.collisionV1) this.collisionV1.update();
 

@@ -86,7 +86,6 @@ export default class Environment {
     this.videoTexture.minFilter = THREE.LinearFilter;
     this.videoTexture.magFilter = THREE.LinearFilter;
 
-
     // set plane with texture
     this.geometry = new THREE.PlaneGeometry(150, 50);
     this.material = new THREE.MeshBasicMaterial({

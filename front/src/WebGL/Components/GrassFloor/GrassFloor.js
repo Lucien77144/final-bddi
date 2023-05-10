@@ -47,7 +47,7 @@ export default class GrassFloor {
     };
 
     this.setGround();
-    this.setGrass();
+    // this.setGrass();
   }
 
   setGroundGeometry() {

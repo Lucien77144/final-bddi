@@ -56,14 +56,15 @@ export default class Experience {
   }
 
   resize() {
-    this.camera.resize();
-    this.renderer.resize();
+    this.camera?.resize();
+    this.renderer?.resize();
   }
 
   update() {
     this.camera.instance && this.camera.update();
     this.activeScene?.update();
     this.outlineModule?.update();
+    // this.renderer?.update();
     this.debug?.update();
   }
 
@@ -89,8 +90,8 @@ export default class Experience {
       }
     });
 
-    this.camera.controls.dispose();
-    this.renderer.instance.dispose();
+    this.camera?.controls.dispose();
+    this.renderer?.dispose();
 
     if (this.debug.active) this.debug.ui.destroy();
   }

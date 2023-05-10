@@ -1,24 +1,19 @@
 import * as THREE from 'three';
 import Experience from '../Experience';
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 
 export default class OutlineModule {
     constructor() {
         this.experience = new Experience;
+        this.sizes = this.experience.sizes;
         this.scene = this.experience.scene;
         this.renderer = this.experience.renderer;
         this.camera = this.experience.camera.instance;
         this.grassScene = this.experience.activeScene;
         this.resources = this.experience.resources;
-
-        this.outlinePass = new OutlinePass(
-            new THREE.Vector2(window.innerWidth, window.innerHeight),
-            this.scene,
-            this.camera
-        );
-
+        
         // Wait for resources
         if (this.resources.loaded == this.resources.toLoad) {
             this.buildUtils();
@@ -30,22 +25,39 @@ export default class OutlineModule {
     }
 
     buildUtils() {
+        this.getInteractiveObjects();
+    
+        this.composer = new EffectComposer(this.renderer.instance);
+    
+        this.renderPass = new RenderPass(this.scene, this.camera);
+        this.composer.addPass(this.renderPass);
+    
+        this.outlinePass = new OutlinePass(
+            new THREE.Vector2(this.sizes.width, this.sizes.height),
+            this.scene,
+            this.camera,
+            this.getInteractiveObjects(),
+            this.target
+        );
         this.outlinePass.visibleEdgeColor.set('#ffffff');
         this.outlinePass.hiddenEdgeColor.set('#ffffff');
         this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
-        this.outlinePass.pulsePeriod = 0;
 
-        this.composer = new EffectComposer(this.renderer.instance);
-
-        this.renderPass = new RenderPass(this.scene, this.camera);
-        this.composer.addPass(this.renderPass);
         this.composer.addPass(this.outlinePass);
+
+        this.composer.renderer.physicallyCorrectLights = false;
 
         this.mouse = new THREE.Vector2();
         this.raycaster = new THREE.Raycaster();
+    
+        window.addEventListener('mousemove', (event) => {
+            this.onMouseMove(event);
+        });
+    }
 
+    getInteractiveObjects() {
         this.interactiveObjects = [];
         this.scene.children.filter((object) => {
             if (object.isGroup) {
@@ -56,10 +68,6 @@ export default class OutlineModule {
                 object.interactive === true && this.interactiveObjects.push(object);
             }
         })
-
-        window.addEventListener('mousemove', (event) => {
-            this.onMouseMove(event);
-        });
     }
 
     onMouseMove(event) {
@@ -90,8 +98,9 @@ export default class OutlineModule {
                 screenPosition.y = -(screenPosition.y - 1)  * window.innerHeight / 2;
             }
         } else {
-           this.outlinePass.selectedObjects != [] && (this.outlinePass.selectedObjects = []);
+            (this.outlinePass && this.outlinePass?.selectedObjects != []) && (this.outlinePass.selectedObjects = []);
         }
+        // this.renderer?.update();
         this.composer?.render();
     }
 }

@@ -18,6 +18,11 @@ export default class OutlineModule {
             this.scene,
             this.camera
         );
+        this.backupCamPosition = this.camera.position.clone();
+
+        window.addEventListener('click', (event) => {
+            this.outlinePass.selectedObjects[0].interactive === true ? this.moveCamera() : console.log('no selected objects');
+        });
 
         // Wait for resources
         if (this.resources.loaded == this.resources.toLoad) {
@@ -27,6 +32,12 @@ export default class OutlineModule {
                 this.buildUtils();
             });
         }
+    }
+
+    moveCamera() {
+        this.backupCamPosition = this.camera.position.clone();
+        this.camera.position.set(0, 0, 0);
+        this.camera.lookAt(0, 0, 0);
     }
 
     buildUtils() {
@@ -82,7 +93,8 @@ export default class OutlineModule {
             if (obj.interactive === true) {
                 const object = obj;
                 this.outlinePass.selectedObjects = [object];
-
+                // add click listener
+                
                 // Translate interact text on top of object position
                 const screenPosition = object.position.clone();
                 screenPosition.project(this.camera);

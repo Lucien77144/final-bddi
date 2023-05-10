@@ -49,7 +49,6 @@ export default class GrassScene {
     this.collisionV1 = new CollisionV1();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
-    this.dialogueBox = new DialogueBox();
   }
 
   update() {
@@ -59,7 +58,6 @@ export default class GrassScene {
     this.fairyDust?.update();
     this.collisionV1?.update();
 
-    this.dialogueBox?.update();
 
     this.floors?.forEach((floor) => {
       floor.update();

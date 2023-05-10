@@ -16,7 +16,6 @@
     "socket.io-client": "^4.6.1",
     "stats.js": "^0.17.0",
     "three": "^0.148.0",
-    "three-outlinepass": "^1.2.0",
     "tweakpane": "^3.1.6"
   },
   "devDependencies": {

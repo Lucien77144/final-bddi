@@ -44,7 +44,6 @@ export default class OutlineModule {
         this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
-
         this.composer.addPass(this.outlinePass);
 
         this.composer.renderer.physicallyCorrectLights = false;

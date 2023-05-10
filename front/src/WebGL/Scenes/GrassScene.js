@@ -42,8 +42,6 @@ export default class GrassScene {
     this.river = new River(new Vector3(-6, 2, -11));
     this.column = new Column(new Vector3(0, 0, 0));
 
-    this.fox = new Fox(new Vector3(0, 4, 0));
-
     this.fairy = new Fairy(new Vector3(0, 5, 12));
     this.fairyDust = new FairyDust();
     this.collisionV1 = new CollisionV1();

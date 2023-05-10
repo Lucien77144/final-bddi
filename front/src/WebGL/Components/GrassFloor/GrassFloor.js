@@ -15,6 +15,7 @@ export default class GrassFloor {
       displacementMap: "displacementMap",
       mask: "mask",
       baseTexture: "dirtTexture",
+      secondTexture: "mudTexture",
     },
     _colors = {
       base: new Color('#11382a'),
@@ -41,13 +42,14 @@ export default class GrassFloor {
       count: _count,
       size: _size,
       baseTexture: this.resources.items[_maps.baseTexture],
+      secondTexture: this.resources.items[_maps.secondTexture],
       displacementMap: this.resources.items[_maps.displacementMap],
       mask: this.resources.items[_maps.mask],
       colors : _colors,
     };
 
     this.setGround();
-    // this.setGrass();
+    this.setGrass();
   }
 
   setGroundGeometry() {
@@ -59,9 +61,14 @@ export default class GrassFloor {
     this.grassParameters.baseTexture.minFilter = NearestFilter;
     this.grassParameters.baseTexture.magFilter = NearestFilter;
 
+    this.grassParameters.secondTexture.generateMipmaps = false;
+    this.grassParameters.secondTexture.minFilter = NearestFilter;
+    this.grassParameters.secondTexture.magFilter = NearestFilter;
+
     this.groundMaterial = new ShaderMaterial({
       uniforms: {
         uBaseTexture: { value: this.grassParameters.baseTexture },
+        uSecondTexture: { value: this.grassParameters.secondTexture },
         uDisplacement: { value: this.grassParameters.displacementMap },
         uMask: { value: this.grassParameters.mask },
         uSize: { value: this.grassParameters.size },

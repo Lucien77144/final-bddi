@@ -185,10 +185,10 @@ export default class FairyDust {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    console.log(this.time.elapsed - this.fairyParams.time);
+    // console.log(this.time.elapsed - this.fairyParams.time);
     const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
     this.positionVariable.material.uniforms.uFairyDistance.value = time;
     this._material.uniforms.uFairyDistance.value = time;
-    console.log(time);
+    // console.log(time);
   }
 }

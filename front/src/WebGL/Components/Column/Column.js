@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Vector3 } from "three";
+import { MeshBasicMaterial, MeshStandardMaterial, Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class Column {
@@ -23,7 +23,6 @@ export default class Column {
     // Resource
     this.resource = this.resources.items.columnModel;
 
-    // this.setMaterial();
     this.setModel();
   }
 
@@ -37,16 +36,10 @@ export default class Column {
       child.dialogue = `I'm the column ${child.name}!`;
       child.dialogGroup = "test"
     });
-    console.log(this.model);
     if (this.debug.active) {
       this.debugFolder.addInput(this.model.children[0].material, "wireframe");
     }
-    // this.model.children[0].material = this.material;
+
     this.scene.add(this.model);
   }
-
-  setMaterial() { 
-  }
-
-  update() { }
 }

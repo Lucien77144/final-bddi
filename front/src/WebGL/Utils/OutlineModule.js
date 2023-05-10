@@ -11,11 +11,8 @@ export default class OutlineModule {
         this.renderer = this.experience.renderer;
         this.camera = this.experience.camera.instance;
         this.grassScene = this.experience.activeScene;
-        // this.dialogueBox = undefined;
         this.resources = this.experience.resources;
 
-        this.renderPass = new RenderPass(this.scene, this.camera);
-        this.composer = new EffectComposer(this.renderer.instance);
         this.outlinePass = new OutlinePass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
             this.scene,
@@ -33,18 +30,21 @@ export default class OutlineModule {
     }
 
     buildUtils() {
-        this.composer.addPass(this.renderPass);
-        this.composer.addPass(this.outlinePass);
-
-        this.mouse = new THREE.Vector2();
-        this.raycaster = new THREE.Raycaster();
-        
         this.outlinePass.visibleEdgeColor.set('#ffffff');
         this.outlinePass.hiddenEdgeColor.set('#ffffff');
         this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
         this.outlinePass.pulsePeriod = 0;
+
+        this.composer = new EffectComposer(this.renderer.instance);
+
+        this.renderPass = new RenderPass(this.scene, this.camera);
+        this.composer.addPass(this.renderPass);
+        this.composer.addPass(this.outlinePass);
+
+        this.mouse = new THREE.Vector2();
+        this.raycaster = new THREE.Raycaster();
 
         this.interactiveObjects = [];
         this.scene.children.filter((object) => {
@@ -92,6 +92,6 @@ export default class OutlineModule {
         } else {
            this.outlinePass.selectedObjects != [] && (this.outlinePass.selectedObjects = []);
         }
-        this.composer.render();
+        this.composer?.render();
     }
 }

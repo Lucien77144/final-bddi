@@ -1,6 +1,5 @@
 import Experience from "webgl/Experience.js";
 import {
-  CineonToneMapping,
   LinearFilter,
   PCFSoftShadowMap,
   RGBAFormat,
@@ -25,14 +24,15 @@ export default class Renderer {
       canvas: this.canvas,
       powerPreference: "high-performance",
     });
-    this.instance.physicallyCorrectLights = true;
+    this.instance.physicallyCorrectLights = false;
     this.instance.outputColorSpace = SRGBColorSpace;
-    this.instance.toneMapping = CineonToneMapping;
-    this.instance.toneMappingExposure = 1;
     this.instance.shadowMap.enabled = true;
     this.instance.shadowMap.type = PCFSoftShadowMap;
-    this.instance.antialias = true;  
+
     this.instance.setClearColor("#34d5eb");
+
+    console.log(this.instance);
+
     this.resize();
   }
 

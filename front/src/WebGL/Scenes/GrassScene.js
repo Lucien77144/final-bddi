@@ -10,6 +10,7 @@ import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
+import Fox from "../Components/Fox/Fox";
 
 export default class GrassScene {
   constructor() {
@@ -40,6 +41,8 @@ export default class GrassScene {
     ];
     this.river = new River(new Vector3(-6, 2, -11));
     this.column = new Column(new Vector3(0, 0, 0));
+
+    this.fox = new Fox(new Vector3(0, 4, 0));
 
     this.fairy = new Fairy(new Vector3(0, 5, 12));
     this.fairyDust = new FairyDust();

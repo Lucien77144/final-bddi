@@ -1,6 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PerspectiveCamera } from "three";
+import MouseMove from "./Utils/MouseMove";
 
 export default class Camera {
   constructor() {
@@ -104,5 +105,6 @@ export default class Camera {
 
   update() {
     if(this.controls) this.controls.update();
-  } 
+    if(!this.mouseMove) { this.mouseMove = new MouseMove(); }
+  }
 }

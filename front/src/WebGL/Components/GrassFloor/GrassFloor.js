@@ -9,7 +9,7 @@ import GrassGeometry from "./Grass";
 export default class GrassFloor {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, 30, 20),
+    _size = new Vector3(10, 1, 20),
     _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
@@ -51,7 +51,7 @@ export default class GrassFloor {
     console.log(this.grassParameters);
 
     this.setGround();
-    /* this.setGrass(); */
+    this.setGrass();
   }
 
   setGroundGeometry() {
@@ -82,7 +82,6 @@ export default class GrassFloor {
       fragmentShader: dispFragment,
     });
 
-    console.log(this.grassParameters.displacementMap);
     this.grassMaterial = new MeshBasicMaterial({
       map: this.grassParameters.displacementMap,
       side: DoubleSide,

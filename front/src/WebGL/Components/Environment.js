@@ -24,19 +24,15 @@ export default class Environment {
   }
 
   setSunLight() {
-    // this.sunLight = new AmbientLight("#fffb96", 1);
-    this.ambiantLight = new AmbientLight("#ffffff", 1);
+    this.ambiantLight = new AmbientLight("#fffb96", .9);
     this.ambiantLight.position.set(3.5, 2, -1.25);
     this.ambiantLight.name = "ambiantLight";
-
     this.scene.add(this.ambiantLight);
 
-
-    this.sunLight =  new THREE.DirectionalLight( 0xffffff, 0.5 );
+    this.sunLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
     this.sunLight.position.set(0, 10, 0);
     this.sunLight.name = "sunLight";
     this.sunLight.castShadow = true;
-
     this.scene.add(this.sunLight);
 
     // Debug
@@ -53,7 +49,7 @@ export default class Environment {
 
   setEnvironmentMap() {
     this.environmentMap = {};
-    this.environmentMap.intensity = 1;
+    this.environmentMap.intensity = .5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
     this.environmentMap.texture.encoding = THREE.SRGBColorSpace;
 

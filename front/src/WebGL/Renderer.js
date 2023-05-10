@@ -1,10 +1,9 @@
 import Experience from "webgl/Experience.js";
 import {
-  CineonToneMapping,
   LinearFilter,
   PCFSoftShadowMap,
   RGBAFormat,
-  sRGBEncoding,
+  SRGBColorSpace,
   WebGLRenderer,
   WebGLRenderTarget,
 } from "three";
@@ -25,14 +24,15 @@ export default class Renderer {
       canvas: this.canvas,
       powerPreference: "high-performance",
     });
-    this.instance.physicallyCorrectLights = true;
-    this.instance.outputEncoding = sRGBEncoding;
-    this.instance.toneMapping = CineonToneMapping;
-    this.instance.toneMappingExposure = 1;
+    this.instance.physicallyCorrectLights = false;
+    this.instance.outputColorSpace = SRGBColorSpace;
     this.instance.shadowMap.enabled = true;
     this.instance.shadowMap.type = PCFSoftShadowMap;
-    this.instance.antialias = true;  
+
     this.instance.setClearColor("#34d5eb");
+
+    console.log(this.instance);
+
     this.resize();
   }
 
@@ -52,6 +52,6 @@ export default class Renderer {
         stencilBuffer: false 
       } 	
     );
-    this.instance.render(this.scene, this.camera.instance, this.fbo, true );
+    this.instance.render(this.scene, this.camera.instance, this.fbo, true);
   }
 }

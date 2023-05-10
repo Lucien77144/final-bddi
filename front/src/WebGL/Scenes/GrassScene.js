@@ -10,6 +10,7 @@ import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
+import Fox from "../Components/Fox/Fox";
 
 export default class GrassScene {
   constructor() {
@@ -31,11 +32,6 @@ export default class GrassScene {
     // Setup
     this.environment = new Environment();
     this.fireflies = new Fireflies();
-    
-    // this.grounds = this.resources.items.groundModel.scenes[0];
-    // this.grounds.position.set(0, 0, 0);
-    // console.log(this.grounds);
-    // this.scene.add(this.grounds);
 
     this.floors = [
       new GrassFloor({
@@ -43,8 +39,10 @@ export default class GrassScene {
         _size: new Vector3(18, .5, 58),
       }),
     ];
-    // this.river = new River(new Vector3(-6, 2, -11));
+    this.river = new River(new Vector3(-6, 2, -11));
     this.column = new Column(new Vector3(0, 0, 0));
+
+    this.fox = new Fox(new Vector3(0, 4, 0));
 
     this.fairy = new Fairy(new Vector3(0, 5, 12));
     this.fairyDust = new FairyDust();
@@ -52,22 +50,22 @@ export default class GrassScene {
 
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.dialogueBox = new DialogueBox();
-    //this.column = new Column(new Vector3(0, 0, 0));
   }
 
   update() {
-    if (this.urma) this.urma.update();
+    this.urma?.update();
 
-    if (this.fairy) this.fairy.update();
-    if (this.fairyDust) this.fairyDust.update();
-    // if (this.dialogueBox) this.dialogueBox.update();
-    if (this.collision) this.collision.update();
-    if (this.collisionV1) this.collisionV1.update();
+    this.fairy?.update();
+    this.fairyDust?.update();
+    this.collisionV1?.update();
+
+    this.dialogueBox?.update();
 
     this.floors?.forEach((floor) => {
       floor.update();
     })
-    if (this.river) this.river.update();
-    if (this.fireflies) this.fireflies.update();
+    this.river?.update();
+    
+    this.fireflies?.update();
   }
 }

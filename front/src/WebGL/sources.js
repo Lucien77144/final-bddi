@@ -98,6 +98,6 @@ export default [
   {
     name: "cloudBackgroundTexture",
     type: "video",
-    path: "textures/ciel.mp4",
+    path: "textures/background.mp4",
   }
 ];

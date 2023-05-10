@@ -18,7 +18,6 @@ export default class DialogueBox {
                 object.interactive === true && this.interactiveObjects.push(object);
             }
         })
-        console.log(this.interactiveObjects);
         // Raycaster to detect if mouse is over an interactive object
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
@@ -31,7 +30,6 @@ export default class DialogueBox {
 
         // Get urma
         this.urma = this.scene.getObjectByName('urma');
-        console.log(this.urma);
         
         window.addEventListener('mousemove', (event) => {
             this.onMouseMove(event);
@@ -50,7 +48,6 @@ export default class DialogueBox {
         let i = 0;
         let dialogGroup
         Dialogs.forEach((dialog) => {
-            console.log(text);
             if (dialog.name === text) {
                 dialogGroup = dialog.dialogs;
             }})

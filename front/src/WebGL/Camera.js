@@ -27,6 +27,7 @@ export default class Camera {
     };
 
     this.setInstance();
+    this.setControls();
     // this.setControls();
     if (this.debug.active) this.setDebug();
   }
@@ -46,7 +47,7 @@ export default class Camera {
       this.options.position.z
     );
 
-    this.instance.position.x = 6;
+    this.instance.position.x = 20;
 
     this.instance.rotation.set(
       this.options.rotate.x,

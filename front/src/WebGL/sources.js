@@ -95,9 +95,9 @@ export default [
   // Videos : 
   // --------------------
 
-  {
-    name: "cloudBackgroundTexture",
-    type: "video",
-    path: "textures/ciel.mp4",
-  }
+  // {
+  //   name: "cloudBackgroundTexture",
+  //   type: "video",
+  //   path: "textures/ciel.mp4",
+  // }
 ];

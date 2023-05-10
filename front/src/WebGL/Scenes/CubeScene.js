@@ -49,7 +49,7 @@ export default class CubeScene {
     // this.cube = new Cube();
     this.environment = new Environment();
     // Créer la géométrie de la plane
-    this.geometry = new THREE.PlaneGeometry(5, 5);
+    this.geometry = new THREE.PlaneGeometry(5, 2);
 
     
 
@@ -70,6 +70,6 @@ export default class CubeScene {
 
   update() {
 
-    this.uniforms.time.value += 0.02;
+    this.uniforms.time.value += 0.01;
   }
 }

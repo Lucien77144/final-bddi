@@ -21,7 +21,7 @@ export default class Environment {
 
     this.setSunLight();
     this.setEnvironmentMap();
-    this.setCloudBackground();
+    // this.setCloudBackground();
   }
 
   setSunLight() {

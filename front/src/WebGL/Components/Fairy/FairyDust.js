@@ -2,7 +2,6 @@ import {
   BufferAttribute,
   BufferGeometry,
   Color,
-  Group,
   Points,
   RepeatWrapping,
   ShaderMaterial,
@@ -25,17 +24,15 @@ export default class FairyDust {
     this.scene = this.experience.scene;
     this.sizes = this.experience.sizes;
     this.renderer = this.experience.renderer.instance;
+    this.camera = this.experience.camera.instance;
     this.fairy = new Fairy();
     this.fairyParams = {
       status: false,
       time: 0,
     };
 
-    this.particles = new Group();
-    this.scene.add(this.particles);
-
     this._options = {
-      width: 50,
+      width: 100,
     };
 
     this._setGeometry();
@@ -105,6 +102,7 @@ export default class FairyDust {
   _setMesh() {
     this._mesh = new Points(this._geometry, this._material);
     this._mesh.name = "Dust";
+    this._mesh.frustumCulled = false;
     this.scene.add(this._mesh);
   }
 
@@ -114,13 +112,10 @@ export default class FairyDust {
       this._options.width,
       this.renderer
     );
-    this.dtPosition = this.gpuCompute.createTexture();
-    this.fillPositions(this.dtPosition);
 
     this.positionVariable = this.gpuCompute.addVariable(
       "positionTexture",
-      fragmentSimulation,
-      this.dtPosition
+      fragmentSimulation
     );
 
     this.positionVariable.material.uniforms = {
@@ -130,8 +125,7 @@ export default class FairyDust {
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
-      this.positionVariable.material.uniforms.uFairyPosition.value =
-        new Vector3(x, y, z);
+      this.positionVariable.material.uniforms.uFairyPosition.value = new Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
@@ -140,27 +134,8 @@ export default class FairyDust {
     ]);
 
     const error = this.gpuCompute.init();
-
     if (error !== null) {
       console.error(error);
-    }
-  }
-
-  fillPositions(textureData) {
-    const posArr = textureData.image.data;
-
-    for (let i = 0; i < posArr.length; i = i + 4) {
-      //const x = Math.random() * 1 - 0.5;
-      const x = this.fairy.model.position.x;
-      // const y = Math.random() * 1 - 0.5;
-      const y = this.fairy.model.position.y;
-      // const z = Math.random() * 0.1 - 0.05 + 0.1;
-      const z = this.fairy.model.position.z;
-
-      posArr[i] = x;
-      posArr[i + 1] = y;
-      posArr[i + 2] = z;
-      posArr[i + 3] = 1;
     }
   }
 
@@ -171,24 +146,25 @@ export default class FairyDust {
     this._material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
-    this._material.uniforms.positionTexture.value =
-      this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+    console.log(this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture);
+    this._material.uniforms.positionTexture.value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
-    if (this.fairy.distFairyToMouse > .5 != this.fairyParams.status) {
-      this.fairyParams.status = this.fairy.distFairyToMouse > .5;
+    if (this.fairy.distFairyToMouse > 0.5 != this.fairyParams.status) {
+      this.fairyParams.status = this.fairy.distFairyToMouse > 0.5;
     }
     if (this.fairyParams.status) {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    if(this.fairy.distFairyToMouse > .5 && (this.time.elapsed - this.fairyParams.time)) {
+    if (
+      this.fairy.distFairyToMouse > 0.5 &&
+      this.time.elapsed - this.fairyParams.time
+    ) {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    console.log(this.time.elapsed - this.fairyParams.time);
     const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
     this.positionVariable.material.uniforms.uFairyDistance.value = time;
     this._material.uniforms.uFairyDistance.value = time;
-    console.log(time);
   }
 }

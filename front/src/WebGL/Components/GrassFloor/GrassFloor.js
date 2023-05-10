@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
 import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
@@ -9,7 +9,7 @@ import GrassGeometry from "./Grass";
 export default class GrassFloor {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, .5, 20),
+    _size = new Vector3(10, 30, 20),
     _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
@@ -48,8 +48,10 @@ export default class GrassFloor {
       colors : _colors,
     };
 
+    console.log(this.grassParameters);
+
     this.setGround();
-    this.setGrass();
+    /* this.setGrass(); */
   }
 
   setGroundGeometry() {
@@ -78,6 +80,13 @@ export default class GrassFloor {
       transparent: true,
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
+    });
+
+    console.log(this.grassParameters.displacementMap);
+    this.grassMaterial = new MeshBasicMaterial({
+      map: this.grassParameters.displacementMap,
+      side: DoubleSide,
+      transparent: true,
     });
   }
 
@@ -129,6 +138,6 @@ export default class GrassFloor {
   }
 
   update() {
-    if(this.grassMaterial) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+    if(this.grassMaterial?.uniforms?.uTime) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
   }
 }

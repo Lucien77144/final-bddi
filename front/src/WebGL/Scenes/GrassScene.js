@@ -39,7 +39,7 @@ export default class GrassScene {
         _size: new Vector3(18, 2, 58),
       }),
     ];
-    this.river = new River(new Vector3(-6, 2, -11));
+    this.river = new River(new Vector3(-6, 2, -5));
     this.column = new Column(new Vector3(0, 0, 0));
 
     this.fairy = new Fairy(new Vector3(0, 5, 12));

@@ -48,8 +48,6 @@ export default class GrassFloor {
       colors : _colors,
     };
 
-    console.log(this.grassParameters);
-
     this.setGround();
     this.setGrass();
   }

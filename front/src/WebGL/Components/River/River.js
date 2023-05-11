@@ -40,6 +40,7 @@ export default class River {
       topLightColor : { value: new THREE.Color('#b0f7e9') },
       bottomLightColor : { value: new THREE.Color('#14c6a5') },
       foamColor : { value: new THREE.Color('#ffffff') },
+      uColorMask: { value: new THREE.Color('#313042') },
       uWaveFrequency : { value: 0.5 },
       uWaveAmplitude : { value: 0.5 },
     }
@@ -65,8 +66,9 @@ export default class River {
     // this.water.position.set(-2, 3, 0);
     this.water.position.set(position.x, position.y, position.z);
     this.water.rotation.x = -Math.PI / 2;
-    this.water.rotation.y = 0.2;
-    this.water.rotation.z = 1.5
+    this.water.rotation.z = Math.PI / 2;
+    // this.water.rotation.y = 0.2;
+    // this.water.rotation.z = 1.5
 
     this.scene.add(this.water);
 

@@ -19,11 +19,6 @@ export default class Cloud {
   }
 
   setMaterial() {
-    const textureF = this.resources.items.cloudFront;
-    textureF.wrapS = THREE.RepeatWrapping;
-    textureF.wrapT = THREE.RepeatWrapping;
-    textureF.repeat.set(1, 1);
-    
     const textureB = this.resources.items.cloudBack;
     textureB.wrapS = THREE.RepeatWrapping;
     textureB.wrapT = THREE.RepeatWrapping;
@@ -32,7 +27,6 @@ export default class Cloud {
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
-        uFront: { value: textureF },
         uBack: { value: textureB },
       },
       vertexShader,

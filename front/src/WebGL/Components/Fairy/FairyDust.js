@@ -146,7 +146,6 @@ export default class FairyDust {
     this._material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
-    console.log(this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture);
     this._material.uniforms.positionTexture.value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
     if (this.fairy.distFairyToMouse > 0.5 != this.fairyParams.status) {

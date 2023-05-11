@@ -74,6 +74,11 @@ export default [
     type: "texture",
     path: "textures/grass/mask.jpg",
   },
+  {
+    name: "cloudBack",
+    type: "texture",
+    path: "textures/background/back.jpg",
+  },
 
   // --------------------
   // Cube Textures :

@@ -31,7 +31,8 @@ let data = {
     delta: 0,
     velocity: 0,
     flag: true,
-  }
+  },
+  lastDirection: 'right',  
 }
 
 let instance = null;
@@ -121,20 +122,22 @@ export default class Urma {
           // pause model animation
           this.animation.action.paused = true;
         }
-        if (val && dir === 'right') this.model.rotation.y = val ? Math.PI : 0;
-        if (val && dir === 'left') this.model.rotation.y = val ? 0 : Math.PI;
-        
+  
         if (val && !data.status[dir].start) {
           data.status[dir].start = true;
           data.time.start = this.time.current;
+          data.lastDirection = dir;  // Ajoutez cette ligne
+          this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
+          this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         }
       });
     })
   }
+  
 
   updatePosition() {
     const { model, camera, time } = this;
@@ -158,6 +161,13 @@ export default class Urma {
 
   }
 
+  orientateBody() {
+    const targetRotationY = data.lastDirection === 'right' ? Math.PI : 0;  // Modifiez cette ligne
+    const lerpFactor = 0.1;  
+  
+    this.model.rotation.y += (targetRotationY - this.model.rotation.y) * lerpFactor;
+  }
+
   update() {
     if (data.move.velocity == 0) {
       data.move.flag = true;
@@ -177,6 +187,7 @@ export default class Urma {
     
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
+    this.orientateBody();
     // update animation
   }
 }

@@ -10,7 +10,7 @@ import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
-import Fox from "../Components/Fox/Fox";
+import Cloud from "../Components/Cloud/Cloud";
 
 export default class GrassScene {
   constructor() {
@@ -31,6 +31,7 @@ export default class GrassScene {
   buildScene() {
     // Setup
     this.environment = new Environment();
+    this.clouds = new Cloud();
     this.fireflies = new Fireflies();
 
     this.floors = [
@@ -65,5 +66,6 @@ export default class GrassScene {
     this.river?.update();
     
     this.fireflies?.update();
+    this.clouds?.update();
   }
 }

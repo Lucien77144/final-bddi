@@ -20,7 +20,6 @@ export default class Environment {
 
     this.setSunLight();
     this.setEnvironmentMap();
-    this.setCloudBackground();
   }
 
   setSunLight() {
@@ -79,38 +78,5 @@ export default class Environment {
         })
         .on("change", this.environmentMap.updateMaterials);
     }
-  }
-
-  setCloudBackground() {
-    // set video
-    this.videoTexture = this.resources.items.cloudBackgroundTexture;
-
-    this.videoTexture.source.data.muted = true;
-    this.videoTexture.source.data.loop = true;
-    this.videoTexture.source.data.play();
-
-    this.videoTexture.SRGBColorSpace = THREE.SRGBColorSpace;
-    this.videoTexture.minFilter = THREE.LinearFilter;
-    this.videoTexture.magFilter = THREE.LinearFilter;
-
-    // set plane with texture
-    this.geometry = new THREE.PlaneGeometry(150, 50);
-    this.material = new THREE.MeshBasicMaterial({
-      map: this.videoTexture,
-      side : THREE.DoubleSide,
-      transparent: false,
-      toneMapped: false,
-    });
-    
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.name = "cloudBackground";
-    this.mesh.material.depthTest = true;
-    this.mesh.material.depthWrite = true;
-
-    this.mesh.position.set(-50, 8, 0);
-    this.mesh.rotation.set(0, Math.PI/2, 0);
-    this.mesh.material.ignoreEnvironment = true;
-
-    this.scene.add(this.mesh);
   }
 }

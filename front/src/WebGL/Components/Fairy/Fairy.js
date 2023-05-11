@@ -41,9 +41,8 @@ export default class Fairy extends EventEmitter {
     this.model.scale.set(0.2, 0.2, 0.2);
     this.model.position.copy(this.position);
     this.model.name = "fairy";
-
+    console.log(this.model);
     this.scene.add(this.model);
-
     for (const child of this.model.children) {
       if (child instanceof Mesh) {
         child.castShadow = true;

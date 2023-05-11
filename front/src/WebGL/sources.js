@@ -36,6 +36,11 @@ export default [
     type: "glb",
     path: "models/Fairy/Fairy.glb",
   },
+  {
+    name: "urmaModel",
+    type: "glb",
+    path: "models/Urma/Urma.glb",
+  },
 
   // --------------------
   // Textures :

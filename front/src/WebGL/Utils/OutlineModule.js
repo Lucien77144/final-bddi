@@ -99,7 +99,6 @@ export default class OutlineModule {
         } else {
             (this.outlinePass && this.outlinePass?.selectedObjects != []) && (this.outlinePass.selectedObjects = []);
         }
-        // this.renderer?.update();
         this.composer?.render();
     }
 }

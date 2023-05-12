@@ -49,7 +49,7 @@ export default class Urma {
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
     this.path = new PathUrma();
-
+    this.grassScene = this.experience.activeScene;
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
 
@@ -145,17 +145,20 @@ export default class Urma {
     const { position: cameraPos, rotation: cameraRot } = camera;
 
     const isOneWay = (data.status.left.start !== data.status.right.start);
-
+    
+    if(!this.grassScene.onGame) {
     data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
 
+    // console.log(this.grassScene);
     modelPos.copy(this.path.position);
 
-    cameraPos.z = modelPos.z - data.move.delta*5;
-    const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-    cameraPos.y = 4 - rdmCamera;
-    cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
-
-    this.animation.mixer.update(this.time.delta * 0.001);
+      cameraPos.z = modelPos.z - data.move.delta*5;
+      const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+      cameraPos.y = 4 - rdmCamera;
+      cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+      
+      this.animation.mixer.update(this.time.delta * 0.001);
+    }
 
   }
 

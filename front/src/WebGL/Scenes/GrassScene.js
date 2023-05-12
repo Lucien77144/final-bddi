@@ -47,7 +47,7 @@ export default class GrassScene {
     this.column = new Column(new Vector3(0, 0, 0));
     this.fairy = new Fairy(new Vector3(0, 5, 12));
     this.fairyDust = new FairyDust();
-    // this.collisionV1 = new CollisionV1();
+    this.collisionV1 = new CollisionV1();
 
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.stele = new Stele()

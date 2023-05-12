@@ -5,17 +5,18 @@ import Experience from "@/WebGL/Experience";
 import * as THREE from "three";
 
 export default class Cloud {
-  constructor() {
+  constructor(_size = new THREE.Vector3(150, 8, 30)) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
     this.time = this.experience.time;
+    this.size = _size;
 
     this.setCloud();
   }
 
   setGeometry() {
-    this.geometry = new THREE.PlaneGeometry(150, 50);
+    this.geometry = new THREE.PlaneGeometry(this.size.x, this.size.z);
   }
 
   setMaterial() {
@@ -24,10 +25,16 @@ export default class Cloud {
     textureB.wrapT = THREE.RepeatWrapping;
     textureB.repeat.set(1, 1);
 
+    const textureM = this.resources.items.mountain;
+    textureM.wrapS = THREE.RepeatWrapping;
+    textureM.wrapT = THREE.RepeatWrapping;
+    textureM.repeat.set(1, 1);
+
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uBack: { value: textureB },
+        uMountain: { value: textureM },
       },
       vertexShader,
       fragmentShader,
@@ -40,10 +47,8 @@ export default class Cloud {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.name = "cloudBackground";
-    this.mesh.position.set(-50, 8, 0);
+    this.mesh.position.set(-this.size.x/2, this.size.y, 0);
     this.mesh.rotation.set(0, Math.PI/2, 0);
-
-    // this.mesh.material.ignoreEnvironment = true;
 
     this.scene.add(this.mesh);
   }

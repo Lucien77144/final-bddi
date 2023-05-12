@@ -57,6 +57,11 @@ export default [
     type: "texture",
     path: "textures/water/hOIsXiZ.png",
   },
+  {
+    name: "mountain",
+    type: "texture",
+    path: "textures/background/moutain.png",
+  },
 
   // jpg :
   {

@@ -43,7 +43,7 @@ export default class GrassScene {
     
     // Setting the environment :
     this.environment = new Environment();
-    this.clouds = new Cloud();
+    this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
 
@@ -59,7 +59,6 @@ export default class GrassScene {
   setWorld(_rotation) {
     this.world = new Group();
     this.world.rotation.z = _rotation;
-
     this.scene.add(this.world);
   }
 

@@ -36,7 +36,7 @@ export default class GrassScene {
 
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-9, 0, 0),
+        _position: new Vector3(-3, 0, 0),
         _size: new Vector3(18, 2, 58),
       }),
     ];

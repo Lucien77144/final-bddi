@@ -40,10 +40,6 @@ export default class Cloud {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.name = "cloudBackground";
-    
-    // this.mesh.material.depthTest = true;
-    // this.mesh.material.depthWrite = true;
-
     this.mesh.position.set(-50, 8, 0);
     this.mesh.rotation.set(0, Math.PI/2, 0);
 

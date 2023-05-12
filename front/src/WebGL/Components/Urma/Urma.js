@@ -150,10 +150,10 @@ export default class Urma {
 
     modelPos.copy(this.path.position);
 
-    cameraPos.z = modelPos.z - data.move.delta*5;
-    const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-    cameraPos.y = 4 - rdmCamera;
-    cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+    // cameraPos.z = modelPos.z - data.move.delta*5;
+    // const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+    // cameraPos.y = 4 - rdmCamera;
+    // cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
 
     this.animation.mixer.update(this.time.delta * 0.001);
 

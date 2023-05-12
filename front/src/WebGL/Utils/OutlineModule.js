@@ -3,9 +3,11 @@ import Experience from '../Experience';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import gsap from 'gsap';
 
 export default class OutlineModule {
     constructor() {
+        console.log(gsap);
         this.experience = new Experience;
         this.sizes = this.experience.sizes;
         this.scene = this.experience.scene;
@@ -13,6 +15,7 @@ export default class OutlineModule {
         this.camera = this.experience.camera.instance;
         this.grassScene = this.experience.activeScene;
         this.resources = this.experience.resources;
+        
 
         this.outlinePass = new OutlinePass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -36,10 +39,35 @@ export default class OutlineModule {
     }
 
     moveCamera() {
-        this.backupCamPosition = this.camera.position.clone();
-        this.camera.position.set(0, 0, 0);
-        this.camera.lookAt(0, 0, 0);
+        const targetPosition = new THREE.Vector3();
+    
+        // Copy the intersected object's position
+        const stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+    
+        // Move the target position a bit to the left (negative x) and up (positive y)
+        targetPosition.x -= -3;
+        targetPosition.y += 0;
+        targetPosition.z += 10;
+    
+        const newPosition = {x: -5, y: 8, z: 3};
+        const newUp = {x: 0, y: 6, z: 0};
+    
+        // Use GSAP to animate the camera's movement
+        gsap.to(this.camera.position, {
+            duration: 1, // duration of the animation in seconds
+            x: newPosition.x,
+            y: newPosition.y,
+            z: newPosition.z,
+            onUpdate: () => {
+                // Ensure the camera's up vector is set to signify the y-axis as up
+                this.camera.up.set(newUp.x, newUp.y, newUp.z);
+                this.camera.lookAt(stelePosition);
+            },
+            ease: "power1.out", // easing function for the animation
+        });
     }
+    
+    
 
     buildUtils() {
         this.getInteractiveObjects();
@@ -71,6 +99,8 @@ export default class OutlineModule {
         window.addEventListener('mousemove', (event) => {
             this.onMouseMove(event);
         });
+
+    
     }
 
     getInteractiveObjects() {

@@ -32,7 +32,7 @@ export default class Column {
     this.model.position.copy(this.position);
     this.model.name = this.name;
     this.model.children.forEach((child) => {
-      child.interactive = true;
+      child.interactive = false;
       child.dialogue = `I'm the column ${child.name}!`;
       child.dialogGroup = "test"
     });

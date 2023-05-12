@@ -11,6 +11,7 @@ import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
+import Stele from "../Components/Stele/Stele";
 
 export default class GrassScene {
   constructor() {
@@ -40,18 +41,18 @@ export default class GrassScene {
     ];
     this.river = new River(new Vector3(-6, 2, -5));
     this.column = new Column(new Vector3(0, 0, 0));
-    
     // Setting the environment :
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
-
+    this.stele = new Stele();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // Setting Fairy :
     this.fairy = new Fairy();
+    
     this.fairyDust = new FairyDust();
     this.collisionV1 = new CollisionV1();
   }
@@ -69,7 +70,6 @@ export default class GrassScene {
     this.fairyDust?.update();
     this.collisionV1?.update();
 
-    this.dialogueBox?.update();
 
     this.floors?.forEach((floor) => {
       floor.update();

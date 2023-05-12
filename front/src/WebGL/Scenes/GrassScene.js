@@ -35,6 +35,8 @@ export default class GrassScene {
     this.clouds = new Cloud();
     this.fireflies = new Fireflies();
 
+    this.onGame = false;
+
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-3, 0, 0),
@@ -43,7 +45,6 @@ export default class GrassScene {
     ];
     this.river = new River(new Vector3(-6, 2, -5));
     this.column = new Column(new Vector3(0, 0, 0));
-    console.log(this.column);
     // this.fairy = new Fairy(new Vector3(0, 5, 12));
     // this.fairyDust = new FairyDust();
     // this.collisionV1 = new CollisionV1();

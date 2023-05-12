@@ -29,6 +29,10 @@ export default class PathUrma {
     ]);
   }
 
+  getPositionAt(pos = t) {
+    return this.curve.getPointAt(pos);
+  }
+
   update(delta, height) {
     const nextValue = t + (delta/20) * -1;
 

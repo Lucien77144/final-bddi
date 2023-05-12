@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Vector3 } from "three";
+import { Group, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
@@ -28,12 +28,10 @@ export default class GrassScene {
     }
   }
 
+  // Setup
   buildScene() {
-    // Setup
-    this.environment = new Environment();
-    this.clouds = new Cloud();
-    this.fireflies = new Fireflies();
-
+    // Setting the world :
+    this.setWorld(-.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-3, 0, 0),
@@ -42,13 +40,27 @@ export default class GrassScene {
     ];
     this.river = new River(new Vector3(-6, 2, -5));
     this.column = new Column(new Vector3(0, 0, 0));
+    
+    // Setting the environment :
+    this.environment = new Environment();
+    this.clouds = new Cloud();
+    this.fireflies = new Fireflies();
+    this.dialogueBox = new DialogueBox();
 
-    this.fairy = new Fairy(new Vector3(0, 5, 12));
+    // Setting Urma :
+    this.urma = new Urma(new Vector3(0, 5, 8));
+
+    // Setting Fairy :
+    this.fairy = new Fairy();
     this.fairyDust = new FairyDust();
     this.collisionV1 = new CollisionV1();
+  }
 
-    this.urma = new Urma(new Vector3(0, 5, 8));
-    this.dialogueBox = new DialogueBox();
+  setWorld(_rotation) {
+    this.world = new Group();
+    this.world.rotation.z = _rotation;
+
+    this.scene.add(this.world);
   }
 
   update() {

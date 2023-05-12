@@ -1,10 +1,9 @@
 import Experience from "webgl/Experience.js";
-import fragmentShader from "./shaders/fragmentShader.glsl";
-import vertexShader from "./shaders/vertexShader.glsl";
-import { AnimationMixer, BoxGeometry, LoopRepeat, Mesh, ShaderMaterial, Vector3 } from "three";
+import { AnimationMixer, LoopRepeat, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
+import Fairy from "../Fairy/Fairy";
 
 const SIZE_FACTOR = 1.25;
 const OPTIONS = {
@@ -49,15 +48,13 @@ export default class Urma {
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
     this.path = new PathUrma();
+    this.fairy = new Fairy();
 
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
 
     this.position = _position;
 
-    // this.setGeometry();
-    // this.setMaterial();
-    // this.setMesh();
     this.setModel();
     this.setAnimation();
     this.setInputs();
@@ -68,15 +65,13 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
+
     this.scene.add(this.model);
     this.camera.position.z = this.model.position.z;
-    console.log(this.model);
-
   }
 
   setAnimation() {
     const clip = this.resource.animations[0];
-    console.log(this.resource);
     this.animation = {
       mixer: new AnimationMixer(this.model),
       action: null,
@@ -86,30 +81,6 @@ export default class Urma {
     this.animation.action.timeScale = 1;
     this.animation.action.setLoop(LoopRepeat, Infinity);
     this.animation.action.play();
-  }
-
-  setGeometry() {
-    this.geometry = new BoxGeometry(.75/SIZE_FACTOR, 1.40/SIZE_FACTOR, .75/SIZE_FACTOR);
-  }
-
-  setMaterial() {
-    this.material = new ShaderMaterial({
-      fragmentShader,
-      vertexShader,
-    });
-  }
-
-  setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.mesh.position.copy(this.position);
-    this.mesh.name = "urma";
-    this.scene.add(this.mesh);
-    this.camera.position.z = this.mesh.position.z;
-    for (const child of this.model.children) {
-      if (child instanceof Mesh) {
-        child.castShadow = true;
-      }
-    }
   }
 
   setInputs() {
@@ -138,7 +109,6 @@ export default class Urma {
     })
   }
   
-
   updatePosition() {
     const { model, camera, time } = this;
     const { position: modelPos } = model;
@@ -156,7 +126,6 @@ export default class Urma {
     cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
 
     this.animation.mixer.update(this.time.delta * 0.001);
-
   }
 
   orientateBody() {
@@ -186,6 +155,5 @@ export default class Urma {
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
-    // update animation
   }
 }

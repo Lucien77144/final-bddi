@@ -10,6 +10,7 @@ import Cube from "../Components/Cube/Cube.js";
 import Fairy from "../Components/Fairy/Fairy.js";
 // import Collision from "@/WebGL/Utils/Collision.js";
 import CollisionV1 from "../Components/Fairy/Collision.js";
+import Tree from "../Components/Tree/Tree.js";
 
 export default class GrassScene {
   constructor() {
@@ -33,6 +34,8 @@ export default class GrassScene {
     this.floor = new GrassFloor();
     this.fairyDust = new FairyDust();
 
+    this.tree = new Tree(new Vector3(0, 5, -3));
+
     // this.collision = new Collision();
     this.collisionV1 = new CollisionV1();
 
@@ -48,6 +51,7 @@ export default class GrassScene {
   }
 
   update() {
+    if(this.tree) this.tree.update();
     // if (this.collision) this.collision.update();
     if (this.collisionV1) this.collisionV1.update();
     if (this.fairyDust) this.fairyDust.update();

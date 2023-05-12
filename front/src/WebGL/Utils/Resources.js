@@ -1,4 +1,5 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 import EventEmitter from "utils/EventEmitter.js";
 import { Cache, CubeTextureLoader, TextureLoader } from "three";
 import Experience from "webgl/Experience.js";
@@ -55,6 +56,12 @@ export default class Resources extends EventEmitter {
     this.loaders = {};
     Cache.enabled = false;
     this.loaders.gltfLoader = new GLTFLoader();
+
+    // Instantiate the DRACOLoader
+    const dracoLoader = new DRACOLoader();
+    dracoLoader.setDecoderPath("../../../draco/"); // Set the path to the Draco decoder files
+    this.loaders.gltfLoader.setDRACOLoader(dracoLoader);
+
     this.loaders.textureLoader = new TextureLoader();
     this.loaders.cubeTextureLoader = new CubeTextureLoader();
   }
@@ -92,15 +99,15 @@ export default class Resources extends EventEmitter {
     this.loaded++;
 
     if (this.debug.active)
-      // console.debug(
-      //   `🖼️ ${source.name} loaded. (${this.loaded}/${this.toLoad})`
-      // );
+      if (this.debug.debugParams?.LoadingScreen) {
+        // console.debug(
+        //   `🖼️ ${source.name} loaded. (${this.loaded}/${this.toLoad})`
+        // );
 
-    if (this.debug.debugParams?.LoadingScreen) {
-      this.loadingBarElement.style.transform = `scaleX(${
-        this.loaded / this.toLoad
-      })`;
-    }
+        this.loadingBarElement.style.transform = `scaleX(${
+          this.loaded / this.toLoad
+        })`;
+      }
 
     if (this.loaded === this.toLoad) {
       // if (this.debug.active) console.debug("✅ Resources loaded!");

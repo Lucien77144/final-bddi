@@ -36,6 +36,11 @@ export default [
     type: "glb",
     path: "models/Fairy/Fairy.glb",
   },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/trees.glb",
+  },
 
   // --------------------
   // Textures :

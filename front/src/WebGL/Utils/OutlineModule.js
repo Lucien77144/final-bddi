@@ -50,8 +50,8 @@ export default class OutlineModule {
     }
 
     moveCamera() {
+        
         this.grassScene.onGame = true;
-        this.onGame = this.grassScene.onGame;
 
         console.log(this.grassScene.onGame);
         const targetPosition = new THREE.Vector3();
@@ -87,6 +87,9 @@ export default class OutlineModule {
                 this.camera.up.set(newUp.x, newUp.y, newUp.z);
                 this.camera.lookAt(this.stelePosition);
             },
+            onComplete: () => {
+                this.onGame = this.grassScene.onGame;
+            },
             ease: "power1.out", // easing function for the animation
         });
 
@@ -95,7 +98,7 @@ export default class OutlineModule {
 
     returnCamera() {
         if (this.originalPosition && this.originalUp) {
-            const tl = gsap.timeline();
+            // const tl = gsap.timeline();
             // Animate the camera's position back to the original position
             // tl.to(this.camera.position, {
             //     duration: 1, // duration of the animation in seconds

@@ -91,7 +91,7 @@ export default class Camera {
       .addInput(this.instance.position, "x", {
         label: "Position X",
         min: -20,
-        max: 20,
+        max: 100,
         step: 0.01,
       })
 

@@ -50,7 +50,6 @@ export default class Environment {
     this.environmentMap = {};
     this.environmentMap.intensity = .5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
-    this.environmentMap.texture.encoding = THREE.SRGBColorSpace;
 
     this.environmentMap.updateMaterials = () => {
       this.scene.traverse((child) => {

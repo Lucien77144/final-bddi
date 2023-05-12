@@ -16,16 +16,16 @@ export default [
   //   type: "glb",
   //   path: "models/Ground/Ground.glb",
   // },
-  {
-    name: "groundModel",
-    type: "glb",
-    path: "models/Ground/Ground_V3.glb",
-  },
-  {
-    name: "stoneModel",
-    type: "glb",
-    path: "models/Rock/Stone.glb",
-  },
+  // {
+  //   name: "groundModel",
+  //   type: "glb",
+  //   path: "models/Ground/Ground_V3.glb",
+  // },
+  // {
+  //   name: "stoneModel",
+  //   type: "glb",
+  //   path: "models/Rock/Stone.glb",
+  // },
   {
     name: "columnModel",
     type: "glb",
@@ -51,6 +51,11 @@ export default [
     name: "transition",
     type: "texture",
     path: "textures/transitions/transition.png",
+  },
+  {
+    name: "dudvMap",
+    type: "texture",
+    path: "textures/water/hOIsXiZ.png",
   },
 
   // jpg :
@@ -83,6 +88,11 @@ export default [
     name: "cloudBack",
     type: "texture",
     path: "textures/background/back.jpg",
+  },
+  {
+    name: "noiseMap",
+    type: "texture",
+    path: "textures/water/gPz7iPX.jpg",
   },
 
   // --------------------

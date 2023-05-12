@@ -5,7 +5,7 @@ import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 export default class Column {
   constructor(_position = new Vector3(0, 0, 0)) {
     this.experience = new Experience();
-    this.scene = this.experience.scene;
+    this.world = this.experience.activeScene.world;
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
     this.time = this.experience.time;
@@ -40,6 +40,6 @@ export default class Column {
       this.debugFolder.addInput(this.model.children[0].material, "wireframe");
     }
 
-    this.scene.add(this.model);
+    this.world.add(this.model);
   }
 }

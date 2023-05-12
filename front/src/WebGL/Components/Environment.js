@@ -20,20 +20,23 @@ export default class Environment {
 
     this.setSunLight();
     this.setEnvironmentMap();
-    this.setCloudBackground();
   }
 
   setSunLight() {
-    // this.sunLight = new AmbientLight("#fffb96", 1);
-    this.sunLight = new AmbientLight("#ffffff", 1);
-    this.sunLight.position.set(3.5, 2, -1.25);
-    this.sunLight.name = "sunLight";
+    this.ambiantLight = new AmbientLight("#fffb96", 2);
+    this.ambiantLight.position.set(3.5, 2, -1.25);
+    this.ambiantLight.name = "ambiantLight";
+    this.scene.add(this.ambiantLight);
 
+    this.sunLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    this.sunLight.position.set(0, 10, 0);
+    this.sunLight.name = "sunLight";
+    this.sunLight.castShadow = true;
     this.scene.add(this.sunLight);
 
     // Debug
     if (this.debug.active) {
-      this.debugFolder.addInput(this.sunLight, "intensity", {
+      this.debugFolder.addInput(this.ambiantLight, "intensity", {
         min: 0,
         max: 10,
         step: 0.001,
@@ -45,7 +48,7 @@ export default class Environment {
 
   setEnvironmentMap() {
     this.environmentMap = {};
-    this.environmentMap.intensity = 2;
+    this.environmentMap.intensity = .5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
     this.environmentMap.texture.encoding = THREE.SRGBColorSpace;
 
@@ -75,37 +78,5 @@ export default class Environment {
         })
         .on("change", this.environmentMap.updateMaterials);
     }
-  }
-
-  setCloudBackground() {
-    // set video
-    this.videoTexture = this.resources.items.cloudBackgroundTexture;
-
-    this.videoTexture.source.data.muted = true;
-    this.videoTexture.source.data.loop = true;
-    this.videoTexture.source.data.play();
-
-    this.videoTexture.SRGBColorSpace = THREE.SRGBColorSpace;
-    this.videoTexture.minFilter = THREE.LinearFilter;
-    this.videoTexture.magFilter = THREE.LinearFilter;
-
-    // set plane with texture
-    this.geometry = new THREE.PlaneGeometry(150, 50);
-    this.material = new THREE.MeshBasicMaterial({
-      map: this.videoTexture,
-      side : THREE.DoubleSide,
-      transparent: false,
-    });
-    
-    this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.name = "cloudBackground";
-    this.mesh.material.depthTest = true;
-    this.mesh.material.depthWrite = true;
-
-    this.mesh.position.set(-50, 8, 0);
-    this.mesh.rotation.set(0, Math.PI/2, 0);
-    this.mesh.material.ignoreEnvironment = true;
-
-    this.scene.add(this.mesh);
   }
 }

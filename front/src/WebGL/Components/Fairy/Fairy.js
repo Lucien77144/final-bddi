@@ -41,9 +41,8 @@ export default class Fairy extends EventEmitter {
     this.model.scale.set(0.2, 0.2, 0.2);
     this.model.position.copy(this.position);
     this.model.name = "fairy";
-
+    console.log(this.model);
     this.scene.add(this.model);
-
     for (const child of this.model.children) {
       if (child instanceof Mesh) {
         child.castShadow = true;
@@ -78,7 +77,7 @@ export default class Fairy extends EventEmitter {
 
     const newPos = new Vector3()
       .copy(this.model.position)
-      .add(fairyDir.multiplyScalar(0.25));
+      .add(fairyDir.multiplyScalar(0.2));
 
     const moveY = this.canGoDown || this.model.position.y < newPos.y;
     const right = this.canGoRight || this.model.position.z < newPos.z;
@@ -108,6 +107,11 @@ export default class Fairy extends EventEmitter {
 
   isFairyMoving() {
     if (!this.model) return false;
+
+    console.log(
+      Math.round(this.model.position.z * 10) !==
+        Math.round(this.mouseMove.cursor.z * 10)
+    );
 
     return (
       Math.round(this.model.position.z * 10) !==

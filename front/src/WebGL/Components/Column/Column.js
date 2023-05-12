@@ -40,14 +40,6 @@ export default class Column {
       this.debugFolder.addInput(this.model.children[0].material, "wireframe");
     }
 
-    console.log('aaazhdchchechi',this.model.children[0].material.map);
-
-    this.model.children[0].material = new MeshBasicMaterial({
-      color: null,
-      map: this.model.children[0].material.map,
-      
-    });
-
     this.scene.add(this.model);
   }
 }

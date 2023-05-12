@@ -36,6 +36,11 @@ export default [
     type: "glb",
     path: "models/Fairy/Fairy.glb",
   },
+  {
+    name: "urmaModel",
+    type: "glb",
+    path: "models/Urma/Urma.glb",
+  },
 
   // --------------------
   // Textures :
@@ -74,6 +79,11 @@ export default [
     type: "texture",
     path: "textures/grass/mask.jpg",
   },
+  {
+    name: "cloudBack",
+    type: "texture",
+    path: "textures/background/back.jpg",
+  },
 
   // --------------------
   // Cube Textures :
@@ -90,14 +100,4 @@ export default [
       "textures/environmentMap/nz.jpg",
     ],
   },
-
-  // --------------------
-  // Videos : 
-  // --------------------
-
-  {
-    name: "cloudBackgroundTexture",
-    type: "video",
-    path: "textures/background.mp4",
-  }
 ];

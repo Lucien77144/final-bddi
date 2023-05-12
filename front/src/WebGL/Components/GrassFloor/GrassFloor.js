@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
 import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
@@ -9,12 +9,13 @@ import GrassGeometry from "./Grass";
 export default class GrassFloor {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, .5, 20),
+    _size = new Vector3(10, 1, 20),
     _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
       mask: "mask",
       baseTexture: "dirtTexture",
+      secondTexture: "mudTexture",
     },
     _colors = {
       base: new Color('#11382a'),
@@ -41,6 +42,7 @@ export default class GrassFloor {
       count: _count,
       size: _size,
       baseTexture: this.resources.items[_maps.baseTexture],
+      secondTexture: this.resources.items[_maps.secondTexture],
       displacementMap: this.resources.items[_maps.displacementMap],
       mask: this.resources.items[_maps.mask],
       colors : _colors,
@@ -59,9 +61,14 @@ export default class GrassFloor {
     this.grassParameters.baseTexture.minFilter = NearestFilter;
     this.grassParameters.baseTexture.magFilter = NearestFilter;
 
+    this.grassParameters.secondTexture.generateMipmaps = false;
+    this.grassParameters.secondTexture.minFilter = NearestFilter;
+    this.grassParameters.secondTexture.magFilter = NearestFilter;
+
     this.groundMaterial = new ShaderMaterial({
       uniforms: {
         uBaseTexture: { value: this.grassParameters.baseTexture },
+        uSecondTexture: { value: this.grassParameters.secondTexture },
         uDisplacement: { value: this.grassParameters.displacementMap },
         uMask: { value: this.grassParameters.mask },
         uSize: { value: this.grassParameters.size },
@@ -71,6 +78,12 @@ export default class GrassFloor {
       transparent: true,
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
+    });
+
+    this.grassMaterial = new MeshBasicMaterial({
+      map: this.grassParameters.displacementMap,
+      side: DoubleSide,
+      transparent: true,
     });
   }
 
@@ -122,6 +135,6 @@ export default class GrassFloor {
   }
 
   update() {
-    if(this.grassMaterial) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+    if(this.grassMaterial?.uniforms?.uTime) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
   }
 }

@@ -7,7 +7,6 @@ import gsap from 'gsap';
 
 export default class OutlineModule {
     constructor() {
-        console.log(gsap);
         this.experience = new Experience;
         this.sizes = this.experience.sizes;
         this.scene = this.experience.scene;
@@ -28,7 +27,7 @@ export default class OutlineModule {
         this.backupCamPosition = this.camera.position.clone();
 
         window.addEventListener('click', (event) => {
-            this.outlinePass.selectedObjects[0].interactive === true ? this.moveCamera() : console.log('no selected objects');
+            (this.outlinePass.selectedObjects[0]?.interactive === true) && this.moveCamera();
         });
 
         window.addEventListener('keydown', (event) => {
@@ -50,10 +49,8 @@ export default class OutlineModule {
     }
 
     moveCamera() {
-        
         this.grassScene.onGame = true;
 
-        console.log(this.grassScene.onGame);
         const targetPosition = new THREE.Vector3();
     
         // Copy the intersected object's position

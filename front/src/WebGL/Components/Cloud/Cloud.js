@@ -36,17 +36,16 @@ export default class Cloud {
     shadowM.wrapT = THREE.RepeatWrapping;
     shadowM.repeat.set(1, 1);
 
-    const floorColors = this.activeScene?.floors[0]?.grassParameters?.colors;
+    const floorColors = this.activeScene?.floors && this.activeScene?.floors[0].grassParameters?.colors;
 
-    // raf : ombres et variations du vert
-
+    // raf : variations du vert
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uBack: { value: textureB },
         uMountain: { value: textureM },
         uMountainS: { value: shadowM },
-        uPrimary: { value: floorColors.base },
+        uPrimary: { value: floorColors?.base || (new THREE.Color('#11382a')) },
         uSecondary: { value: new THREE.Color('#fafafa') },
         uSecondary2: { value: new THREE.Color('#777777') },
         uShadowColor: { value: new THREE.Color('#161616') },

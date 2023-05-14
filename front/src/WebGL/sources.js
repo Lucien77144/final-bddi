@@ -41,6 +41,16 @@ export default [
     type: "glb",
     path: "models/Urma/Urma.glb",
   },
+  {
+    name: "riverRocksModel",
+    type: "glb",
+    path: "models/River/Rocks_river.glb",
+  },
+  {
+    name: "bridgeModel",
+    type: "glb",
+    path: "models/River/Bridge.glb",
+  },
 
   // --------------------
   // Textures :

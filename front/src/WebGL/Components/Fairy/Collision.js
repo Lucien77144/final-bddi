@@ -44,7 +44,14 @@ export default class Collision {
     }
   }
 
+  updateHelpers() {
+    this.arrowHelpers.down.position.copy(this.fairy.model.position);
+    this.arrowHelpers.left.position.copy(this.fairy.model.position);
+    this.arrowHelpers.right.position.copy(this.fairy.model.position);
+  }
+
   update() {
     this.fairy.moveFairy();
+    this.updateHelpers();
   }
 }

@@ -130,7 +130,7 @@ export default class Fairy extends EventEmitter {
         floor.position.z - floor.size.z / 2
       );
       return pos.z < this.model?.position.z && this.model?.position.z < pos.z + floor.size.z;
-    })
+    });
     
     this.minY = Math.max(...filteredFloors.map(floor => floor.position.y + floor.size.y));
   }

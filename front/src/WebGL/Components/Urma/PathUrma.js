@@ -1,7 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { CatmullRomCurve3, Vector3 } from "three";
 
-const SPEED = .75;
+const SPEED = .6;
 
 let t = 1;
 let instance = null;

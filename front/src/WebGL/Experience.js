@@ -8,6 +8,7 @@ import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
 import sources from "webgl/sources.js";
 import OutlineModule from "./Utils/OutlineModule";
+import SoundDesign from "./Utils/SoundDesign";
 
 let instance = null;
 
@@ -25,6 +26,9 @@ export default class Experience {
     // Options
     this.canvas = _canvas;
 
+    // Audio Context
+    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
     // Setup
     this.sizes = new Sizes();
     this.time = new Time();
@@ -35,6 +39,16 @@ export default class Experience {
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
     this.outlineModule = new OutlineModule();
+    this.forestSound = new SoundDesign(this.audioContext, '/sounds/forest.mp3');
+    this.forestSound.loadAudio().then(() => {
+      this.forestSound.play();
+    }).catch((error) => {
+      console.error('Error loading audio:', error);
+    });
+
+    document.getElementById('toggle-sound-button').onclick = () => {
+      this.forestSound.toggle();
+    };
 
     // Resize event
     this.sizes.on("resize", () => {

@@ -140,24 +140,24 @@ export default class Urma {
   }
 
   update() {
-    if (data.move.velocity == 0) {
-      data.move.flag = true;
+    // if (data.move.velocity == 0) {
+    //   data.move.flag = true;
 
-      data.status.left.start && (data.status.left.start = false);
-      data.status.right.start && (data.status.right.start = false);
-      data.status.right.end && (data.status.right.end = false);
-      data.status.left.end && (data.status.left.end = false);
-    }
+    //   data.status.left.start && (data.status.left.start = false);
+    //   data.status.right.start && (data.status.right.start = false);
+    //   data.status.right.end && (data.status.right.end = false);
+    //   data.status.left.end && (data.status.left.end = false);
+    // }
 
-    let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
-    endVelocity = endVelocity > 1 ? 1 : endVelocity;
+    // let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
+    // endVelocity = endVelocity > 1 ? 1 : endVelocity;
 
-    data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
-    data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
-    data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
+    // data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
+    // data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
+    // data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
     
-    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
-    this.updatePosition();
-    this.orientateBody();
+    // this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
+    // this.updatePosition();
+    // this.orientateBody();
   }
 }

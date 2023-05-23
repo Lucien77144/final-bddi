@@ -33,6 +33,7 @@ export default class Experience {
     this.resources = new Resources(sources);
     this.camera = new Camera();
     this.renderer = new Renderer(this.scene, this.camera);
+    console.log(this.renderer);
     this.activeScene = new SceneManager();
     this.outlineModule = new OutlineModule();
 

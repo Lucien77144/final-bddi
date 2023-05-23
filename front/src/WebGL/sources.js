@@ -52,6 +52,34 @@ export default [
     path: "models/River/Bridge.glb",
   },
 
+  // Control Panel
+
+  {
+    name: "controlBaseModel",
+    type: "glb",
+    path: "models/ControlPanel/Base.glb",
+  },
+  {
+    name: "diskOneModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_1.glb",
+  },
+  {
+    name: "diskTwoModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_2.glb",
+  },
+  {
+    name: "diskThreeModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_3.glb",
+  },
+  {
+    name: "controlReferenceModel",
+    type: "glb",
+    path: "models/ControlPanel/Reference.glb",
+  },
+
   // --------------------
   // Textures :
   // --------------------

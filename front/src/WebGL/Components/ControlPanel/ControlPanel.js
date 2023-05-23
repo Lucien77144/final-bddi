@@ -31,49 +31,75 @@ export default class ControlPanel {
 
         this.experience.renderer.instance.domElement.addEventListener('mousedown', (event) => {
             mouseDown = true;
-
+        
             // Update the mouse pos
             this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
             this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
+        
             // Find meshes that are under the mouse pointer
             this.raycaster.setFromCamera(this.mouse, this.experience.camera.instance);
             let intersects = this.raycaster.intersectObjects(this.model.children, true);
-
+        
             // If there are some intersections, select the first one (the closest)
             if (intersects.length > 0 && intersects[0].object.disk) {
                 this.selectedObject = intersects[0].object;
+                
+                let rect = this.experience.renderer.instance.domElement.getBoundingClientRect();
+                let centerX = rect.left + (rect.width / 2);
+                let centerY = rect.top + (rect.height / 2);
+        
+                // Calculate the vector from the center of the canvas to the initial mouse position
+                this.initialVector = new THREE.Vector2(event.clientX - centerX, event.clientY - centerY);
+                this.initialVector.normalize();
+        
+                this.previousMousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                };
             }
         });
-
+        
         this.experience.renderer.instance.domElement.addEventListener('mousemove', (event) => {
             if (mouseDown && this.selectedObject) {
                 let rect = this.experience.renderer.instance.domElement.getBoundingClientRect();
                 let centerX = rect.left + (rect.width / 2);
                 let centerY = rect.top + (rect.height / 2);
-
-                let currentAngle = Math.atan2(centerY - event.clientY, event.clientX - centerX);
-
-                if (this.previousAngle && this.previousAngle !== currentAngle) {
-                    let deltaAngle = currentAngle - this.previousAngle;
-                    if (deltaAngle > Math.PI) {
-                        deltaAngle -= 2 * Math.PI;
-                    } else if (deltaAngle < -Math.PI) {
-                        deltaAngle += 2 * Math.PI;
-                    }
-
-                    this.selectedObject.rotation.y += deltaAngle;
-                }
-
-                this.previousAngle = currentAngle;
+        
+                // Calculate the vector from the center of the canvas to the current mouse position
+                let currentVector = new THREE.Vector2(event.clientX - centerX, event.clientY - centerY);
+                currentVector.normalize();
+        
+                // Calculate the rotation angle
+                let angle = Math.atan2(
+                    this.initialVector.x * currentVector.y - this.initialVector.y * currentVector.x,
+                    this.initialVector.x * currentVector.x + this.initialVector.y * currentVector.y
+                );
+        
+                // Calculate the sign of the cross product of initialVector and currentVector
+                let crossSign = Math.sign(this.initialVector.x * currentVector.y - this.initialVector.y * currentVector.x);
+        
+                // Apply the rotation to the disk
+                this.selectedObject.rotation.y -= angle * crossSign;
+        
+                // Update the initial vector and the previous mouse position for the next mouse move event
+                this.initialVector = currentVector;
+                this.previousMousePosition = {
+                    x: event.clientX,
+                    y: event.clientY
+                };
             }
         });
+        
+        
+        
+        
+        
 
         this.experience.renderer.instance.domElement.addEventListener('mouseup', (event) => {
             mouseDown = false;
-            this.selectedObject = null;
             this.previousAngle = null;
-        
+            this.selectedObject = null;
+
             if (this.checkGameWon()) {
                 console.log("You won the game!");
             }

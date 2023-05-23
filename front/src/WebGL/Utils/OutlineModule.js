@@ -174,7 +174,7 @@ export default class OutlineModule {
         );
         this.outlinePass.visibleEdgeColor.set('#ffffff');
         this.outlinePass.hiddenEdgeColor.set('#ffffff');
-        this.outlinePass.edgeThickness = 5;
+        // this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
         this.composer.addPass(this.outlinePass);

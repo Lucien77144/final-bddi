@@ -48,7 +48,7 @@ export default class GrassScene {
     });
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column();
+    this.column = new Column(new Vector3(0, -.35, 0));
 
     // Setting the environment :
     this.environment = new Environment();

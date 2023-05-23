@@ -17,7 +17,6 @@ export default class Collision {
     this.distances = {};
 
     this.initArrowHelpers();
-    this.initCollisions();
   }
 
   initArrowHelpers() {
@@ -45,56 +44,14 @@ export default class Collision {
     }
   }
 
-  initCollisions() {
-    this.collisions.down = [];
-    this.collisions.left = [];
-    this.collisions.right = [];
-    this.distances.down = 10;
-    this.distances.left = 10;
-    this.distances.right = 10;
-  }
-
-  getIntersect(direction) {
-    this.arrowHelpers[direction].position.copy(this.fairy.model.position);
-
-    this.raycaster.set(
-      this.fairy.model.position.clone(),
-      new Vector3(
-        0,
-        direction == "down" ? -1 : 0,
-        direction == "left" ? 1 : direction == "right" ? -1 : 0
-      )
-    );
-
-    this.floors?.forEach((e) => {
-      const intersections = this.raycaster.intersectObject(e.ground);
-
-      if (intersections.length > 0) {
-        intersections.forEach((intersection) => {
-          this.distances[direction] = intersection.distance;
-          this.collisions[direction].push({
-            floor: e.ground,
-            distance: this.distances[direction],
-          });
-        });
-      }
-    });
+  updateHelpers() {
+    this.arrowHelpers.down.position.copy(this.fairy.model.position);
+    this.arrowHelpers.left.position.copy(this.fairy.model.position);
+    this.arrowHelpers.right.position.copy(this.fairy.model.position);
   }
 
   update() {
-    this.getIntersect("down");
-    this.getIntersect("left");
-    this.getIntersect("right");
-
-    const leftCollisions = this.collisions.left.sort((a, b) => a.distance - b.distance);
-    const rightCollisions = this.collisions.right.sort((a, b) => a.distance - b.distance);
-
-    this.fairy.canGoDown = !(this.distances.down < 0.2);
-    this.fairy.canGoLeft = !(leftCollisions[0]?.distance < 0.6);
-    this.fairy.canGoRight = !(rightCollisions[0]?.distance < 0.6);
-
     this.fairy.moveFairy();
-
-    this.initCollisions();
+    this.updateHelpers();
   }
 }

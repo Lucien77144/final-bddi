@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
 import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
@@ -9,12 +9,13 @@ import GrassGeometry from "./Grass";
 export default class GrassFloor {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _size = new Vector3(10, 30, 20),
+    _size = new Vector3(10, 1, 20),
     _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
       mask: "mask",
       baseTexture: "dirtTexture",
+      secondTexture: "mudTexture",
     },
     _colors = {
       base: new Color('#11382a'),
@@ -29,27 +30,29 @@ export default class GrassFloor {
     },
   } = {}) {
     this.experience = new Experience();
-    this.scene = this.experience.scene;
+    this.world = this.experience.activeScene.world;
     this.resources = this.experience.resources;
     this.time = this.experience.time;
     this.debug = this.experience.debug;
 
+    this.count = _count;
     this.position = _position;
+    this.size = _size;
     this.name = `grassFloor-${this.experience.scene.children.filter((child) => child.name.includes("grassFloor")).length}`;
+    this.colors = _colors;
 
     this.grassParameters = {
-      count: _count,
-      size: _size,
+      count: this.count,
+      size: this.size,
       baseTexture: this.resources.items[_maps.baseTexture],
+      secondTexture: this.resources.items[_maps.secondTexture],
       displacementMap: this.resources.items[_maps.displacementMap],
       mask: this.resources.items[_maps.mask],
-      colors : _colors,
+      colors : this.colors,
     };
 
-    console.log(this.grassParameters);
-
     this.setGround();
-    /* this.setGrass(); */
+    this.setGrass();
   }
 
   setGroundGeometry() {
@@ -61,9 +64,14 @@ export default class GrassFloor {
     this.grassParameters.baseTexture.minFilter = NearestFilter;
     this.grassParameters.baseTexture.magFilter = NearestFilter;
 
-    /* this.groundMaterial = new ShaderMaterial({
+    this.grassParameters.secondTexture.generateMipmaps = false;
+    this.grassParameters.secondTexture.minFilter = NearestFilter;
+    this.grassParameters.secondTexture.magFilter = NearestFilter;
+
+    this.groundMaterial = new ShaderMaterial({
       uniforms: {
         uBaseTexture: { value: this.grassParameters.baseTexture },
+        uSecondTexture: { value: this.grassParameters.secondTexture },
         uDisplacement: { value: this.grassParameters.displacementMap },
         uMask: { value: this.grassParameters.mask },
         uSize: { value: this.grassParameters.size },
@@ -73,9 +81,8 @@ export default class GrassFloor {
       transparent: true,
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
-    }); */
+    });
 
-    console.log(this.grassParameters.displacementMap);
     this.grassMaterial = new MeshBasicMaterial({
       map: this.grassParameters.displacementMap,
       side: DoubleSide,
@@ -92,7 +99,7 @@ export default class GrassFloor {
     this.ground.rotation.x = -Math.PI / 2;
     this.ground.name = this.name;
 
-    this.scene.add(this.ground);
+    this.world.add(this.ground);
   }
 
   setGrass() {
@@ -102,9 +109,8 @@ export default class GrassFloor {
     this.grass = new Mesh(this.grassGeometry, this.grassMaterial);
     this.grass.position.copy(this.ground.position);
     this.grass.name = this.name + "-blades";
-    this.grass.ignoreEnvironment = true;
 
-    this.scene.add(this.grass);
+    this.world.add(this.grass);
   }
 
   setGrassGeometry() {

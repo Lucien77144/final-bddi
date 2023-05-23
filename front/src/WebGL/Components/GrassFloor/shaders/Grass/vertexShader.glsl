@@ -2,6 +2,7 @@ uniform float uTime;
 uniform sampler2D uDisplacement;
 uniform sampler2D uMask;
 uniform vec3 uSize;
+uniform float uMaxBladeSize;
 
 varying vec2 vUv;
 varying vec3 vBasePosition;
@@ -31,12 +32,13 @@ void main() {
   vUv = uv;
   
   float wind = getWind();
-  vPosition.y += getTexture2D(uDisplacement).r * uSize.y + wind;
+  vPosition.y += (getTexture2D(uDisplacement).r * uSize.y) + wind;
   vBasePosition.y += wind;
   vPosition.z += wave(wind);
 
-  vMask = 1. - (getTexture2D(uMask).r + getTexture2D(uMask).b);
-  vPosition.y *= vMask;
+  vMask = 1. - (getTexture2D(uMask).b + getTexture2D(uMask).g + getTexture2D(uMask).r);
+  vPosition.y -= (uMaxBladeSize - uMaxBladeSize * vMask);
+  vPosition.z += 1.;
   
   gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.);
 }

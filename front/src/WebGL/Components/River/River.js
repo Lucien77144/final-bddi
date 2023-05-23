@@ -1,4 +1,3 @@
-// import shaders
 import waterVertexShader from "./shaders/vertexShader.glsl";
 import waterFragmentShader from "./shaders/fragmentShader.glsl";
 import Experience from "@/WebGL/Experience";
@@ -7,22 +6,17 @@ import * as THREE from "three";
 export default class River {
   constructor(position) {
     this.experience = new Experience();
-    this.scene = this.experience.scene;
+    this.world = this.experience.activeScene.world;
     this.resources = this.experience.resources;
     this.time = this.experience.time;
     this.uTime = 0;
 
-    // Wait for resources
-    // textures 
-
-    this.loader = new THREE.TextureLoader();
-
-    this.noiseMap = this.loader.load("https://i.imgur.com/gPz7iPX.jpg")
-    this.dudvMap = this.loader.load("https://i.imgur.com/hOIsXiZ.jpg")
-
+    this.noiseMap = this.resources.items.noiseMap;
     this.noiseMap.wrapS = this.noiseMap.wrapT = THREE.RepeatWrapping;
     this.noiseMap.minFilter = THREE.NearestFilter;
     this.noiseMap.magFilter = THREE.NearestFilter;
+
+    this.dudvMap = this.resources.items.dudvMap;
     this.dudvMap.wrapS = this.dudvMap.wrapT = THREE.RepeatWrapping;
 
     this.setUniforms();
@@ -33,13 +27,14 @@ export default class River {
   setUniforms() {
     this.uniforms = {
       uTime: { value: this.uTime },
-      tNoise: { value: null },
-      tDudv: { value: null },
+      tNoise: { value: this.noiseMap },
+      tDudv: { value: this.dudvMap },
       topDarkColor : { value: new THREE.Color('#4e7a71') },
       bottomDarkColor : { value: new THREE.Color('#0e7562') },
       topLightColor : { value: new THREE.Color('#b0f7e9') },
       bottomLightColor : { value: new THREE.Color('#14c6a5') },
       foamColor : { value: new THREE.Color('#ffffff') },
+      uColorMask: { value: new THREE.Color('#313042') },
       uWaveFrequency : { value: 0.5 },
       uWaveAmplitude : { value: 0.5 },
     }
@@ -60,18 +55,14 @@ export default class River {
   }
 
   setWater(position) {
-    this.geometry = new THREE.PlaneGeometry(8, 16, 8, 16, 1, true)
+    this.geometry = new THREE.PlaneGeometry(8, 16, 8, 16, 1, true);
+
     this.water = new THREE.Mesh(this.geometry, this.material);
-    // this.water.position.set(-2, 3, 0);
     this.water.position.set(position.x, position.y, position.z);
     this.water.rotation.x = -Math.PI / 2;
-    this.water.rotation.y = 0.2;
-    this.water.rotation.z = 1.5
+    this.water.rotation.z = Math.PI / 2;
 
-    this.scene.add(this.water);
-
-    this.material.uniforms.tNoise.value = this.noiseMap;
-    this.material.uniforms.tDudv.value = this.dudvMap;
+    this.world.add(this.water);
   }
 
   update() {

@@ -1,4 +1,5 @@
 import { Vector2, Raycaster, Vector3 } from 'three';
+import * as THREE from 'three';
 import Experience from '@/WebGL/Experience';
 
 export default class ControlPanel {
@@ -15,6 +16,12 @@ export default class ControlPanel {
         this.selectedObject = null;
 
         this.setModel();
+
+        this.correctSections = {
+            'Disk_0003': 0,  // Replace these values with the correct angles for your disks
+            'Disk_1003': 4,
+            'Disk_2004': 6
+        };        
 
         this.raycaster = new Raycaster();
         this.mouse = new Vector2();
@@ -66,11 +73,47 @@ export default class ControlPanel {
             mouseDown = false;
             this.selectedObject = null;
             this.previousAngle = null;
+        
+            if (this.checkGameWon()) {
+                console.log("You won the game!");
+            }
         });
 
-        
-
     }
+
+    checkGameWon() {
+        // Iterate backwards through children
+        for (let i = this.model.children.length - 1; i >= 0; i--) {
+            const child = this.model.children[i];
+            
+            if(child.name.includes('Disk')) {
+                const euler = new THREE.Euler();
+    
+                // Set the rotation order to 'YXZ' or 'YZX'
+                euler.setFromQuaternion(child.quaternion, 'YXZ');
+    
+                const angleInDegrees = euler.y * (180 / Math.PI);
+    
+                // Normalize the angle to be in range [0, 360)
+                const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
+                console.log(normalizedAngle);
+                // Determine the current section of the disk
+                const currentSection = Math.floor(normalizedAngle / 45);
+                console.log(currentSection);
+                // Check if the disk's current section is the correct one
+                if (currentSection !== this.correctSections[child.name]) {
+                    return false; // If not, the game is not won yet
+                }
+            }
+        }
+    
+        // If all disks are showing the correct section, the game is won
+        return true;
+    }
+    
+    
+    
+    
 
     setModel() {
         this.model = this.resource.scene;

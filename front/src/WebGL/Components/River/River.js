@@ -4,7 +4,10 @@ import Experience from "@/WebGL/Experience";
 import * as THREE from "three";
 
 export default class River {
-  constructor(position) {
+  constructor({
+    _position = new THREE.Vector3(0, 0, 0),
+    _size = new THREE.Vector2(8, 16),
+  } = {}) {
     this.experience = new Experience();
     this.world = this.experience.activeScene.world;
     this.resources = this.experience.resources;
@@ -21,7 +24,7 @@ export default class River {
 
     this.setUniforms();
     this.setMaterial();
-    this.setWater(position);
+    this.setWater(_position, _size);
   }
 
   setUniforms() {
@@ -54,8 +57,8 @@ export default class River {
     });
   }
 
-  setWater(position) {
-    this.geometry = new THREE.PlaneGeometry(8, 16, 8, 16, 1, true);
+  setWater(position, size) {
+    this.geometry = new THREE.PlaneGeometry(size.x, size.y, size.x, size.y, 1, true);
 
     this.water = new THREE.Mesh(this.geometry, this.material);
     this.water.position.set(position.x, position.y, position.z);

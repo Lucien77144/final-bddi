@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Group, Vector3 } from "three";
+import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
@@ -37,12 +37,15 @@ export default class GrassScene {
     this.setWorld(-.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-7, 0, 0),
-        _size: new Vector3(27, 2, 58),
+        _position: new Vector3(-7, 0, -14),
+        _size: new Vector3(27, 2, 95),
         _count: 175000,
       }),
     ];
-    this.river = new River(new Vector3(-6, 2, -5));
+    this.river = new River({
+      _position: new Vector3(-5, 1.35, -10),
+      _size: new Vector2(13, 30),
+    });
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column();
@@ -57,9 +60,9 @@ export default class GrassScene {
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // Setting Fairy :
-    this.fairy = new Fairy();
-    this.fairyDust = new FairyDust();
-    this.collisionV1 = new CollisionV1();
+    // this.fairy = new Fairy();
+    // this.fairyDust = new FairyDust();
+    // this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {

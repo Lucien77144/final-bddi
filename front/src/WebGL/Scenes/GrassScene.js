@@ -5,6 +5,7 @@ import GrassFloor from "components/Grass/GrassFloor.js";
 import Urma from "components/Urma/Urma.js";
 import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
+import Tree from "components/Tree/Tree.js";
 import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
 import Fairy from "../Components/Fairy/Fairy.js";
@@ -32,6 +33,7 @@ export default class GrassScene {
     this.environment = new Environment();
     this.floor = new GrassFloor();
     this.fairyDust = new FairyDust();
+    this.tree = new Tree(new Vector3(0, 5, 0));
 
     // this.collision = new Collision();
     this.collisionV1 = new CollisionV1();
@@ -49,6 +51,7 @@ export default class GrassScene {
 
   update() {
     // if (this.collision) this.collision.update();
+    if (this.tree) this.tree.update();
     if (this.collisionV1) this.collisionV1.update();
     if (this.fairyDust) this.fairyDust.update();
     if (this.floor) this.floor.update();

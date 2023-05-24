@@ -69,6 +69,11 @@ export default [
     type: "texture",
     path: "img/cloud.jpg",
   },
+  {
+    name: "treeMask",
+    type: "texture",
+    path: "textures/tree/mask.png",
+  },
 
   // --------------------
   // Cube Textures :

@@ -2,6 +2,7 @@ import Experience from "webgl/Experience.js";
 import {
   DoubleSide,
   Group,
+  MathUtils,
   Mesh,
   PlaneGeometry,
   RepeatWrapping,
@@ -26,7 +27,7 @@ export default class Tree {
     this.scene = this.experience.scene;
     this.camera = this.experience.camera.instance;
     this.resources = this.experience.resources;
-    this.debug = this.experience.debug;
+    // this.debug = this.experience.debug;
     this.position = _position;
 
     this.setGroup();
@@ -34,7 +35,7 @@ export default class Tree {
     this.setMaterial();
     this.setMesh();
 
-    if (this.debug.active) this.setDebug();
+    // if (this.debug.active) this.setDebug();
   }
 
   setGroup() {
@@ -69,7 +70,6 @@ export default class Tree {
     this.mesh = new Mesh(this.geometry, this.material);
     this.treeGroup.add(this.mesh);
     this.mesh.rotation.y = Math.PI / 2;
-    // this.mesh.lookAt(this.camera.position);
   }
 
   setDebug() {
@@ -91,6 +91,20 @@ export default class Tree {
   }
 
   update() {
-    // this.mesh.lookAt(this.camera.position);
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+    const targetPosition = this.camera.position.clone();
+
+    this.mesh.lookAt(targetPosition);
+
+    const meshRotation = this.mesh.rotation.clone();
+    const targetRotationY = clamp(meshRotation.y, 0.9, 1.05);
+    const smoothness = 0.05; // Valeur pour ajuster la vitesse de rotation (plus la valeur est petite, plus la rotation sera lente)
+
+    meshRotation.y = MathUtils.lerp(
+      meshRotation.y,
+      targetRotationY,
+      smoothness
+    );
+    this.mesh.rotation.copy(meshRotation);
   }
 }

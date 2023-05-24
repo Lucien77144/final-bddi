@@ -16,6 +16,8 @@ import Cloud from "../Components/Cloud/Cloud";
 import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
+import River from "../Components/River/River.js";
+import Column from "../Components/Column/Column.js";
 
 export default class GrassScene {
   constructor() {
@@ -36,7 +38,7 @@ export default class GrassScene {
   // Setup
   buildScene() {
     // Setting the world :
-    this.setWorld(-.1); // value is rotation on z axis
+    this.setWorld(-0.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-7, 0, 0),
@@ -51,7 +53,6 @@ export default class GrassScene {
 
     // Setting the environment :
     this.environment = new Environment();
-    this.floor = new GrassFloor();
     this.fairyDust = new FairyDust();
     this.tree = new Tree(new Vector3(0, 5, 0));
 
@@ -76,12 +77,20 @@ export default class GrassScene {
   }
 
   update() {
-    // if (this.collision) this.collision.update();
-    if (this.tree) this.tree.update();
-    if (this.collisionV1) this.collisionV1.update();
-    if (this.fairyDust) this.fairyDust.update();
-    if (this.floor) this.floor.update();
-    if (this.urma) this.urma.update();
-    // if (this.fairy) this.fairy.update();
+    this.tree?.update();
+
+    this.urma?.update();
+
+    this.fairy?.update();
+    this.fairyDust?.update();
+    this.collisionV1?.update();
+
+    this.floors?.forEach((floor) => {
+      floor.update();
+    });
+    this.river?.update();
+
+    this.fireflies?.update();
+    this.clouds?.update();
   }
 }

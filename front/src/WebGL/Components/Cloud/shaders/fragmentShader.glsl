@@ -24,8 +24,9 @@ void main()  {
     vec3 secondary = mix(uSecondary, uSecondary2, vUv.y);
     vec3 resultMountain = mix(uPrimary, secondary, montains.b);
 
-    vec3 color = mix(resultMountain, back.rgb, (montains.r < 1.) && (montains.r < .5) ? montains.r * 2. : 1.);
-    color = mix(color, uShadowColor, shadow.r);
+    vec3 front = mix(resultMountain, uShadowColor, shadow.r);
+
+    vec3 color = mix(front, back.rgb, (montains.r < 1.) && (montains.r < .5) ? montains.r * 2. : 1.);
     
 	gl_FragColor = vec4(color, 1.);
 }

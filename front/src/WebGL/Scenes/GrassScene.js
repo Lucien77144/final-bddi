@@ -39,7 +39,7 @@ export default class GrassScene {
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
         _size: new Vector3(54, 2, 95),
-        _count: 175000,
+        _count: 225000,
       }),
     ];
     this.river = new River({

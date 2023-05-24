@@ -77,16 +77,9 @@ export default class GrassFloor {
         uSize: { value: this.grassParameters.size },
         uBaseColor: { value: this.grassParameters.colors.base },
       },
-      side: DoubleSide,
       transparent: true,
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
-    });
-
-    this.grassMaterial = new MeshBasicMaterial({
-      map: this.grassParameters.displacementMap,
-      side: DoubleSide,
-      transparent: true,
     });
   }
 

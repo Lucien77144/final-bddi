@@ -28,3 +28,21 @@ body {
   position : relative;
   z-index: 1;
 }
+
+.interact-text {
+  position : absolute;
+  top : -40%;
+  left : -2.5%;
+  z-index : 1;
+}
+
+.dialogue-box {
+  position : absolute;
+  bottom : 10%;
+  left : 50%;
+  z-index : 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  transform: translate(-50%, -50%);
+  width : 50%;
+  color : white;
+}

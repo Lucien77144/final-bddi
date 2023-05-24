@@ -7,40 +7,41 @@ import {
   Quaternion,
   MathUtils,
 } from "three";
+import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
+import PathUrma from "../Urma/PathUrma";
 
 let instance = null;
-export default class Fairy {
-  constructor(position = new Vector3(0, 0, 0)) {
+export default class Fairy extends EventEmitter {
+  constructor(_position) {
+    super();
     if (instance) {
       return instance;
     }
     instance = this;
 
-    const { scene, resources, debug, time } = new Experience();
+    const { scene, resources, debug, time, activeScene } = new Experience();
     this.scene = scene;
     this.resources = resources;
     this.debug = debug;
     this.time = time;
-    this.position = position;
-
-    this.resource = this.resources.items.fairyModel;
+    this.position = _position || new PathUrma().getPositionAt();
+    this.fairyModel = this.resources.items.fairyModel;
+    this.floors = activeScene.floors;
 
     this.mouseMove = new MouseMove();
 
+    this.getYLimit();
     this.setModel();
     this.setAnimation();
   }
 
   setModel() {
-    console.log(this.resource);
-    this.model = cloneGltf(this.resource).scene;
-
+    this.model = cloneGltf(this.fairyModel).scene;
     this.model.scale.set(0.2, 0.2, 0.2);
     this.model.position.copy(this.position);
     this.model.name = "fairy";
-
     this.scene.add(this.model);
 
     for (const child of this.model.children) {
@@ -73,30 +74,29 @@ export default class Fairy {
       lerpFactor
     );
 
-    const resPos = new Vector3().copy(this.model.position);
-
     const newPos = new Vector3()
       .copy(this.model.position)
-      .add(fairyDir.multiplyScalar(0.25));
+      .add(fairyDir.multiplyScalar(0.2));
 
-    const moveY = this.canGoDown || this.model.position.y < newPos.y;
-    const right = this.canGoRight || this.model.position.z < newPos.z;
-    const left = this.canGoLeft || newPos.z < this.model.position.z;
+    const canGoDown = (newPos.y > this.minY);
 
-    if (moveY) {
-      resPos.y = newPos.y;
-    } else {
-      resPos.y += 0.01;
+    const resPos = {
+      ...new Vector3().copy(this.model.position),
+      x: newPos.x,
+      y: canGoDown || (this.model.position.y < newPos.y) ? newPos.y : this.minY,
+      z: newPos.z,
     }
-    if ((this.canGoLeft || left) && (this.canGoRight || right)) {
-      resPos.z = newPos.z;
-    }
-
-    resPos.x = newPos.x;
 
     const logDist = Math.log(this.distFairyToMouse + 1);
-    const speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
+    let speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
+
     this.model.position.lerp(resPos, speed);
+
+    this.trigger("moveFairy", [
+      this.model.position.x,
+      this.model.position.y,
+      this.model.position.z,
+    ]);
   }
 
   isFairyMoving() {
@@ -109,7 +109,7 @@ export default class Fairy {
   }
 
   setAnimation() {
-    const clip = this.resource.animations[0];
+    const clip = this.fairyModel.animations[0];
 
     this.animation = {
       mixer: new AnimationMixer(this.model),
@@ -122,9 +122,25 @@ export default class Fairy {
     this.animation.action.play();
   }
 
+  getYLimit() {
+    const filteredFloors = this.floors.filter((floor) => {
+      const pos = new Vector3(
+        0,
+        0,
+        floor.position.z - floor.size.z / 2
+      );
+      return pos.z < this.model?.position.z && this.model?.position.z < pos.z + floor.size.z;
+    });
+    
+    this.minY = Math.max(...filteredFloors.map(floor => floor.position.y + floor.size.y));
+  }
+
   update() {
-    this.animation.mixer.update(
-      this.time.delta * (0.001 + this.distFairyToMouse * 0.001)
-    );
+    this.getYLimit();
+    if (this.distFairyToMouse) {
+      this.animation.mixer.update(
+        this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)
+      );
+    }
   }
 }

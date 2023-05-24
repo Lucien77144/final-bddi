@@ -7,6 +7,7 @@ import Resources from "utils/Resources.js";
 import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
 import sources from "webgl/sources.js";
+import OutlineModule from "./Utils/OutlineModule";
 
 let instance = null;
 
@@ -33,6 +34,7 @@ export default class Experience {
     this.camera = new Camera();
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
+    this.outlineModule = new OutlineModule();
 
     // Resize event
     this.sizes.on("resize", () => {
@@ -50,21 +52,20 @@ export default class Experience {
     this.debug = new Debug();
     this.camera = new Camera();
     this.activeScene = new SceneManager(nextName);
-    this.renderer.scene = this.scene;
-    this.renderer.camera = this.camera;
     this.update();
   }
 
   resize() {
-    this.camera.resize();
-    this.renderer.resize();
+    this.camera?.resize();
+    this.renderer?.resize();
   }
 
   update() {
     this.camera.instance && this.camera.update();
-    this.activeScene.update();
-    this.renderer.update();
-    this.debug.update();
+    this.activeScene?.update();
+    this.outlineModule?.update();
+    // this.renderer?.update();
+    this.debug?.update();
   }
 
   destroy() {
@@ -89,8 +90,8 @@ export default class Experience {
       }
     });
 
-    this.camera.controls.dispose();
-    this.renderer.instance.dispose();
+    this.camera?.controls.dispose();
+    this.renderer?.dispose();
 
     if (this.debug.active) this.debug.ui.destroy();
   }

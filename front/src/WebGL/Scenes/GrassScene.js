@@ -1,16 +1,21 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Vector3 } from "three";
-import GrassFloor from "components/Grass/GrassFloor.js";
+import { Group, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Tree from "components/Tree/Tree.js";
 import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
-import Fairy from "../Components/Fairy/Fairy.js";
 // import Collision from "@/WebGL/Utils/Collision.js";
 import CollisionV1 from "../Components/Fairy/Collision.js";
+import Fireflies from "../Components/Fireflies/Fireflies.js";
+import GrassFloor from "../Components/GrassFloor/GrassFloor";
+import Fairy from "../Components/Fairy/Fairy";
+import DialogueBox from "../Components/DialogueBox.js";
+import Cloud from "../Components/Cloud/Cloud";
+import Stele from "../Components/Stele/Stele";
+import RocksRiver from "../Components/RocksRiver/RocksRiver";
+import Bridge from "../Components/Bridge/Bridge";
 
 export default class GrassScene {
   constructor() {
@@ -28,8 +33,23 @@ export default class GrassScene {
     }
   }
 
+  // Setup
   buildScene() {
-    // Setup
+    // Setting the world :
+    this.setWorld(-.1); // value is rotation on z axis
+    this.floors = [
+      new GrassFloor({
+        _position: new Vector3(-7, 0, 0),
+        _size: new Vector3(27, 2, 58),
+        _count: 175000,
+      }),
+    ];
+    this.river = new River(new Vector3(-6, 2, -5));
+    this.rocksRiver = new RocksRiver();
+    this.bridge = new Bridge();
+    this.column = new Column();
+
+    // Setting the environment :
     this.environment = new Environment();
     this.floor = new GrassFloor();
     this.fairyDust = new FairyDust();
@@ -42,11 +62,17 @@ export default class GrassScene {
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))
     this.urma = new Urma(new Vector3(0, 5, 8));
-    // this.cube = new Cube(new Vector3(6.36, 0, 10));
 
-    this.column = new Column(new Vector3(0, 0, 0));
+    // Setting Fairy :
+    this.fairy = new Fairy();
+    this.fairyDust = new FairyDust();
+    this.collisionV1 = new CollisionV1();
+  }
 
-    // this.fairy = new Fairy(new Vector3(0, 5, 12));
+  setWorld(_rotation) {
+    this.world = new Group();
+    this.world.rotation.z = _rotation;
+    this.scene.add(this.world);
   }
 
   update() {

@@ -1,7 +1,6 @@
 import { ArrowHelper, Raycaster, Vector3 } from "three";
 import Experience from "webgl/Experience.js";
 import Fairy from "components/Fairy/Fairy";
-import GrassFloor from "components/Grass/GrassFloor";
 import MouseMove from "utils/MouseMove.js";
 
 export default class Collision {
@@ -11,14 +10,13 @@ export default class Collision {
     this.camera = this.experience.camera.instance;
     this.mouseMove = new MouseMove();
     this.fairy = new Fairy();
-    this.grassFloor = new GrassFloor();
+    this.floors = this.experience.activeScene.floors;
     this.raycaster = new Raycaster();
     this.arrowHelpers = {};
     this.collisions = {};
     this.distances = {};
 
     this.initArrowHelpers();
-    this.initCollisions();
   }
 
   initArrowHelpers() {
@@ -46,56 +44,14 @@ export default class Collision {
     }
   }
 
-  initCollisions() {
-    this.collisions.down = [];
-    this.collisions.left = [];
-    this.collisions.right = [];
-    this.distances.down = 10;
-    this.distances.left = 10;
-    this.distances.right = 10;
-  }
-
-  getIntersect(direction) {
-    this.arrowHelpers[direction].position.copy(this.fairy.model.position);
-
-    this.raycaster.set(
-      this.fairy.model.position.clone(),
-      new Vector3(
-        0,
-        direction == "down" ? -1 : 0,
-        direction == "left" ? 1 : direction == "right" ? -1 : 0
-      )
-    );
-
-    this.grassFloor.grounds.children.forEach((floor) => {
-      const intersections = this.raycaster.intersectObject(floor);
-
-      if (intersections.length > 0) {
-        intersections.forEach((intersection) => {
-          this.distances[direction] = intersection.distance;
-          this.collisions[direction].push({
-            floor,
-            distance: this.distances[direction],
-          });
-        });
-      }
-    });
+  updateHelpers() {
+    this.arrowHelpers.down.position.copy(this.fairy.model.position);
+    this.arrowHelpers.left.position.copy(this.fairy.model.position);
+    this.arrowHelpers.right.position.copy(this.fairy.model.position);
   }
 
   update() {
-    this.getIntersect("down");
-    this.getIntersect("left");
-    this.getIntersect("right");
-
-    const leftCollisions = this.collisions.left.sort((a, b) => a.distance - b.distance);
-    const rightCollisions = this.collisions.right.sort((a, b) => a.distance - b.distance);
-
-    this.fairy.canGoDown = !(this.distances.down < 0.2);
-    this.fairy.canGoLeft = !(leftCollisions[0]?.distance < 0.6);
-    this.fairy.canGoRight = !(rightCollisions[0]?.distance < 0.6);
-
     this.fairy.moveFairy();
-
-    this.initCollisions();
+    this.updateHelpers();
   }
 }

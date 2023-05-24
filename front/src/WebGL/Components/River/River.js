@@ -42,14 +42,12 @@ export default class River {
       uTime: { value: this.uTime },
       tNoise: { value: this.noiseMap },
       tDudv: { value: this.dudvMap },
-      topDarkColor : { value: new THREE.Color('#383bff') },
-      bottomDarkColor : { value: new THREE.Color('#2a4280') },
-      topLightColor : { value: new THREE.Color('#4956dd') },
+      topDarkColor : { value: new THREE.Color('#ffffff') },
+      bottomDarkColor : { value: new THREE.Color('#f5f5f5') },
+      topLightColor : { value: new THREE.Color('#4964dd') },
       bottomLightColor : { value: new THREE.Color('#146ac6') },
       foamColor : { value: new THREE.Color('#ffffff') },
       uColorMask: { value: new THREE.Color('#313042') },
-      uWaveFrequency : { value: 0.2 },
-      uWaveAmplitude : { value: 0.2 },
       envMap: { type: 't', value: this.envMap },
     }
   }

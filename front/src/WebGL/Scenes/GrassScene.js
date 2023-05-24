@@ -37,14 +37,14 @@ export default class GrassScene {
     this.setWorld(-.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-7, 0, -14),
-        _size: new Vector3(27, 2, 95),
+        _position: new Vector3(-20.5, 0, -14),
+        _size: new Vector3(54, 2, 95),
         _count: 175000,
       }),
     ];
     this.river = new River({
-      _position: new Vector3(-5, 1.35, -10),
-      _size: new Vector2(13, 30),
+      _position: new Vector3(-17, 1.35, -10),
+      _size: new Vector2(13, 60),
     });
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();

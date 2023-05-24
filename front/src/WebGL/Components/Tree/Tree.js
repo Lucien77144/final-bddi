@@ -90,7 +90,7 @@ export default class Tree {
       });
   }
 
-  update() {
+  setOrientation() {
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
     const targetPosition = this.camera.position.clone();
 
@@ -106,5 +106,9 @@ export default class Tree {
       smoothness
     );
     this.mesh.rotation.copy(meshRotation);
+  }
+
+  update() {
+    this.setOrientation();
   }
 }

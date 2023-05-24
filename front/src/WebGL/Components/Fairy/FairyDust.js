@@ -140,8 +140,6 @@ export default class FairyDust {
   }
 
   update() {
-    if (this.fairy) this.fairy.update();
-
     this.positionVariable.material.uniforms.uTime.value += this.time.delta;
     this._material.uniforms.uTime.value += this.time.delta;
 

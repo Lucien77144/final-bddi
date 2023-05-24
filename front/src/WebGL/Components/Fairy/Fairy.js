@@ -11,6 +11,8 @@ import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
+import FairyDust from "./FairyDust";
+import Collision from "./Collision";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -29,6 +31,8 @@ export default class Fairy extends EventEmitter {
     this.position = _position || new PathUrma().getPositionAt();
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
+    this.fairyDust = new FairyDust();
+    this.collision = new Collision();
 
     this.mouseMove = new MouseMove();
 
@@ -78,14 +82,14 @@ export default class Fairy extends EventEmitter {
       .copy(this.model.position)
       .add(fairyDir.multiplyScalar(0.2));
 
-    const canGoDown = (newPos.y > this.minY);
+    const canGoDown = newPos.y > this.minY;
 
     const resPos = {
       ...new Vector3().copy(this.model.position),
       x: newPos.x,
-      y: canGoDown || (this.model.position.y < newPos.y) ? newPos.y : this.minY,
+      y: canGoDown || this.model.position.y < newPos.y ? newPos.y : this.minY,
       z: newPos.z,
-    }
+    };
 
     const logDist = Math.log(this.distFairyToMouse + 1);
     let speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
@@ -124,18 +128,21 @@ export default class Fairy extends EventEmitter {
 
   getYLimit() {
     const filteredFloors = this.floors.filter((floor) => {
-      const pos = new Vector3(
-        0,
-        0,
-        floor.position.z - floor.size.z / 2
+      const pos = new Vector3(0, 0, floor.position.z - floor.size.z / 2);
+      return (
+        pos.z < this.model?.position.z &&
+        this.model?.position.z < pos.z + floor.size.z
       );
-      return pos.z < this.model?.position.z && this.model?.position.z < pos.z + floor.size.z;
     });
-    
-    this.minY = Math.max(...filteredFloors.map(floor => floor.position.y + floor.size.y));
+
+    this.minY = Math.max(
+      ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
+    );
   }
 
   update() {
+    this.fairyDust?.update();
+    this.collision?.update();
     this.getYLimit();
     if (this.distFairyToMouse) {
       this.animation.mixer.update(

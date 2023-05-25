@@ -12,6 +12,7 @@ export default class Cloud {
     this.resources = this.experience.resources;
     this.time = this.experience.time;
     this.size = _size;
+    this.camera = this.experience.camera.instance;
 
     this.setCloud();
   }
@@ -38,7 +39,6 @@ export default class Cloud {
 
     const floorColors = this.activeScene?.floors && this.activeScene?.floors[0].grassParameters?.colors;
 
-    // raf : variations du vert
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
@@ -70,5 +70,6 @@ export default class Cloud {
   update() {
     this.uTime = this.time.elapsed * 0.0005;
     this.material.uniforms.uTime.value = this.time.elapsed * .001;
+    this.mesh.position.z = this.camera.position.z / 1.75; 
   }
 }

@@ -119,7 +119,6 @@ export default class Urma {
     if(!this.grassScene.onGame) {
     data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
 
-    // console.log(this.grassScene);
     modelPos.copy(this.path.position);
 
       cameraPos.z = modelPos.z - data.move.delta*5;

@@ -55,6 +55,11 @@ export default class Urma {
 
     this.position = _position;
 
+    this.keyState = {
+      right: false,
+      left: false,
+    };
+
     this.setModel();
     this.setAnimation();
     this.setInputs();
@@ -65,35 +70,38 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
-
     this.scene.add(this.model);
     this.camera.position.z = this.model.position.z;
   }
 
   setAnimation() {
-    const clip = this.resource.animations[0];
+    const idleClip = this.resource.animations.find((animation) => animation.name === "Idle");
+    const runClip = this.resource.animations.find((animation) => animation.name === "Run");
+  
     this.animation = {
-      mixer: new AnimationMixer(this.model),
-      action: null,
+        mixer: new AnimationMixer(this.model),
+        actions: {
+            idle: null,
+            run: null,
+        },
+        isFading: {
+            idle: false,
+            run: false,
+        },
     };
-
-    this.animation.action = this.animation.mixer.clipAction(clip);
-    this.animation.action.timeScale = 1;
-    this.animation.action.setLoop(LoopRepeat, Infinity);
-    this.animation.action.play();
+  
+    this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
+    this.animation.actions.run = this.animation.mixer.clipAction(runClip);
+    this.currentAnimation = 'idle'
+    this.animation.actions.idle.play();
   }
 
-  setInputs() {
-    ["right", 'left'].forEach((dir) => {
-      InputManager.on(dir, (val) => {
-        if (val) {
-          // start model animation
-          this.animation.action.paused = false;
-        } else {
-          // pause model animation
-          this.animation.action.paused = true;
-        }
-  
+
+setInputs() {
+  ["right", 'left'].forEach((dir) => {
+    InputManager.on(dir, (val) => {
+      this.keyState[dir] = val;
+
         if (val && !data.status[dir].start) {
           data.status[dir].start = true;
           data.time.start = this.time.current;
@@ -126,7 +134,6 @@ export default class Urma {
       cameraPos.y = 4 - rdmCamera;
       cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
       
-      this.animation.mixer.update(this.time.delta * 0.001);
     }
 
   }
@@ -155,8 +162,31 @@ export default class Urma {
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
     
+
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
+    this.animation.mixer.update(this.time.delta * 0.001);
+
+    if(this.keyState.right || this.keyState.left){
+      console.log(this.currentAnimation);
+      if(this.currentAnimation === 'idle'){
+        this.currentAnimation = 'run';
+        this.animation.actions.idle.fadeOut(0.5);
+        console.log(this.animation.actions.run.fadeIn(0.5));
+        this.animation.actions.run.fadeIn(0.5);
+        this.animation.actions.run.play();
+        
+      }
+    } else {
+      if(this.currentAnimation === 'run'){
+        console.log('idle');
+        this.currentAnimation = 'idle';
+        this.animation.actions.run.fadeOut(0.5);
+        this.animation.actions.idle.fadeIn(0.5);
+        this.animation.actions.idle.play();
+      }
+    }
+
   }
 }

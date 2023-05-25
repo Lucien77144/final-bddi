@@ -3,8 +3,8 @@ import {
   AmbientLight,
   Mesh,
   MeshStandardMaterial,
-  sRGBEncoding,
 } from "three";
+import * as THREE from "three";
 
 export default class Environment {
   constructor() {
@@ -23,14 +23,20 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.sunLight = new AmbientLight("#96ffd6", 5);
-    this.sunLight.position.set(3.5, 2, -1.25);
+    this.ambiantLight = new AmbientLight("#fffb96", 2);
+    this.ambiantLight.position.set(3.5, 2, -1.25);
+    this.ambiantLight.name = "ambiantLight";
+    this.scene.add(this.ambiantLight);
+
+    this.sunLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+    this.sunLight.position.set(0, 10, 0);
     this.sunLight.name = "sunLight";
+    this.sunLight.castShadow = true;
     this.scene.add(this.sunLight);
 
     // Debug
     if (this.debug.active) {
-      this.debugFolder.addInput(this.sunLight, "intensity", {
+      this.debugFolder.addInput(this.ambiantLight, "intensity", {
         min: 0,
         max: 10,
         step: 0.001,
@@ -38,14 +44,12 @@ export default class Environment {
       });
     }
   }
+  
 
   setEnvironmentMap() {
     this.environmentMap = {};
-    this.environmentMap.intensity = 1.5;
+    this.environmentMap.intensity = .5;
     this.environmentMap.texture = this.resources.items.environmentMapTexture;
-    this.environmentMap.texture.encoding = sRGBEncoding;
-
-    // this.scene.environment = this.environmentMap.texture;
 
     this.environmentMap.updateMaterials = () => {
       this.scene.traverse((child) => {
@@ -54,9 +58,9 @@ export default class Environment {
           child.material instanceof MeshStandardMaterial &&
           !child.ignoreEnvironment
         ) {
-          // child.material.envMap = this.environmentMap.texture;
-          child.material.envMapIntensity = this.environmentMap.intensity;
+          child.material.envMap = this.environmentMap.texture;
           child.material.needsUpdate = true;
+          child.material.envMapIntensity = this.environmentMap.intensity;
         }
       });
     };

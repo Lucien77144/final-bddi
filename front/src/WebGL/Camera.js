@@ -1,6 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { PerspectiveCamera } from "three";
+import MouseMove from "./Utils/MouseMove";
 
 export default class Camera {
   constructor() {
@@ -46,6 +47,8 @@ export default class Camera {
       this.options.position.z
     );
 
+    this.instance.position.x = 9;
+
     this.instance.rotation.set(
       this.options.rotate.x,
       this.options.rotate.y,
@@ -88,8 +91,8 @@ export default class Camera {
       .addInput(this.instance.position, "x", {
         label: "Position X",
         min: -20,
-        max: 20,
-        step: 0.1,
+        max: 100,
+        step: 0.01,
       })
 
     if(this.controls) {
@@ -102,5 +105,6 @@ export default class Camera {
 
   update() {
     if(this.controls) this.controls.update();
-  } 
+    if(!this.mouseMove) { this.mouseMove = new MouseMove(); }
+  }
 }

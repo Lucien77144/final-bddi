@@ -1,10 +1,34 @@
+varying vec2 vUv;
+
 uniform float uTime;
-varying float vLife;
+uniform vec3 uColor;
+uniform float uFadeIn;
+uniform float uFadeOut;
+uniform float uFairyDistance;
 
 void main()
 {
-    float distanceToCenter = distance(gl_PointCoord, vec2(0.5)) + ((uTime - vLife) * 0.00018);
-    float strength = 0.05 / distanceToCenter - 0.1 ;
+    float life = mod(uTime * .2 + (vUv.x + vUv.y) * 2000., 2000.); // vie qui va de 0 à 1000
 
-    gl_FragColor = vec4(1.0, 0.99, 0.3, strength);
+    float fadeInTime = 200.0;
+    float fadeOutTime = 800.0;
+    float minSize = 0.001;
+    float maxSize = 0.07;
+    float size;
+
+    if (life < fadeInTime) {
+        // Interpolation de la taille minimale à la taille maximale pendant la période de fade-in
+        size = mix(minSize, maxSize, smoothstep(0.0, fadeInTime, life));
+    } else if (life > fadeOutTime) {
+        // Interpolation de la taille maximale à la taille minimale pendant la période de fade-out
+        size = mix(maxSize, minSize, smoothstep(fadeOutTime, 1400.0, life));
+    } else {
+        // Taille maximale pendant la période stable
+        size = maxSize;
+    }
+
+    float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
+    float strength = size / distanceToCenter;
+
+    gl_FragColor = vec4(uColor, strength * uFairyDistance);
 }

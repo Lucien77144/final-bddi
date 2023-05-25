@@ -1,12 +1,19 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Vector3 } from "three";
-import GrassFloor from "components/Grass/GrassFloor.js";
+import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import Column from "components/Column/Column.js";
 import FairyDust from "components/Fairy/FairyDust.js";
-import Rock from "../Components/Rock/Rock.js";
-import Cube from "../Components/Cube/Cube.js";
+import Column from "../Components/Column/Column";
+import River from "../Components/River/River";
+import CollisionV1 from "../Components/Fairy/Collision.js";
+import Fireflies from "../Components/Fireflies/Fireflies.js";
+import GrassFloor from "../Components/GrassFloor/GrassFloor";
+import Fairy from "../Components/Fairy/Fairy";
+import DialogueBox from "../Components/DialogueBox.js";
+import Cloud from "../Components/Cloud/Cloud";
+import Stele from "../Components/Stele/Stele";
+import RocksRiver from "../Components/RocksRiver/RocksRiver";
+import Bridge from "../Components/Bridge/Bridge";
 
 export default class GrassScene {
   constructor() {
@@ -24,22 +31,60 @@ export default class GrassScene {
     }
   }
 
+  // Setup
   buildScene() {
-    // Setup
+    // Setting the world :
+    this.setWorld(-.1); // value is rotation on z axis
+    this.floors = [
+      new GrassFloor({
+        _position: new Vector3(-7, 0, -14),
+        _size: new Vector3(27, 2, 95),
+        _count: 175000,
+      }),
+    ];
+    this.river = new River({
+      _position: new Vector3(-5, 1.35, -10),
+      _size: new Vector2(13, 30),
+    });
+    this.rocksRiver = new RocksRiver();
+    this.bridge = new Bridge();
+    this.column = new Column(new Vector3(0, -.35, 0));
+
+    // Setting the environment :
     this.environment = new Environment();
-    this.floor = new GrassFloor();
-    this.fairyDust = new FairyDust();
-    // this.rock1 = new Rock(new Vector3(0, 3, 0))
-    // this.rock2 = new Rock(new Vector3(3, 3, 3))
-    // this.rock3 = new Rock(new Vector3(6, 3, 6))
+    this.clouds = new Cloud(new Vector3(150, 15, 50));
+    this.fireflies = new Fireflies();
+    this.dialogueBox = new DialogueBox();
+    this.stele = new Stele();
+    // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
-    this.cube = new Cube(new Vector3(-2.7, 3, -.4));
-    this.column = new Column(new Vector3(0, 0, 0));
+
+    // Setting Fairy :
+    // this.fairy = new Fairy();
+    // this.fairyDust = new FairyDust();
+    // this.collisionV1 = new CollisionV1();
+  }
+
+  setWorld(_rotation) {
+    this.world = new Group();
+    this.world.rotation.z = _rotation;
+    this.scene.add(this.world);
   }
 
   update() {
-    if (this.fairyDust) this.fairyDust.update();
-    if (this.floor) this.floor.update();
-    if (this.urma) this.urma.update();
+    this.urma?.update();
+
+    this.fairy?.update();
+    this.fairyDust?.update();
+    this.collisionV1?.update();
+
+
+    this.floors?.forEach((floor) => {
+      floor.update();
+    })
+    this.river?.update();
+    
+    this.fireflies?.update();
+    this.clouds?.update();
   }
 }

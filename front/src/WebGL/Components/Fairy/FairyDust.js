@@ -1,117 +1,169 @@
-import * as THREE from "three";
-import Experience from "webgl/Experience.js";
-import vertexShader from "./shaders/vertexShader.glsl";
-import fragmentShader from "./shaders/fragmentShader.glsl";
-import FairyPosition from "./FairyPosition.js";
+import {
+  BufferAttribute,
+  BufferGeometry,
+  Color,
+  Points,
+  RepeatWrapping,
+  ShaderMaterial,
+  Vector3,
+} from "three";
+import { GPUComputationRenderer } from "three/examples/jsm/misc/GPUComputationRenderer.js";
+
+import Experience from "../../Experience";
+
+import Fairy from "./Fairy.js";
+
+import fairyDustVertexShader from "./shaders/vertexShader.glsl";
+import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
+import fragmentSimulation from "./shaders/fragmentSimulation.glsl";
 
 export default class FairyDust {
   constructor() {
     this.experience = new Experience();
     this.time = this.experience.time;
     this.scene = this.experience.scene;
-    this.fairyPosition = new FairyPosition();
+    this.sizes = this.experience.sizes;
+    this.renderer = this.experience.renderer.instance;
+    this.camera = this.experience.camera.instance;
+    this.fairy = new Fairy();
+    this.fairyParams = {
+      status: false,
+      time: 0,
+    };
 
-    this.particles = new THREE.Group();
-    this.scene.add(this.particles);
+    this._options = {
+      width: 100,
+    };
 
-    this.particlesMaterial = new THREE.ShaderMaterial({
-      transparent: true,
-      depthWrite: false,
-      blending: THREE.AdditiveBlending,
-      uniforms: {
-        uTime: { value: 0 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
-        uSize: { value: 100 },
-      },
-      vertexShader,
-      fragmentShader,
-    });
+    this._setGeometry();
+    this._setMaterial();
+
+    this._setMesh();
+
+    this.initGPU();
   }
 
-  addParticles() {
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCnt = 10;
+  _setGeometry() {
+    this._geometry = new BufferGeometry();
 
-    const posArray = new Float32Array(particlesCnt * 3);
-    const scaleArray = new Float32Array(particlesCnt);
-    this.lifeArray = new Float32Array(particlesCnt);
+    const positions = new Float32Array(
+      this._options.width * this._options.width * 3
+    );
+    const reference = new Float32Array(
+      this._options.width * this._options.width * 2
+    );
 
-    const radius = Math.random() * 2;
+    const scaleArray = new Float32Array(this._options.width ** 2);
 
-    for (let i = 0; i < particlesCnt; i++) {
-      posArray[i * 3 + 0] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 3] -
-        Math.pow(Math.random(), 5) *
-          (Math.random() < 0.5 ? 1 : -1) *
-          0.2 *
-          radius;
-      posArray[i * 3 + 1] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 2];
+    const lifeArray = new Float32Array(this._options.width ** 2);
 
-      posArray[i * 3 + 2] =
-        this.fairyPosition.positions[this.fairyPosition.positions.length - 1] +
-        Math.pow(Math.random(), 5) *
-          (Math.random() < 0.5 ? 1 : -1) *
-          0.2 *
-          radius;
+    for (let i = 0; i < this._options.width ** 2; i++) {
+      const x = Math.random();
+      const y = Math.random();
+      const z = Math.random();
+      const xx = (i % this._options.width) / this._options.width;
+      const yy = ~~(i / this._options.width) / this._options.width;
+
+      lifeArray[i] = this.time.elapsed;
 
       scaleArray[i] = Math.random();
 
-      this.lifeArray[i] = this.time.elapsed;
+      positions.set([x, y, z], i * 3);
+      reference.set([xx, yy], i * 2);
     }
 
-    particlesGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(posArray, 3)
-    );
+    this._geometry.setAttribute("position", new BufferAttribute(positions, 3));
+    this._geometry.setAttribute("reference", new BufferAttribute(reference, 2));
 
-    particlesGeometry.setAttribute(
-      "aScale",
-      new THREE.BufferAttribute(scaleArray, 1)
-    );
+    this._geometry.setAttribute("aScale", new BufferAttribute(scaleArray, 1));
 
-    particlesGeometry.setAttribute(
-      "life",
-      new THREE.BufferAttribute(this.lifeArray, 1)
-    );
-
-    const particlesMesh = new THREE.Points(
-      particlesGeometry,
-      this.particlesMaterial
-    );
-
-    particlesMesh.life = 0;
-    this.particles.add(particlesMesh);
+    this._geometry.setAttribute("life", new BufferAttribute(lifeArray, 1));
   }
 
-  updateParticles() {
-    this.particles.children.forEach((el, cur) => {
-      if (el.life > 50) {
-        const object = this.particles.children[cur];
-
-        object.geometry.dispose();
-        this.particles.remove(object);
-      } else {
-        el.life++;
-      }
+  _setMaterial() {
+    this._material = new ShaderMaterial({
+      transparent: true,
+      depthWrite: false,
+      uniforms: {
+        positionTexture: { value: null },
+        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uSize: { value: 100 },
+        uColor: { value: new Color("#faf2af") },
+        uFadeIn: { value: 0.1 },
+        uFadeOut: { value: 0.5 },
+        uTime: { value: 0 },
+        uFairyDistance: { value: 0 },
+      },
+      vertexShader: fairyDustVertexShader,
+      fragmentShader: fairyDustFragmentShader,
     });
   }
 
+  _setMesh() {
+    this._mesh = new Points(this._geometry, this._material);
+    this._mesh.name = "Dust";
+    this._mesh.frustumCulled = false;
+    this.scene.add(this._mesh);
+  }
+
+  initGPU() {
+    this.gpuCompute = new GPUComputationRenderer(
+      this._options.width,
+      this._options.width,
+      this.renderer
+    );
+
+    this.positionVariable = this.gpuCompute.addVariable(
+      "positionTexture",
+      fragmentSimulation
+    );
+
+    this.positionVariable.material.uniforms = {
+      uTime: { value: 0 },
+      uFairyPosition: { value: new Vector3(0, 0, 0) },
+      uFairyDistance: { value: 0 },
+    };
+
+    this.fairy.on("moveFairy", (x, y, z) => {
+      this.positionVariable.material.uniforms.uFairyPosition.value = new Vector3(x, y, z);
+    });
+
+    this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
+    this.gpuCompute.setVariableDependencies(this.positionVariable, [
+      this.positionVariable,
+    ]);
+
+    const error = this.gpuCompute.init();
+    if (error !== null) {
+      console.error(error);
+    }
+  }
+
   update() {
-    if (this.fairyPosition) this.fairyPosition.update();
+    if (this.fairy) this.fairy.update();
 
-    if (this.particlesMaterial) {
-      this.particlesMaterial.uniforms.uTime.value = this.time.elapsed;
+    this.positionVariable.material.uniforms.uTime.value += this.time.delta;
+    this._material.uniforms.uTime.value += this.time.delta;
+
+    this.gpuCompute.compute();
+    this._material.uniforms.positionTexture.value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+
+    if (this.fairy.distFairyToMouse > 0.5 != this.fairyParams.status) {
+      this.fairyParams.status = this.fairy.distFairyToMouse > 0.5;
+    }
+    if (this.fairyParams.status) {
+      this.fairyParams.time = this.time.elapsed;
     }
 
-    if (this.fairyPosition.positions) {
-      if (Math.floor(this.time.elapsed / 50) != this.timeElapsed) {
-        this.timeElapsed = Math.floor(this.time.elapsed / 50);
-        if (this.fairyPosition.isFairyMoving()) {
-          this.addParticles();
-        }
-        this.updateParticles();
-      }
+    if (
+      this.fairy.distFairyToMouse > 0.5 &&
+      this.time.elapsed - this.fairyParams.time
+    ) {
+      this.fairyParams.time = this.time.elapsed;
     }
+
+    const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
+    this.positionVariable.material.uniforms.uFairyDistance.value = time;
+    this._material.uniforms.uFairyDistance.value = time;
   }
 }

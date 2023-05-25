@@ -14,6 +14,7 @@ import Cloud from "../Components/Cloud/Cloud";
 import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
+import ControlPanel from "../Components/ControlPanel/ControlPanel";
 
 export default class GrassScene {
   constructor() {
@@ -55,14 +56,15 @@ export default class GrassScene {
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
-    this.stele = new Stele();
+    // this.stele = new Stele();
+    this.controPanel = new ControlPanel(this.experience);
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // Setting Fairy :
-    this.fairy = new Fairy();
-    this.fairyDust = new FairyDust();
-    this.collisionV1 = new CollisionV1();
+    // this.fairy = new Fairy();
+    // this.fairyDust = new FairyDust();
+    // this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {
@@ -78,7 +80,7 @@ export default class GrassScene {
     this.fairyDust?.update();
     this.collisionV1?.update();
 
-
+    this.controlPanel?.update();
     this.floors?.forEach((floor) => {
       floor.update();
     })

@@ -15,6 +15,7 @@ export default class OutlineModule {
         this.grassScene = this.experience.activeScene;
         this.resources = this.experience.resources;
 
+
         this.originalPosition = null;
         this.originalUp = null;
         this.onGame = false;
@@ -26,17 +27,66 @@ export default class OutlineModule {
         );
         this.backupCamPosition = this.camera.position.clone();
 
+        this.activeObject = null;
+        this.base = null;
+
+        this.mouseDown = false;
+
+        window.addEventListener('mousedown', (event) => {
+            this.mouseDown = true;
+        });
+
+        window.addEventListener('mouseup', (event) => {
+            this.mouseDown = false;
+            this.activeObject = null;  // clear active object on mouse up
+            this.getInteractiveObjects();  // refresh interactive objects
+        });
+
+
         window.addEventListener('click', (event) => {
-            (this.outlinePass.selectedObjects[0]?.interactive === true) && this.moveCamera();
+            if (this.outlinePass.selectedObjects[0]?.interactive === true) {
+                this.activeObject = this.outlinePass.selectedObjects[0];
+                this.controlPanelChildren = this.activeObject.parent.children;
+                this.controlPanelChildren.forEach((child) => {
+                    if (child.name.includes('Disk')) {
+                        child.interactive = true;
+                    }});
+                if (this.activeObject.base) {
+                    console.log(this.activeObject);
+                    this.base = this.activeObject;
+                    console.log(this.base);
+                    this.handleBaseClick();
+                } else if (this.activeObject.disk) {
+                    this.handleDiskClick();
+                }
+            }
         });
 
         window.addEventListener('keydown', (event) => {
             if(this.onGame) {
                 if (event.code === 'Space') {
                     this.returnCamera();
+        
+                    // Reset outlined object
+                    this.outlinePass.selectedObjects = [];
+                    
+                    // Reset active object
+                    this.activeObject = null;
+        
+                    // If any objects have been modified during the interaction, reset them
+                    // For example, you might reset any objects that have been moved or changed color
+                    this.interactiveObjects.forEach((object) => {
+                        // Add code here to reset each object to its original state
+                        object.interactive = false;
+                    });
+                    this.base.interactive = true;
+
                 }
             }
-        });        
+        });
+               
+
+        
 
         // Wait for resources
         if (this.resources.loaded == this.resources.toLoad) {
@@ -82,7 +132,7 @@ export default class OutlineModule {
             onUpdate: () => {
                 // Ensure the camera's up vector is set to signify the y-axis as up
                 this.camera.up.set(newUp.x, newUp.y, newUp.z);
-                this.camera.lookAt(this.stelePosition);
+                this.camera.lookAt(-5, 2.5, 9);
             },
             onComplete: () => {
                 this.onGame = this.grassScene.onGame;
@@ -95,25 +145,6 @@ export default class OutlineModule {
 
     returnCamera() {
         if (this.originalPosition && this.originalUp) {
-            // const tl = gsap.timeline();
-            // Animate the camera's position back to the original position
-            // tl.to(this.camera.position, {
-            //     duration: 1, // duration of the animation in seconds
-            //     x: this.originalPosition.x,
-            //     y: this.originalPosition.y,
-            //     z: this.originalPosition.z,
-            //     ease: "power1.out", // easing function for the animation
-            // });
-    
-            // // After the position has been reset, animate the lookAt
-            // tl.to(this.camera.up, {
-            //     duration: 1, // duration of the animation in seconds
-            //     onUpdate: () => {
-            //         this.camera.up.set(this.originalUp.x, this.originalUp.y, this.originalUp.z);
-            //         this.camera.lookAt(this.originalTarget);
-            //     },
-            //     ease: "power1.out", // easing function for the animation
-            // });
 
             this.camera.position.copy(this.originalPosition);
             this.camera.up.copy(this.originalUp);
@@ -142,8 +173,8 @@ export default class OutlineModule {
             this.target
         );
         this.outlinePass.visibleEdgeColor.set('#ffffff');
-        this.outlinePass.hiddenEdgeColor.set('#a9a9a9');
-        this.outlinePass.edgeThickness = 5;
+        this.outlinePass.hiddenEdgeColor.set('#ffffff');
+        // this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
         this.composer.addPass(this.outlinePass);
@@ -155,6 +186,9 @@ export default class OutlineModule {
     
         window.addEventListener('mousemove', (event) => {
             this.onMouseMove(event);
+            if (this.activeObject && this.activeObject.disk) {
+                this.handleDiskHover();
+            }
         });
 
     
@@ -177,33 +211,68 @@ export default class OutlineModule {
         this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-        this.raycaster.setFromCamera(this.mouse, this.camera);
+        if (!this.mouseDown) {
+            this.raycaster.setFromCamera(this.mouse, this.camera);
+        }
+    }
+
+    handleBaseClick() {
+        this.activeObject.traverse((child) => {
+            if (child.base) {
+                child.interactive = false;
+                this.moveCamera();
+            } else if (child.disk) {
+                child.interactive = true;
+            }
+        });
+
+        this.getInteractiveObjects(); // Refresh interactive objects
+        this.activeObject = null;
+    }
+
+    handleDiskClick() {
+        // You might have additional behavior you want to implement when a disk is clicked.
+        // For example, you could change the color of the disk or move it to a different location.
+    }
+
+    handleDiskHover() {
+        this.activeObject.traverse((child) => {
+            if (child.disk) {
+                child.interactive = false;
+            }
+        });
+
+        this.activeObject.interactive = true; // Make the currently hovered disk interactive
+        this.getInteractiveObjects(); // Refresh interactive objects
     }
 
     update() {
-        const intersects = this.raycaster?.intersectObjects(this.interactiveObjects, true);
-        if(intersects?.length > 0) {
-            intersects.forEach((i) => {
-                if(i.object.type === 'Points') {
-                    // DELETE objet from intersect array
-                    intersects.splice(intersects.indexOf(i), 1);
+        // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
+        if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {
+            const intersects = this.raycaster?.intersectObjects(this.interactiveObjects, true);
+            if(intersects?.length > 0) {
+                intersects.forEach((i) => {
+                    if(i.object.type === 'Points') {
+                        // DELETE object from intersect array
+                        intersects.splice(intersects.indexOf(i), 1);
+                    }
+                });
+                const obj = intersects[0]?.object;
+                if (obj.interactive === true) {
+                    const object = obj;
+                    this.outlinePass.selectedObjects = [object];
+                    
+                    // Translate interact text on top of object position
+                    const screenPosition = object.position.clone();
+                    screenPosition.project(this.camera);
+                    screenPosition.x = (screenPosition.x + 1)  * window.innerWidth / 2;
+                    screenPosition.y = -(screenPosition.y - 1)  * window.innerHeight / 2;
                 }
-            });
-            const obj = intersects[0]?.object;
-            if (obj.interactive === true) {
-                const object = obj;
-                this.outlinePass.selectedObjects = [object];
-                // add click listener
-                
-                // Translate interact text on top of object position
-                const screenPosition = object.position.clone();
-                screenPosition.project(this.camera);
-                screenPosition.x = (screenPosition.x + 1)  * window.innerWidth / 2;
-                screenPosition.y = -(screenPosition.y - 1)  * window.innerHeight / 2;
+            } else {
+                (this.outlinePass && this.outlinePass?.selectedObjects != []) && (this.outlinePass.selectedObjects = []);
             }
-        } else {
-            (this.outlinePass && this.outlinePass?.selectedObjects != []) && (this.outlinePass.selectedObjects = []);
         }
         this.composer?.render();
     }
+    
 }

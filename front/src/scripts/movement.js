@@ -37,7 +37,6 @@ socket.on('startMovement', () => {
     document.addEventListener('mousemove', (event) => {
         cursor.x = event.clientX;
         cursor.y = event.clientY;
-
         socket.emit('move', {roomId : room.id, position : cursor});
     });
 
@@ -45,7 +44,6 @@ socket.on('startMovement', () => {
         // console.log('Position joueur 1', data.players[0].position);
         // console.log('Position joueur 2', data.players[1].position);
         currentRoom = data;
-
         // console.log('Current room', currentRoom);
     });
 });

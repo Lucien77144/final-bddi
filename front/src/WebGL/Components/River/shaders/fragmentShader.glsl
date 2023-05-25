@@ -13,7 +13,9 @@ uniform vec3 foamColor;
 uniform float uTime;
 
 varying vec3 vReflect;
-uniform samplerCube envMap;
+varying vec3 vPosition;
+uniform samplerCube uEnvMap;
+uniform vec2 uSize;
 
 float fRound( float a ) {
     return floor( a + 0.5 );
@@ -23,7 +25,7 @@ const float strength = 0.02;
 const float foamThreshold = 0.02;
 
 void main() {
-    vec3 reflectedColor = textureCube(envMap, vec3(-vReflect.x, vReflect.yz)).rgb;
+    vec3 reflectedColor = textureCube(uEnvMap, vec3(-vReflect.x, vReflect.yz)).rgb;
     vec2 displacement = texture2D( tDudv, vUv + uTime * 0.01 ).rg;
     displacement = ( ( displacement * 2.0 ) - 1.0 ) * strength;
 
@@ -33,10 +35,11 @@ void main() {
 
     vec3 color = mix( mix( bottomDarkColor, topDarkColor, vUv.y ), mix( bottomLightColor, topLightColor, vUv.y ), noise );
     color = mix( color, foamColor, step( vUv.y + displacement.y, foamThreshold ) ); // add foam
+    
+	float distX = clamp(1. - (vPosition.y - 10.) / uSize.x, 0., 1.);
 
-    gl_FragColor.rgb = color;
-    gl_FragColor.rgb = mix(gl_FragColor.rgb, reflectedColor, 0.5);
-    gl_FragColor.a = 0.6;
+    gl_FragColor.rgb = mix(color, reflectedColor, 0.25);
+    gl_FragColor.a = 0.75 * distX;
 
     #include <tonemapping_fragment>
     #include <encodings_fragment>

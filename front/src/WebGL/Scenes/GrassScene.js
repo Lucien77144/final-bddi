@@ -53,7 +53,6 @@ export default class GrassScene {
     // Setting the environment :
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(150, 15, 50));
-    this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
     this.stele = new Stele();
     // Setting Urma :
@@ -78,13 +77,11 @@ export default class GrassScene {
     this.fairyDust?.update();
     this.collisionV1?.update();
 
-
     this.floors?.forEach((floor) => {
       floor.update();
     })
     this.river?.update();
     
-    this.fireflies?.update();
     this.clouds?.update();
   }
 }

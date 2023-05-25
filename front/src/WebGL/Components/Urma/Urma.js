@@ -4,6 +4,7 @@ import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
+import SoundDesign from "@/WebGL/Utils/SoundDesign";
 
 const SIZE_FACTOR = 1.25;
 const OPTIONS = {
@@ -55,6 +56,9 @@ export default class Urma {
 
     this.position = _position;
 
+    this.sound = new SoundDesign(this.experience.audioContext, "/sounds/dirtRun.mp3");
+    this.sound.loadAudio();
+
     this.setModel();
     this.setAnimation();
     this.setInputs();
@@ -89,9 +93,18 @@ export default class Urma {
         if (val) {
           // start model animation
           this.animation.action.paused = false;
+
+          if (!this.sound.isPlaying) {
+            this.sound.play();
+          }
+
         } else {
           // pause model animation
           this.animation.action.paused = true;
+
+          if (this.sound.isPlaying) {
+            this.sound.stop();
+          }
         }
   
         if (val && !data.status[dir].start) {

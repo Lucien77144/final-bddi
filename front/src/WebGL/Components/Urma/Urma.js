@@ -131,20 +131,20 @@ export default class Urma {
       const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
       cameraPos.y = 4 - rdmCamera;
       cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
-      MOVE.updateUrmaPosition(meshPos);
+      MOVE.updateUrmaPosition(modelPos);
       this.animation.mixer.update(this.time.delta * 0.001);
     }
     } else {
-        const { mesh, camera, time } = this;
-        const { position: meshPos } = mesh;
+        const { model, camera, time } = this;
+        const { position: modelPos } = model;
         const { position: cameraPos, rotation: cameraRot } = camera;
     
         const isOneWay = (data.status.left.start !== data.status.right.start);
     
-        meshPos.copy(MOVE.urmaPosition);
+        modelPos.copy(MOVE.urmaPosition);
         data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
         
-        cameraPos.z = meshPos.z - data.move.delta*5;
+        cameraPos.z = modelPos.z - data.move.delta*5;
         
         const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
         cameraPos.y = 4 - rdmCamera;

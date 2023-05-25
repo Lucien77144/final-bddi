@@ -124,7 +124,7 @@ export default class Urma {
 
       cameraPos.z = modelPos.z - data.move.delta*5;
       const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-      cameraPos.y = 4 - rdmCamera;
+      cameraPos.y = 3 - rdmCamera;
       cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
 
       this.updateCameraX(cameraPos, modelPos);
@@ -137,7 +137,7 @@ export default class Urma {
   updateCameraX(cameraPos, modelPos) {
     const activeDist = .15;
     const variation = 3;
-    const baseDist = 9;
+    const baseDist = 7;
 
     let factor = 1 - (Math.abs(this.path.factor - .5) * 2);
         factor = 1 - Math.min(factor, activeDist) / activeDist;

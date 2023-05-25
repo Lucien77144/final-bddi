@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Group, Vector2, Vector3 } from "three";
+import { Fog, Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
@@ -57,6 +57,10 @@ export default class GrassScene {
     this.stele = new Stele();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+
+    // add fog : 
+    this.scene.fog = new Fog(0x000000, 0, 100);
+    
 
     // Setting Fairy :
     // this.fairy = new Fairy();

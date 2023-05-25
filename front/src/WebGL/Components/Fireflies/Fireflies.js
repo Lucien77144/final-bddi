@@ -37,7 +37,7 @@ export default class Fireflies {
         for(let i = 0; i < this.firefliesCount; i++)
         {
             this.positionArray[i * 3 + 0] = Math.random( - 7) * this.size.x
-            this.positionArray[i * 3 + 1] = Math.random() * 5
+            this.positionArray[i * 3 + 1] = Math.random() * 10
             this.positionArray[i * 3 + 2] = Math.random() * this.size.z
 
             this.scaleArray[i] = Math.random() * 2

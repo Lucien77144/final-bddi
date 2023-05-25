@@ -4,6 +4,8 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
 import gsap from 'gsap';
+import { currentPlayer } from "@/scripts/room";
+
 
 export default class OutlineModule {
     constructor() {
@@ -33,10 +35,12 @@ export default class OutlineModule {
         this.mouseDown = false;
 
         window.addEventListener('mousedown', (event) => {
+            if ( currentPlayer.role === "heda" ) return;
             this.mouseDown = true;
         });
 
         window.addEventListener('mouseup', (event) => {
+            if ( currentPlayer.role === "heda" ) return;
             this.mouseDown = false;
             this.activeObject = null;  // clear active object on mouse up
             this.getInteractiveObjects();  // refresh interactive objects
@@ -44,6 +48,7 @@ export default class OutlineModule {
 
 
         window.addEventListener('click', (event) => {
+            if ( currentPlayer.role === "heda" ) return;
             if (this.outlinePass.selectedObjects[0]?.interactive === true) {
                 this.activeObject = this.outlinePass.selectedObjects[0];
                 this.controlPanelChildren = this.activeObject.parent.children;
@@ -63,6 +68,7 @@ export default class OutlineModule {
         });
 
         window.addEventListener('keydown', (event) => {
+            if ( currentPlayer.role === "heda" ) return;
             if(this.onGame) {
                 if (event.code === 'Space') {
                     this.returnCamera();
@@ -197,6 +203,7 @@ export default class OutlineModule {
     getInteractiveObjects() {
         this.interactiveObjects = [];
         this.scene.children.filter((object) => {
+            if ( currentPlayer.role === "heda" ) return;
             if (object.isGroup) {
                 object.children.forEach((child) => {
                     child.interactive === true && this.interactiveObjects.push(child);

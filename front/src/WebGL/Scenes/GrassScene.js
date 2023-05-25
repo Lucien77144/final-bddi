@@ -62,9 +62,9 @@ export default class GrassScene {
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // Setting Fairy :
-    // this.fairy = new Fairy();
-    // this.fairyDust = new FairyDust();
-    // this.collisionV1 = new CollisionV1();
+    this.fairy = new Fairy();
+    this.fairyDust = new FairyDust();
+    this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {

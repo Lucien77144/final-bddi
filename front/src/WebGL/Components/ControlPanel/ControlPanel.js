@@ -1,6 +1,7 @@
 import { Vector2, Raycaster, Vector3 } from 'three';
 import * as THREE from 'three';
 import Experience from '@/WebGL/Experience';
+import { currentPlayer } from '@/scripts/room';
 
 export default class ControlPanel {
     constructor(experience, _position = new Vector3(-5, 2.5, 9), _rotation = new Vector3(0, 0, 0)) {
@@ -30,6 +31,7 @@ export default class ControlPanel {
         let mouseDown = false;
 
         this.experience.renderer.instance.domElement.addEventListener('mousedown', (event) => {
+            if ( currentPlayer.role !== 'urma' ) return;
             mouseDown = true;
         
             // Update the mouse pos
@@ -60,6 +62,7 @@ export default class ControlPanel {
         });
         
         this.experience.renderer.instance.domElement.addEventListener('mousemove', (event) => {
+            if ( currentPlayer.role !== 'urma' ) return;
             if (mouseDown && this.selectedObject) {
                 let rect = this.experience.renderer.instance.domElement.getBoundingClientRect();
                 let centerX = rect.left + (rect.width / 2);
@@ -96,6 +99,7 @@ export default class ControlPanel {
         
 
         this.experience.renderer.instance.domElement.addEventListener('mouseup', (event) => {
+            if ( currentPlayer.role !== 'urma' ) return;
             mouseDown = false;
             this.previousAngle = null;
             this.selectedObject = null;

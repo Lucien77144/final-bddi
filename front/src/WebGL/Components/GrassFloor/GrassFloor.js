@@ -4,7 +4,7 @@ import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
 import grassFragment from "./shaders/Grass/fragmentShader.glsl";
-import GrassGeometry from "./Grass";
+import GrassGeometry from "./GrassGeometry";
 
 export default class GrassFloor {
   constructor({

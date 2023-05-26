@@ -4,6 +4,7 @@ import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
+import { gsap } from "gsap";
 
 const SIZE_FACTOR = 1.25;
 const OPTIONS = {
@@ -117,47 +118,74 @@ export default class Urma {
     const isOneWay = (data.status.left.start !== data.status.right.start);
     
     if(!this.grassScene.onGame) {
-    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+      data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
 
-    // console.log(this.grassScene);
-    modelPos.copy(this.path.position);
+      modelPos.copy(this.path.position);
 
       cameraPos.z = modelPos.z - data.move.delta*5;
       const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-      cameraPos.y = 4 - rdmCamera;
+      cameraPos.y = 3 - rdmCamera;
       cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
-      
+
+      this.updateCameraX(cameraPos, modelPos);
+
       this.animation.mixer.update(this.time.delta * 0.001);
     }
 
   }
 
+  updateCameraX(cameraPos, modelPos) {
+    const activeDist = .15;
+    const variation = 3;
+    const baseDist = 7;
+
+    let factor = 1 - (Math.abs(this.path.factor - .5) * 2);
+        factor = 1 - Math.min(factor, activeDist) / activeDist;
+
+    let x = baseDist - (factor * variation);
+
+    const dist = Math.abs(modelPos.x - cameraPos.x);
+    if(dist > 10) {
+      x -= (dist - baseDist) * .75;
+    }
+
+    // gsap.to(cameraPos, {
+    //   duration: .5,
+    //   ease: "power2.out",
+    //   x,
+    // });
+  }
+
   orientateBody() {
-    const targetRotationY = data.lastDirection === 'right' ? Math.PI : 0;  // Modifiez cette ligne
-    const lerpFactor = 0.1;  
+    const lerpFactor = 0.1;
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+    const nextFactor = this.path.factor + (data.lastDirection === 'right' ? -.01 : .01);
+    const nextPos = this.path.getPositionAt(clamp(nextFactor, 0, 1));
+    const targetRotationY = Math.atan2(nextPos.z - this.path.position.z, nextPos.x - this.path.position.x) + Math.PI / 2;
   
     this.model.rotation.y += (targetRotationY - this.model.rotation.y) * lerpFactor;
   }
 
   update() {
-    // if (data.move.velocity == 0) {
-    //   data.move.flag = true;
+    if (data.move.velocity == 0) {
+      data.move.flag = true;
 
-    //   data.status.left.start && (data.status.left.start = false);
-    //   data.status.right.start && (data.status.right.start = false);
-    //   data.status.right.end && (data.status.right.end = false);
-    //   data.status.left.end && (data.status.left.end = false);
-    // }
+      data.status.left.start && (data.status.left.start = false);
+      data.status.right.start && (data.status.right.start = false);
+      data.status.right.end && (data.status.right.end = false);
+      data.status.left.end && (data.status.left.end = false);
+    }
 
-    // let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
-    // endVelocity = endVelocity > 1 ? 1 : endVelocity;
+    let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
+    endVelocity = endVelocity > 1 ? 1 : endVelocity;
 
-    // data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
-    // data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
-    // data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
+    data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
+    data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
+    data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
     
-    // this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
-    // this.updatePosition();
-    // this.orientateBody();
+    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
+    this.updatePosition();
+    this.orientateBody();
   }
 }

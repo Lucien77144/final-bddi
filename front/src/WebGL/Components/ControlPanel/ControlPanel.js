@@ -90,11 +90,6 @@ export default class ControlPanel {
             }
         });
         
-        
-        
-        
-        
-
         this.experience.renderer.instance.domElement.addEventListener('mouseup', (event) => {
             mouseDown = false;
             this.previousAngle = null;
@@ -122,10 +117,8 @@ export default class ControlPanel {
     
                 // Normalize the angle to be in range [0, 360)
                 const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
-                console.log(normalizedAngle);
                 // Determine the current section of the disk
                 const currentSection = Math.floor(normalizedAngle / 45);
-                console.log(currentSection);
                 // Check if the disk's current section is the correct one
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
@@ -137,14 +130,9 @@ export default class ControlPanel {
         return true;
     }
     
-    
-    
-    
-
     setModel() {
         this.model = this.resource.scene;
         this.model.position.copy(this.position);
-        console.log(this.model);
         this.model.scale.set(1.5, 1.5, 1.5);
         this.model.name = this.name;
         this.model.interactive = true;

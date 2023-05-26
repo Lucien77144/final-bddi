@@ -64,5 +64,7 @@ void main() {
         color = mix(color,    uColor3,  getNoise(2.));
         color = mix(color,    uColor4,  getNoise(3.));
 
-  gl_FragColor = vec4(mix(uBaseColor, color, vBasePosition.y / uMaxBladeSize), 1. * vMask);
+  float distX = (vPosition.x + 20.5) / uSize.x;
+
+  gl_FragColor = vec4(mix(uBaseColor, color, vBasePosition.y / uMaxBladeSize), 1. * vMask * distX);
 }

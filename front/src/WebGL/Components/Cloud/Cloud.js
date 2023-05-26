@@ -12,6 +12,7 @@ export default class Cloud {
     this.resources = this.experience.resources;
     this.time = this.experience.time;
     this.size = _size;
+    this.camera = this.experience.camera.instance;
 
     this.setCloud();
   }
@@ -36,19 +37,25 @@ export default class Cloud {
     shadowM.wrapT = THREE.RepeatWrapping;
     shadowM.repeat.set(1, 1);
 
+    const FogM = this.resources.items.mountainF;
+    FogM.wrapS = THREE.RepeatWrapping;
+    FogM.wrapT = THREE.RepeatWrapping;
+    FogM.repeat.set(1, 1);
+
     const floorColors = this.activeScene?.floors && this.activeScene?.floors[0].grassParameters?.colors;
 
-    // raf : variations du vert
     this.material = new THREE.ShaderMaterial({
       uniforms: {
         uTime: { value: 0 },
         uBack: { value: textureB },
         uMountain: { value: textureM },
         uMountainS: { value: shadowM },
+        uFogM: { value: FogM },
         uPrimary: { value: floorColors?.base || (new THREE.Color('#11382a')) },
         uSecondary: { value: new THREE.Color('#fafafa') },
         uSecondary2: { value: new THREE.Color('#777777') },
         uShadowColor: { value: new THREE.Color('#161616') },
+        uFogColor: { value: new THREE.Color('#d8d8d8') },
       },
       vertexShader,
       fragmentShader,
@@ -70,5 +77,6 @@ export default class Cloud {
   update() {
     this.uTime = this.time.elapsed * 0.0005;
     this.material.uniforms.uTime.value = this.time.elapsed * .001;
+    this.mesh.position.z = this.camera.position.z / 1.75; 
   }
 }

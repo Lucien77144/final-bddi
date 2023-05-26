@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Group, Vector3 } from "three";
+import { Fog, Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
@@ -14,9 +14,10 @@ import Cloud from "../Components/Cloud/Cloud";
 import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
+import Rock from "../Components/Rock/Rock";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 
-export default class GrassScene {
+export default class Intro {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -38,20 +39,25 @@ export default class GrassScene {
     this.setWorld(-.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-7, 0, 0),
-        _size: new Vector3(27, 2, 58),
-        _count: 175000,
+        _position: new Vector3(-20.5, 0, -14),
+        _size: new Vector3(54, 2, 95),
+        _count: 250000,
       }),
     ];
-    this.river = new River(new Vector3(-6, 2, -5));
+    this.river = new River({
+      _position: new Vector3(-17, 1.35, -10),
+      _size: new Vector2(13, 60),
+    });
+    // this.rocks = [
+    //   new Rock(new Vector3(0, 3, 0)),
+    // ]
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column();
+    this.column = new Column(new Vector3(0, -.35, 0));
 
     // Setting the environment :
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(150, 15, 50));
-    this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
     // this.stele = new Stele();
     this.controPanel = new ControlPanel(this.experience);
@@ -83,7 +89,6 @@ export default class GrassScene {
     })
     this.river?.update();
     
-    this.fireflies?.update();
     this.clouds?.update();
   }
 }

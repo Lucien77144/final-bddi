@@ -4,7 +4,8 @@ import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";
 import grassFragment from "./shaders/Grass/fragmentShader.glsl";
-import GrassGeometry from "./Grass";
+import GrassGeometry from "./GrassGeometry";
+import Fireflies from "../Fireflies/Fireflies";
 
 export default class GrassFloor {
   constructor({
@@ -28,6 +29,11 @@ export default class GrassFloor {
         },
       ]
     },
+    _fireflies = {
+      status: true,
+      count: 750,
+      instance: null,
+    },
   } = {}) {
     this.experience = new Experience();
     this.world = this.experience.activeScene.world;
@@ -40,6 +46,7 @@ export default class GrassFloor {
     this.size = _size;
     this.name = `grassFloor-${this.experience.scene.children.filter((child) => child.name.includes("grassFloor")).length}`;
     this.colors = _colors;
+    this.fireflies = _fireflies;
 
     this.grassParameters = {
       count: this.count,
@@ -53,6 +60,7 @@ export default class GrassFloor {
 
     this.setGround();
     this.setGrass();
+    this.fireflies.status && this.setFireflies();
   }
 
   setGroundGeometry() {
@@ -77,16 +85,9 @@ export default class GrassFloor {
         uSize: { value: this.grassParameters.size },
         uBaseColor: { value: this.grassParameters.colors.base },
       },
-      side: DoubleSide,
       transparent: true,
       vertexShader: dispVertex,
       fragmentShader: dispFragment,
-    });
-
-    this.grassMaterial = new MeshBasicMaterial({
-      map: this.grassParameters.displacementMap,
-      side: DoubleSide,
-      transparent: true,
     });
   }
 
@@ -136,7 +137,16 @@ export default class GrassFloor {
     });
   }
 
+  setFireflies() {
+    this.fireflies.instance = new Fireflies({
+      _count: this.fireflies.count,
+      _position: this.position,
+      _size: this.size,
+    });
+  }
+
   update() {
     if(this.grassMaterial?.uniforms?.uTime) this.grassMaterial.uniforms.uTime.value = this.time.elapsed;
+    if(this.fireflies?.instance) this.fireflies.instance.update();
   }
 }

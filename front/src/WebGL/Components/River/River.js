@@ -4,12 +4,18 @@ import Experience from "@/WebGL/Experience";
 import * as THREE from "three";
 
 export default class River {
-  constructor(position) {
+  constructor({
+    _position = new THREE.Vector3(0, 0, 0),
+    _size = new THREE.Vector2(8, 16),
+  } = {}) {
     this.experience = new Experience();
     this.world = this.experience.activeScene.world;
     this.resources = this.experience.resources;
+
     this.time = this.experience.time;
     this.uTime = 0;
+    this.position = _position;
+    this.size = _size;
 
     this.noiseMap = this.resources.items.noiseMap;
     this.noiseMap.wrapS = this.noiseMap.wrapT = THREE.RepeatWrapping;
@@ -19,32 +25,29 @@ export default class River {
     this.dudvMap = this.resources.items.dudvMap;
     this.dudvMap.wrapS = this.dudvMap.wrapT = THREE.RepeatWrapping;
 
-    this.setUniforms();
-    this.setMaterial();
-    this.setWater(position);
-  }
+    this.envMap = this.resources.items.environmentMapTexture
 
-  setUniforms() {
-    this.uniforms = {
-      uTime: { value: this.uTime },
-      tNoise: { value: this.noiseMap },
-      tDudv: { value: this.dudvMap },
-      topDarkColor : { value: new THREE.Color('#4e7a71') },
-      bottomDarkColor : { value: new THREE.Color('#0e7562') },
-      topLightColor : { value: new THREE.Color('#b0f7e9') },
-      bottomLightColor : { value: new THREE.Color('#14c6a5') },
-      foamColor : { value: new THREE.Color('#ffffff') },
-      uColorMask: { value: new THREE.Color('#313042') },
-      uWaveFrequency : { value: 0.5 },
-      uWaveAmplitude : { value: 0.5 },
-    }
+    this.setMaterial();
+    this.setWater();
   }
 
   setMaterial() {
     this.material = new THREE.ShaderMaterial({
       uniforms: THREE.UniformsUtils.merge([
         THREE.UniformsLib['fog'],
-        this.uniforms  
+        this.uniforms = {
+          uTime: { value: this.uTime },
+          tNoise: { value: this.noiseMap },
+          tDudv: { value: this.dudvMap },
+          topDarkColor : { value: new THREE.Color('#ffffff') },
+          bottomDarkColor : { value: new THREE.Color('#dbdbdb') },
+          topLightColor : { value: new THREE.Color('#334dc1') },
+          bottomLightColor : { value: new THREE.Color('#0d4886') },
+          foamColor : { value: new THREE.Color('#ffffff') },
+          uColorMask: { value: new THREE.Color('#212032') },
+          uEnvMap: { value: this.envMap },
+          uSize: { value: this.size },
+        }
       ]),
       vertexShader: waterVertexShader,
       fragmentShader: waterFragmentShader,
@@ -54,11 +57,11 @@ export default class River {
     });
   }
 
-  setWater(position) {
-    this.geometry = new THREE.PlaneGeometry(8, 16, 8, 16, 1, true);
+  setWater() {
+    this.geometry = new THREE.PlaneGeometry(this.size.x, this.size.y, this.size.x, this.size.y, 1, true);
 
     this.water = new THREE.Mesh(this.geometry, this.material);
-    this.water.position.set(position.x, position.y, position.z);
+    this.water.position.set(this.position.x, this.position.y, this.position.z);
     this.water.rotation.x = -Math.PI / 2;
     this.water.rotation.z = Math.PI / 2;
 

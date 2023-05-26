@@ -1,10 +1,10 @@
 import FairyScene from "scenes/FairyScene.js";
-import GrassScene from "scenes/GrassScene.js";
 import CubeScene from "scenes/CubeScene";
+import Intro from "./intro";
 
 export default {
-  main: GrassScene,
+  main: Intro,
   "cube": CubeScene,
   "fairy": FairyScene,
-  "grass": GrassScene,
+  "intro": Intro,
 };

@@ -6,6 +6,7 @@ import * as MOVE from "@/scripts/movement"
 import { currentPlayer } from "@/scripts/room";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
+import { gsap } from "gsap";
 
 const SIZE_FACTOR = 1.25;
 const OPTIONS = {
@@ -57,6 +58,11 @@ export default class Urma {
 
     this.position = _position;
 
+    this.keyState = {
+      right: false,
+      left: false,
+    };
+
     this.setModel();
     this.setAnimation();
     if(currentPlayer.role === "urma") {
@@ -69,46 +75,58 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
-
     this.scene.add(this.model);
     this.camera.position.z = this.model.position.z;
   }
 
   setAnimation() {
-    const clip = this.resource.animations[0];
+    const idleClip = this.resource.animations.find((animation) => animation.name === "Idle");
+    const runClip = this.resource.animations.find((animation) => animation.name === "Run");
+  
     this.animation = {
-      mixer: new AnimationMixer(this.model),
-      action: null,
+        mixer: new AnimationMixer(this.model),
+        actions: {
+            idle: null,
+            run: null,
+        },
     };
+  
+    this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
+    this.animation.actions.run = this.animation.mixer.clipAction(runClip);
+    this.animation.actions.current = this.animation.actions.idle;
+    this.animation.actions.current.play();
 
-    this.animation.action = this.animation.mixer.clipAction(clip);
-    this.animation.action.timeScale = 1;
-    this.animation.action.setLoop(LoopRepeat, Infinity);
-    this.animation.action.play();
+    this.animation.play = (name) => {
+      const nextAction = this.animation.actions[name];
+      const oldAction = this.animation.actions.current;
+
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.actions.current = nextAction;
+    }
   }
-  
-  setInputs() {
-    
-    ["right", 'left'].forEach((dir) => {
-      InputManager.on(dir, (val) => {
-        if (val) {
-          // start model animation
-          this.animation.action.paused = false;
-        } else {
-          // pause model animation
-          this.animation.action.paused = true;
-        }
-  
+
+
+setInputs() {
+  ["right", 'left'].forEach((dir) => {
+    InputManager.on(dir, (val) => {
+
+
         if (val && !data.status[dir].start) {
+          this.animation.play('run');
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir;  // Ajoutez cette ligne
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
+          this.animation.play('idle');
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
+         
         }
       });
     })
@@ -123,16 +141,19 @@ export default class Urma {
     const isOneWay = (data.status.left.start !== data.status.right.start);
     
     if(!this.grassScene.onGame) {
-    data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+      data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
 
-    modelPos.copy(this.path.position);
+      modelPos.copy(this.path.position);
 
       cameraPos.z = modelPos.z - data.move.delta*5;
       const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-      cameraPos.y = 4 - rdmCamera;
+      cameraPos.y = 3 - rdmCamera;
       cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+
+      this.updateCameraX(cameraPos, modelPos);
+
+      this.animation.mixer.update(this.time.delta * 0.00025);
       MOVE.updateUrmaPosition(modelPos);
-      this.animation.mixer.update(this.time.delta * 0.001);
     }
     } else {
         const { model, camera, time } = this;
@@ -153,17 +174,43 @@ export default class Urma {
     }
   }
 
- 
+  updateCameraX(cameraPos, modelPos) {
+    const activeDist = .15;
+    const variation = 3;
+    const baseDist = 7;
+
+    let factor = 1 - (Math.abs(this.path.factor - .5) * 2);
+        factor = 1 - Math.min(factor, activeDist) / activeDist;
+
+    let x = baseDist - (factor * variation);
+
+    const dist = Math.abs(modelPos.x - cameraPos.x);
+    if(dist > 10) {
+      x -= (dist - baseDist) * .75;
+    }
+
+    // gsap.to(cameraPos, {
+    //   duration: .5,
+    //   ease: "power2.out",
+    //   x,
+    // });
+  }
+
   orientateBody() {
-    const targetRotationY = data.lastDirection === 'right' ? Math.PI : 0;  // Modifiez cette ligne
-    const lerpFactor = 0.1;  
+    const lerpFactor = 0.1;
+    const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+
+    const nextFactor = this.path.factor + (data.lastDirection === 'right' ? -.01 : .01);
+    const nextPos = this.path.getPositionAt(clamp(nextFactor, 0, 1));
+    const targetRotationY = Math.atan2(nextPos.z - this.path.position.z, nextPos.x - this.path.position.x) + Math.PI / 2;
   
     this.model.rotation.y += (targetRotationY - this.model.rotation.y) * lerpFactor;
   }
 
   update() {
-            if (data.move.velocity == 0) {
-        data.move.flag = true;
+    if (data.move.velocity == 0) {
+      data.move.flag = true;
+
       data.status.left.start && (data.status.left.start = false);
       data.status.right.start && (data.status.right.start = false);
       data.status.right.end && (data.status.right.end = false);
@@ -177,9 +224,12 @@ export default class Urma {
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
     
+
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
+    this.animation.mixer.update(this.time.delta * 0.001);
+
 
   }
 }

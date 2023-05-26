@@ -17,7 +17,6 @@ export default class OutlineModule {
         this.grassScene = this.experience.activeScene;
         this.resources = this.experience.resources;
 
-
         this.originalPosition = null;
         this.originalUp = null;
         this.onGame = false;
@@ -46,7 +45,6 @@ export default class OutlineModule {
             this.getInteractiveObjects();  // refresh interactive objects
         });
 
-
         window.addEventListener('click', (event) => {
             if ( currentPlayer.role === "heda" ) return;
             if (this.outlinePass.selectedObjects[0]?.interactive === true) {
@@ -70,7 +68,7 @@ export default class OutlineModule {
         window.addEventListener('keydown', (event) => {
             if ( currentPlayer.role === "heda" ) return;
             if(this.onGame) {
-                if (event.code === 'Space') {
+                if ((event.code === 'Space') || (event.code === 'Escape')) {
                     this.returnCamera();
         
                     // Reset outlined object
@@ -86,14 +84,10 @@ export default class OutlineModule {
                         object.interactive = false;
                     });
                     this.base.interactive = true;
-
                 }
             }
         });
                
-
-        
-
         // Wait for resources
         if (this.resources.loaded == this.resources.toLoad) {
             this.buildUtils();
@@ -145,8 +139,6 @@ export default class OutlineModule {
             },
             ease: "power1.out", // easing function for the animation
         });
-
-        
     }
 
     returnCamera() {
@@ -160,8 +152,6 @@ export default class OutlineModule {
             this.onGame = this.grassScene.onGame;
         }
     }
-    
-    
 
     buildUtils() {
         this.getInteractiveObjects();
@@ -196,8 +186,6 @@ export default class OutlineModule {
                 this.handleDiskHover();
             }
         });
-
-    
     }
 
     getInteractiveObjects() {
@@ -281,5 +269,4 @@ export default class OutlineModule {
         }
         this.composer?.render();
     }
-    
 }

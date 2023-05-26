@@ -11,12 +11,12 @@ void main()
     float life = mod(uTime * .85 + (vUv.x + vUv.y) * 2000., 2000.); // vie qui va de 0 à 1000
 
     float fadeInTime = 200.0;
-    float fadeOutTime = 800.0;
+    float fadeOutTime = 1000.0;
     float minSize = 0.001;
     float maxSize = 0.07;
     float size;
 
-    float minLife = 1400.;
+    float minLife = 1700.;
 
     if (life < fadeInTime) {
         // Interpolation de la taille minimale à la taille maximale pendant la période de fade-in
@@ -33,9 +33,6 @@ void main()
 	//     size = minSize;
 	// }
 
-    if(uFairyDistance < .5 && life >= minLife){
-        size = minSize;
-    }
 
     float distanceToCenter = distance(gl_PointCoord, vec2(0.5));
     float strength = size / distanceToCenter - 0.1;

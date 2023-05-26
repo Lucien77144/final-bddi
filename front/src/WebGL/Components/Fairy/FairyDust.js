@@ -93,6 +93,7 @@ export default class FairyDust {
         uFadeOut: { value: 0.5 },
         uTime: { value: 0 },
         uFairyDistance: { value: 0 },
+        uFairyPosition: { value: new Vector3(0, 0, 0) },
       },
       vertexShader: fairyDustVertexShader,
       fragmentShader: fairyDustFragmentShader,
@@ -126,6 +127,8 @@ export default class FairyDust {
 
     this.fairy.on("moveFairy", (x, y, z) => {
       this.positionVariable.material.uniforms.uFairyPosition.value =
+        new Vector3(x, y, z);
+        this._material.uniforms.uFairyPosition.value =
         new Vector3(x, y, z);
     });
 

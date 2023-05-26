@@ -34,7 +34,7 @@ void main() {
 			}
 		}else{
 			if(life >= minLife){
-				target = vec3(uFairyPosition.x, uFairyPosition.y, uFairyPosition.z);
+				target = vec3(0.,-100., 0.);
 			}else{
 				target = position;
 			}

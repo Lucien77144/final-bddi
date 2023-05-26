@@ -60,7 +60,7 @@ export default class GrassScene {
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // Setting Fairy :
-    // this.fairy = new Fairy();
+    this.fairy = new Fairy();
     // this.fairyDust = new FairyDust();
     // this.collisionV1 = new CollisionV1();
   }
@@ -75,8 +75,6 @@ export default class GrassScene {
     this.urma?.update();
 
     this.fairy?.update();
-    this.fairyDust?.update();
-    this.collisionV1?.update();
 
 
     this.floors?.forEach((floor) => {

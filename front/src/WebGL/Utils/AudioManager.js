@@ -20,7 +20,7 @@ export default class AudioManager {
       this.volume = _volume;
       
       // Wait for resources & event
-      InputManager.on("startAudio", () => {
+      this.resources.on("ready", () => {
         if (this.resources.loadedAudios == this.resources.toLoadAudios) {
           InputManager.audioLoaded = true;
           this.buildSound();

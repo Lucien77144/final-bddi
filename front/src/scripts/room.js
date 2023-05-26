@@ -122,8 +122,6 @@ function showRoleSelection() {
     roleSelection.classList.remove('hidden');
 }
 
-
-
 export function roleSelectionEvent(role) {
     console.log('Select role');
     socket.emit('roleSelect', {roomId : room.id, role: role});

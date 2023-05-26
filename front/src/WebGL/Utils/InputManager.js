@@ -12,10 +12,12 @@ class InputManager extends EventEmitter {
     addEventListener("keydown", ({ key }) => {
       this.trigger(key, [true]);
       this.setKeyHandler(key, true);
+      this.initAudio();
     });
     addEventListener("keyup", ({ key }) => {
       this.trigger(key, [false]);
       this.setKeyHandler(key, false);
+      this.initAudio();
     });
   }
 
@@ -53,10 +55,18 @@ class InputManager extends EventEmitter {
   setMouseEvents() {
     addEventListener("mousedown", (event) => {
       this.trigger("mousedown", [event]);
+      this.initAudio();
     });
     addEventListener("mouseup", ({ event }) => {
       this.trigger("mouseup", [event]);
+      this.initAudio();
     });
+  }
+
+  initAudio() {
+    if(!this.audioLoaded) {
+      this.trigger("startAudio");
+    }
   }
 }
 

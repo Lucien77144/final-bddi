@@ -25,8 +25,6 @@ export default class Experience {
 
     // Options
     this.canvas = _canvas;
-
-    // Set Ressources
   }
   
   setUp() {
@@ -40,7 +38,9 @@ export default class Experience {
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
     this.outlineModule = new OutlineModule();
-    this.forestSound = new AudioManager('forestAudio');
+    this.forestSound = new AudioManager({
+      _path: "forestAudio",
+    });
 
     // Resize event
     this.sizes.on("resize", () => {

@@ -1,21 +1,24 @@
 import Experience from "webgl/Experience.js";
 import { CatmullRomCurve3, Vector3 } from "three";
 
-const SPEED = .6;
+const SPEED = .4;
 
-let t = 1;
 let instance = null;
 export default class PathUrma {
-  constructor(_position = new Vector3(0, 0, 0)) {
+  constructor({
+    _position = new Vector3(0, 0, 0),
+    _factor = 1,
+  } = {}) {
     // Singleton
     if (instance) {
-        return instance;
+      return instance;
     }
     instance = this;
     
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.position = _position;
+    this.factor = _factor;
 
     this.setPath();
   }
@@ -33,22 +36,22 @@ export default class PathUrma {
     ]);
   }
 
-  getPositionAt(pos = t) {
+  getPositionAt(pos = this.factor) {
     return this.curve.getPointAt(pos);
   }
 
   update(delta, height) {
-    const nextValue = t + (delta / (20 / SPEED)) * -1;
+    const nextValue = this.factor + (delta / (20 / SPEED)) * -1;
 
     if ((nextValue < 1) && (nextValue > 0)) {
-      t = nextValue;
+      this.factor = nextValue;
     } else if (Math.round(nextValue) === 0) {
-      t /= 2;
+      this.factor /= 2;
     } else if (Math.round(nextValue) === 1) {
-      t += (1-t)/2;
+      this.factor += (1-this.factor)/2;
     }
 
-    const point = this.curve.getPointAt(t);
+    const point = this.curve.getPointAt(this.factor);
     this.position.copy(point);
     this.position.y += height/2;
   }

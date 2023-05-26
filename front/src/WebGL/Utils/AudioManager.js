@@ -1,5 +1,6 @@
 import { Audio, AudioListener } from "three";
 import Experience from "../Experience";
+import InputManager from "./InputManager";
 
 let listener = null;
 export default class AudioManager {
@@ -8,9 +9,6 @@ export default class AudioManager {
       _loop = false,
       _volume = 1,
     } = {}) {
-      if(!_path) return;
-      console.log('pass');
-      
       this.experience = new Experience();
       this.camera = this.experience.camera.instance;
       this.resources = this.experience.resources;
@@ -21,24 +19,23 @@ export default class AudioManager {
       this.loop = _loop;
       this.volume = _volume;
       
+      // Wait for resources & event
+      InputManager.on("startAudio", () => {
+        if (this.resources.loadedAudios == this.resources.toLoadAudios) {
+          InputManager.audioLoaded = true;
+          this.buildSound();
+        }
+      });
+    }
+
+    buildSound() {
       // Singleton of audio listener
       if (listener) {
         return listener;
       } else {
-        this.initAudio();
+        this.initListener();
       }
-      
-      // Wait for resources
-      if (this.resources.loaded == this.resources.toLoad) {
-        this.buildSound();
-      } else {
-        this.resources.on("ready", () => {
-          this.buildSound();
-        });
-      }
-    }
 
-    buildSound() {
       this.audio = this.resources.items[this.path];
       
       this.sound = new Audio( listener );
@@ -49,30 +46,19 @@ export default class AudioManager {
       this.sound.play();
     }
   
-    initAudio() {
+    initListener() {
       listener = new AudioListener();
       this.camera.add( listener );
     }
   
     play() {
-      if (!this.isAudioLoaded) {
-        console.error("Audio not loaded yet");
-        return;
-      }
       this.source.start(0);
       this.isPlaying = true;
     }
   
     stop() {
-      if (!this.isAudioLoaded) {
-        console.error("Audio not loaded yet");
-        return;
-      }
       this.source.stop(0);
       this.isPlaying = false;
-      // We need to create a new source after stopping the old one
-      // this.source = this.audioContext.createBufferSource();
-      this.loadAudio();
     }
   
     toggle() {

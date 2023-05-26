@@ -116,8 +116,7 @@ export default class Resources extends EventEmitter {
 
     if (this.loaded === this.toLoad) {
       // if (this.debug.active) console.debug("✅ Resources loaded!");
-      if (this.debug.debugParams?.LoadingScreen)
-        this.loadingScreenElement.remove();
+      if (this.debug.debugParams?.LoadingScreen) this.loadingScreenElement.remove();
       this.trigger("ready");
     }
   }

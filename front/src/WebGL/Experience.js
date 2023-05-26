@@ -26,9 +26,6 @@ export default class Experience {
     // Options
     this.canvas = _canvas;
 
-    // Audio Context
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     // Setup
     this.sizes = new Sizes();
     this.time = new Time();
@@ -39,7 +36,9 @@ export default class Experience {
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
     this.outlineModule = new OutlineModule();
-    this.forestSound = new AudioManager('forestAudio');
+    this.forestSound = new AudioManager({
+      _path: "forestAudio",
+    });
 
     // Resize event
     this.sizes.on("resize", () => {

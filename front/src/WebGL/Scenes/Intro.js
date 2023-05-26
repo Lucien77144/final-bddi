@@ -60,7 +60,7 @@ export default class Intro {
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.dialogueBox = new DialogueBox();
     // this.stele = new Stele();
-    this.controPanel = new ControlPanel(this.experience);
+    this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
 

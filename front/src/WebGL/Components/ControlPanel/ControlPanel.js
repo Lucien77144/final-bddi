@@ -3,8 +3,11 @@ import * as THREE from 'three';
 import Experience from '@/WebGL/Experience';
 
 export default class ControlPanel {
-    constructor(experience, _position = new Vector3(-5, 2.5, 9), _rotation = new Vector3(0, 0, 0)) {
-        this.experience = experience;
+    constructor (
+        _position = new Vector3(-5, 2.5, 9),
+        _rotation = new Vector3(0, 0, 0)
+    ) {
+        this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
 

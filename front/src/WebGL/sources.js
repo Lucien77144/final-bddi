@@ -70,13 +70,17 @@ export default [
   {
     name: "mountain",
     type: "texture",
-    // path: "textures/background/moutain.png",
-    path: "textures/background/moutain2.jpg",
+    path: "textures/background/moutain.jpg",
   },
   {
     name: "mountainS",
     type: "texture",
     path: "textures/background/moutain_shadow.jpg",
+  },
+  {
+    name: "mountainF",
+    type: "texture",
+    path: "textures/background/moutain_fog.jpg",
   },
 
   // jpg :

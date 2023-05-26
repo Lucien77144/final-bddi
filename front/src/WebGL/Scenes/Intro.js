@@ -1,20 +1,17 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Fog, Group, Vector2, Vector3 } from "three";
+import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
 import River from "../Components/River/River";
 import CollisionV1 from "../Components/Fairy/Collision.js";
-import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
-import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
-import Rock from "../Components/Rock/Rock";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 
 export default class Intro {

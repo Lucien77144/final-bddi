@@ -26,9 +26,6 @@ export default class Experience {
     // Options
     this.canvas = _canvas;
 
-    // Audio Context
-    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-
     // Setup
     this.sizes = new Sizes();
     this.time = new Time();

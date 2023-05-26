@@ -4,11 +4,13 @@ uniform float uTime;
 uniform sampler2D uBack;
 uniform sampler2D uMountain;
 uniform sampler2D uMountainS;
+uniform sampler2D uFogM;
 
 uniform vec3 uPrimary;
 uniform vec3 uSecondary;
 uniform vec3 uSecondary2;
 uniform vec3 uShadowColor;
+uniform vec3 uFogColor;
 
 vec2 getNewUv(float power) {
     vec2 newUv = vUv;
@@ -24,8 +26,11 @@ void main()  {
     vec3 secondary = mix(uSecondary, uSecondary2, vUv.y);
     vec3 resultMountain = mix(uPrimary, secondary, montains.b);
 
-    vec3 color = mix(resultMountain, back.rgb, (montains.r < 1.) && (montains.r < .5) ? montains.r * 2. : 1.);
-    color = mix(color, uShadowColor, shadow.r);
+    vec3 front = mix(resultMountain, uShadowColor, shadow.r);
+
+    vec3 color = mix(front, back.rgb, (montains.r < 1.) && (montains.r < .5) ? montains.r * 2. : 1.);
+    color = mix(color, uFogColor, 1. - texture2D(uFogM, vUv).r);
+    color = mix(color, vec3(.5), texture2D(uFogM, vUv).r - .35);
     
 	gl_FragColor = vec4(color, 1.);
 }

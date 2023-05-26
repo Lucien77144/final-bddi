@@ -56,9 +56,12 @@ export default class Urma {
     this.resource = this.resources.items.urmaModel;
 
     this.position = _position;
+    
+    this.sound = new AudioManager({
+      _path: "runUrmaAudio",
+      _status: false,
+    });
 
-    // this.sound = new SoundDesign(this.experience.audioContext, "/sounds/dirtRun.mp3");
-    // this.sound.loadAudio();
     this.keyState = {
       right: false,
       left: false,
@@ -85,8 +88,8 @@ export default class Urma {
     this.animation = {
       mixer: new AnimationMixer(this.model),
       actions: {
-          idle: null,
-          run: null,
+        idle: null,
+        run: null,
       },
     };
   
@@ -113,15 +116,15 @@ export default class Urma {
         if (val) {
           this.animation?.action && (this.animation.action.paused = false);
 
-          // if (!this.sound.isPlaying) {
-          //   this.sound.play();
-          // }
+          if (!this.sound?.isPlaying) {
+            this.sound.play();
+          }
         } else {
           this.animation?.action && (this.animation.action.paused = true);
 
-          // if (this.sound.isPlaying) {
-          //   this.sound.stop();
-          // }
+          if (this.sound?.isPlaying) {
+            this.sound.stop();
+          }
         }
   
         if (val && !data.status[dir].start) {

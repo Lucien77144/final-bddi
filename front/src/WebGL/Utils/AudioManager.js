@@ -2,12 +2,12 @@ import { Audio, AudioListener } from "three";
 import Experience from "../Experience";
 import InputManager from "./InputManager";
 
-let listener = null;
 export default class AudioManager {
     constructor({
       _path = null,
       _loop = false,
       _volume = 1,
+      _status = true,
     } = {}) {
       this.experience = new Experience();
       this.camera = this.experience.camera.instance;
@@ -18,6 +18,7 @@ export default class AudioManager {
       this.isPlaying = false;
       this.loop = _loop;
       this.volume = _volume;
+      this.status = _status;
       
       // Wait for resources & event
       // this.ressources.on("ready", () => { // FOR SERVER SETUP
@@ -30,35 +31,32 @@ export default class AudioManager {
     }
 
     buildSound() {
-      // Singleton of audio listener
-      if (listener) {
-        return listener;
-      } else {
-        this.initListener();
-      }
+      this.initListener();
 
       this.audio = this.resources.items[this.path];
       
-      this.sound = new Audio( listener );
+      this.sound = new Audio( this.listener );
 
       this.sound.setBuffer( this.audio );
       this.sound.setLoop( this.loop );
       this.sound.setVolume( this.volume );
-      this.sound.play();
+      this.status && this.sound.play();
     }
   
     initListener() {
-      listener = new AudioListener();
-      this.camera.add( listener );
+      this.listener = new AudioListener();
+      this.camera.add( this.listener );
     }
   
     play() {
-      this.source.start(0);
+      if(!this.sound) return;
+      this.sound.play();
       this.isPlaying = true;
     }
   
     stop() {
-      this.source.stop(0);
+      if(!this.sound) return;
+      this.sound.stop();
       this.isPlaying = false;
     }
   

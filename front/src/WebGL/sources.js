@@ -71,6 +71,16 @@ export default [
     type: "audio",
     path: "/sounds/forest.mp3",
   },
+  {
+    name: "runUrmaAudio",
+    type: "audio",
+    path: "/sounds/dirtRun.mp3",
+  },
+  {
+    name: "runWingsAudio",
+    type: "audio",
+    path: "/sounds/wings.wav",
+  },
 
   // --------------------
   // Textures :

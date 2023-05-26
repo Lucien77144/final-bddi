@@ -22,7 +22,7 @@ export default class Fairy extends EventEmitter {
     }
     instance = this;
 
-    const { scene, resources, debug, time, activeScene, audioContext } = new Experience();
+    const { scene, resources, debug, time, activeScene } = new Experience();
     this.scene = scene;
     this.resources = resources;
     this.debug = debug;
@@ -31,8 +31,11 @@ export default class Fairy extends EventEmitter {
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
 
-    // this.fairySound = new SoundDesign(audioContext, '/sounds/wings.wav', true);  // Create a sound instance
-    // this.fairySound.loadAudio();  // Load the audio file
+    this.sound = new AudioManager({
+      _path: "runWingsAudio",
+      _status: false,
+      _loop: true,
+    });
 
     this.mouseMove = new MouseMove();
 
@@ -103,15 +106,15 @@ export default class Fairy extends EventEmitter {
     ]);
 
     // Check if the fairy is moving
-    // if (this.isFairyMoving()) {
-    //   if (!this.fairySound.isPlaying) {
-    //     this.fairySound.play();  // If the fairy is moving, play the sound
-    //   }
-    // } else {
-    //   if (this.fairySound.isPlaying) {
-    //     this.fairySound.stop();  // If the fairy is not moving, stop the sound
-    //   }
-    // }
+    if (this.isFairyMoving()) {
+      if (!this.sound.isPlaying) {
+        this.sound.play();  // If the fairy is moving, play the sound
+      }
+    } else {
+      if (this.sound.isPlaying) {
+        this.sound.stop();  // If the fairy is not moving, stop the sound
+      }
+    }
   }
 
   isFairyMoving() {

@@ -11,7 +11,7 @@ import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
-import SoundDesign from "@/WebGL/Utils/SoundDesign";
+import AudioManager from "@/WebGL/Utils/AudioManager";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -31,8 +31,8 @@ export default class Fairy extends EventEmitter {
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
 
-    this.fairySound = new SoundDesign(audioContext, '/sounds/wings.wav', true);  // Create a sound instance
-    this.fairySound.loadAudio();  // Load the audio file
+    // this.fairySound = new SoundDesign(audioContext, '/sounds/wings.wav', true);  // Create a sound instance
+    // this.fairySound.loadAudio();  // Load the audio file
 
     this.mouseMove = new MouseMove();
 
@@ -103,16 +103,15 @@ export default class Fairy extends EventEmitter {
     ]);
 
     // Check if the fairy is moving
-    if (this.isFairyMoving()) {
-      if (!this.fairySound.isPlaying) {
-        this.fairySound.play();  // If the fairy is moving, play the sound
-      }
-    } else {
-      if (this.fairySound.isPlaying) {
-        this.fairySound.stop();  // If the fairy is not moving, stop the sound
-      }
-    }
-    
+    // if (this.isFairyMoving()) {
+    //   if (!this.fairySound.isPlaying) {
+    //     this.fairySound.play();  // If the fairy is moving, play the sound
+    //   }
+    // } else {
+    //   if (this.fairySound.isPlaying) {
+    //     this.fairySound.stop();  // If the fairy is not moving, stop the sound
+    //   }
+    // }
   }
 
   isFairyMoving() {

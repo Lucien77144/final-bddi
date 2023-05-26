@@ -4,7 +4,7 @@ import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
-import SoundDesign from "@/WebGL/Utils/SoundDesign";
+import AudioManager from "@/WebGL/Utils/AudioManager";
 import { gsap } from "gsap";
 
 const SIZE_FACTOR = 1.25;
@@ -57,8 +57,8 @@ export default class Urma {
 
     this.position = _position;
 
-    this.sound = new SoundDesign(this.experience.audioContext, "/sounds/dirtRun.mp3");
-    this.sound.loadAudio();
+    // this.sound = new SoundDesign(this.experience.audioContext, "/sounds/dirtRun.mp3");
+    // this.sound.loadAudio();
     this.keyState = {
       right: false,
       left: false,
@@ -111,20 +111,17 @@ export default class Urma {
     ["right", 'left'].forEach((dir) => {
       InputManager.on(dir, (val) => {
         if (val) {
-          // start model animation
           this.animation?.action && (this.animation.action.paused = false);
 
-          if (!this.sound.isPlaying) {
-            this.sound.play();
-          }
-
+          // if (!this.sound.isPlaying) {
+          //   this.sound.play();
+          // }
         } else {
-          // pause model animation
           this.animation?.action && (this.animation.action.paused = true);
 
-          if (this.sound.isPlaying) {
-            this.sound.stop();
-          }
+          // if (this.sound.isPlaying) {
+          //   this.sound.stop();
+          // }
         }
   
         if (val && !data.status[dir].start) {

@@ -63,8 +63,8 @@ export default class Intro {
 
     // Setting Fairy :
     this.fairy = new Fairy();
-    this.fairyDust = new FairyDust();
-    this.collisionV1 = new CollisionV1();
+    // this.fairyDust = new FairyDust();
+    // this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {
@@ -77,15 +77,13 @@ export default class Intro {
     this.urma?.update();
 
     this.fairy?.update();
-    this.fairyDust?.update();
-    this.collisionV1?.update();
 
-    this.controlPanel?.update();
     this.floors?.forEach((floor) => {
       floor.update();
     })
     this.river?.update();
     
+    this.fireflies?.update();
     this.clouds?.update();
   }
 }

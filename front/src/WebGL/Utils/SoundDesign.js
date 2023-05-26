@@ -1,16 +1,19 @@
 export default class SoundDesign {
-    constructor(audioContext, audioFilePath) {
+    constructor(audioContext, audioFilePath, loop = false) {
       this.audioContext = audioContext;
       this.audioFilePath = audioFilePath;
       this.source = this.audioContext.createBufferSource();
       this.isAudioLoaded = false;
       this.isPlaying = false;
+      this.loop = loop;  // Storing the loop value
+
     }
   
     async loadAudio() {
       let response = await fetch(this.audioFilePath);
       let arrayBuffer = await response.arrayBuffer();
       this.source.buffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      this.source.loop = this.loop;  // Set the loop property
       this.source.connect(this.audioContext.destination);
       this.isAudioLoaded = true;
     }

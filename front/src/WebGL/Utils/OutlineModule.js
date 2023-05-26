@@ -171,7 +171,6 @@ export default class OutlineModule {
                 object.interactive === true && this.interactiveObjects.push(object);
             }
         })
-        console.log(this.interactiveObjects);
     }
 
     onMouseMove(event) {

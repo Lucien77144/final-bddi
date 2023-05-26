@@ -14,8 +14,9 @@ import Cloud from "../Components/Cloud/Cloud";
 import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
+import Rock from "../Components/Rock/Rock";
 
-export default class GrassScene {
+export default class Intro {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -39,13 +40,16 @@ export default class GrassScene {
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
         _size: new Vector3(54, 2, 95),
-        _count: 225000,
+        _count: 250000,
       }),
     ];
     this.river = new River({
       _position: new Vector3(-17, 1.35, -10),
       _size: new Vector2(13, 60),
     });
+    this.rocks = [
+      new Rock(new Vector3(-17, 1.35, -10)),
+    ]
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -.35, 0));
@@ -57,10 +61,6 @@ export default class GrassScene {
     this.stele = new Stele();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
-
-    // add fog : 
-    this.scene.fog = new Fog(0x000000, 0, 100);
-    
 
     // Setting Fairy :
     // this.fairy = new Fairy();

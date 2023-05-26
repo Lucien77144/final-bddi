@@ -25,12 +25,7 @@ export default class River {
     this.dudvMap = this.resources.items.dudvMap;
     this.dudvMap.wrapS = this.dudvMap.wrapT = THREE.RepeatWrapping;
 
-    this.cubeTextureLoader = new THREE.CubeTextureLoader();
-    this.envMap = this.cubeTextureLoader.load([
-      'textures/environmentMap/px.jpg', 'textures/environmentMap/nx.jpg',
-      'textures/environmentMap/py.jpg', 'textures/environmentMap/ny.jpg',
-      'textures/environmentMap/pz.jpg', 'textures/environmentMap/nz.jpg'
-  ]);
+    this.envMap = this.resources.items.environmentMapTexture
 
     this.setMaterial();
     this.setWater();

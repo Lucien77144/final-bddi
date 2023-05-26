@@ -38,7 +38,7 @@ void main() {
     
 	float distX = clamp(1. - (vPosition.y - 10.) / uSize.x, 0., 1.);
 
-    gl_FragColor.rgb = mix(color, reflectedColor, 0.25);
+    gl_FragColor.rgb = mix(color, reflectedColor, 0.15);
     gl_FragColor.a = 0.75 * distX;
 
     #include <tonemapping_fragment>

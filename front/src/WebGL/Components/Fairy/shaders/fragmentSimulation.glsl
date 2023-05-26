@@ -26,23 +26,6 @@ void main() {
 
 	vec3 offset = vec3(rand(uv), rand(uv + vec2(1.0, 0.0)), rand(uv + vec2(0.0, 1.0))) * .3; 
 
-	// if (life >= minLife) { 
-	// 	target = vec3(uFairyPosition.x - .5 , uFairyPosition.y, uFairyPosition.z) + offset;
-	// } else {
-	// 	target = move(position, life, uv);
-	// }
-
-
-		// if (life >= minLife) { 
-		// 	target = vec3(uFairyPosition.x - .5 , uFairyPosition.y, uFairyPosition.z) + offset;
-		// } else {
-		// 	if(uFairyDistance < .5){
-		// 		target = position;
-		// 	}else{
-		// 		target = move(position, life, uv);
-		// 	}
-		// }
-
 		if(uFairyDistance > .5){
 			if(life >= minLife){
 				target = vec3(uFairyPosition.x , uFairyPosition.y, uFairyPosition.z) + offset;

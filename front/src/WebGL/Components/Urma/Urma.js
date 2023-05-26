@@ -56,6 +56,11 @@ export default class Urma {
 
     this.position = _position;
 
+    this.keyState = {
+      right: false,
+      left: false,
+    };
+
     this.setModel();
     this.setAnimation();
     this.setInputs();
@@ -66,45 +71,58 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
-
     this.scene.add(this.model);
     this.camera.position.z = this.model.position.z;
   }
 
   setAnimation() {
-    const clip = this.resource.animations[0];
+    const idleClip = this.resource.animations.find((animation) => animation.name === "Idle");
+    const runClip = this.resource.animations.find((animation) => animation.name === "Run");
+  
     this.animation = {
-      mixer: new AnimationMixer(this.model),
-      action: null,
+        mixer: new AnimationMixer(this.model),
+        actions: {
+            idle: null,
+            run: null,
+        },
     };
+  
+    this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
+    this.animation.actions.run = this.animation.mixer.clipAction(runClip);
+    this.animation.actions.current = this.animation.actions.idle;
+    this.animation.actions.current.play();
 
-    this.animation.action = this.animation.mixer.clipAction(clip);
-    this.animation.action.timeScale = 1;
-    this.animation.action.setLoop(LoopRepeat, Infinity);
-    this.animation.action.play();
+    this.animation.play = (name) => {
+      const nextAction = this.animation.actions[name];
+      const oldAction = this.animation.actions.current;
+
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.actions.current = nextAction;
+    }
   }
 
-  setInputs() {
-    ["right", 'left'].forEach((dir) => {
-      InputManager.on(dir, (val) => {
-        if (val) {
-          // start model animation
-          this.animation.action.paused = false;
-        } else {
-          // pause model animation
-          this.animation.action.paused = true;
-        }
-  
+
+setInputs() {
+  ["right", 'left'].forEach((dir) => {
+    InputManager.on(dir, (val) => {
+
+
         if (val && !data.status[dir].start) {
+          this.animation.play('run');
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir;  // Ajoutez cette ligne
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
+          this.animation.play('idle');
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
+         
         }
       });
     })
@@ -129,7 +147,7 @@ export default class Urma {
 
       this.updateCameraX(cameraPos, modelPos);
 
-      this.animation.mixer.update(this.time.delta * 0.001);
+      this.animation.mixer.update(this.time.delta * 0.00025);
     }
 
   }
@@ -184,8 +202,12 @@ export default class Urma {
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
     
+
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
+    this.animation.mixer.update(this.time.delta * 0.001);
+
+
   }
 }

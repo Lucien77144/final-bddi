@@ -84,34 +84,44 @@ export default class Urma {
             idle: null,
             run: null,
         },
-        isFading: {
-            idle: false,
-            run: false,
-        },
     };
   
     this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
     this.animation.actions.run = this.animation.mixer.clipAction(runClip);
-    this.currentAnimation = 'idle'
-    this.animation.actions.idle.play();
+    this.animation.actions.current = this.animation.actions.idle;
+    this.animation.actions.current.play();
+
+    this.animation.play = (name) => {
+      const nextAction = this.animation.actions[name];
+      const oldAction = this.animation.actions.current;
+
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.actions.current = nextAction;
+    }
   }
 
 
 setInputs() {
   ["right", 'left'].forEach((dir) => {
     InputManager.on(dir, (val) => {
-      this.keyState[dir] = val;
+
 
         if (val && !data.status[dir].start) {
+          this.animation.play('run');
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir;  // Ajoutez cette ligne
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
+          this.animation.play('idle');
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
+         
         }
       });
     })
@@ -168,25 +178,6 @@ setInputs() {
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.001);
 
-    if(this.keyState.right || this.keyState.left){
-      console.log(this.currentAnimation);
-      if(this.currentAnimation === 'idle'){
-        this.currentAnimation = 'run';
-        this.animation.actions.idle.fadeOut(0.5);
-        console.log(this.animation.actions.run.fadeIn(0.5));
-        this.animation.actions.run.fadeIn(0.5);
-        this.animation.actions.run.play();
-        
-      }
-    } else {
-      if(this.currentAnimation === 'run'){
-        console.log('idle');
-        this.currentAnimation = 'idle';
-        this.animation.actions.run.fadeOut(0.5);
-        this.animation.actions.idle.fadeIn(0.5);
-        this.animation.actions.idle.play();
-      }
-    }
 
   }
 }

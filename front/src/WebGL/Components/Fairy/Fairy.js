@@ -12,6 +12,8 @@ import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
 import AudioManager from "@/WebGL/Utils/AudioManager";
+import { currentPlayer } from "@/scripts/room";
+import { currentRoom } from "@/scripts/movement";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -21,8 +23,7 @@ export default class Fairy extends EventEmitter {
       return instance;
     }
     instance = this;
-
-    const { scene, resources, debug, time, activeScene, audioContext } = new Experience();
+    const { scene, resources, debug, time, activeScene } = new Experience();
     this.scene = scene;
     this.resources = resources;
     this.debug = debug;
@@ -57,7 +58,6 @@ export default class Fairy extends EventEmitter {
 
   moveFairy() {
     if (!this.model) return;
-
     const fairyDir = new Vector3()
       .copy(this.mouseMove.cursor)
       .sub(this.model.position)
@@ -151,6 +151,7 @@ export default class Fairy extends EventEmitter {
   }
 
   update() {
+    this.mouseMove.update();
     this.getYLimit();
     if (this.distFairyToMouse) {
       this.animation.mixer.update(

@@ -2,6 +2,8 @@ import Experience from "webgl/Experience.js";
 import { AnimationMixer, LoopRepeat, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
+import * as MOVE from "@/scripts/movement"
+import { currentPlayer } from "@/scripts/room";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
 import AudioManager from "@/WebGL/Utils/AudioManager";
@@ -66,7 +68,9 @@ export default class Urma {
 
     this.setModel();
     this.setAnimation();
+    if(currentPlayer.role === "urma") {
     this.setInputs();
+    }
   }
 
   setModel() {
@@ -142,25 +146,44 @@ export default class Urma {
   }
   
   updatePosition() {
+    if(currentPlayer.role === "urma") {
     const { model, camera, time } = this;
     const { position: modelPos } = model;
     const { position: cameraPos, rotation: cameraRot } = camera;
 
     const isOneWay = (data.status.left.start !== data.status.right.start);
     
-    if(!this.grassScene.onGame) {
-      data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+      if(!this.grassScene.onGame) {
+        data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
 
-      modelPos.copy(this.path.position);
+        modelPos.copy(this.path.position);
 
-      cameraPos.z = modelPos.z - data.move.delta*5;
-      const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-      cameraPos.y = 3 - rdmCamera;
-      cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+        cameraPos.z = modelPos.z - data.move.delta*5;
+        const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+        cameraPos.y = 3 - rdmCamera;
+        cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
 
-      this.updateCameraX(cameraPos, modelPos);
+        this.updateCameraX(cameraPos, modelPos);
 
-      this.animation.mixer.update(this.time.delta * 0.001);
+        this.animation.mixer.update(this.time.delta * 0.00025);
+        MOVE.updateUrmaPosition(modelPos);
+      }
+    } else {
+        const { model, camera, time } = this;
+        const { position: modelPos } = model;
+        const { position: cameraPos, rotation: cameraRot } = camera;
+    
+        const isOneWay = (data.status.left.start !== data.status.right.start);
+    
+        modelPos.copy(MOVE.urmaPosition);
+        data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
+        
+        cameraPos.z = modelPos.z - data.move.delta*5;
+        
+        const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
+        cameraPos.y = 4 - rdmCamera;
+        
+        cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
     }
   }
 

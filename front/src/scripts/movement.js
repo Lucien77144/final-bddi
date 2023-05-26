@@ -12,7 +12,17 @@ import { socket } from "./socket";
  * Start Movement Event
  */
 
-let currentRoom = room;
+export let currentRoom = room;
+export let urmaPosition = {x : 0, y : 0, z : 0};
+
+export let updateUrmaPosition = (urmaPos) => {
+    socket.emit('updateUrmaPosition', {roomId : room.id, urmaPos});
+}
+
+socket.on('updateUrmaPosition', (data) => {
+    // console.log('Update urma position', data);
+    urmaPosition = data.urmaPos;
+});
 
 socket.on('startMovement', () => {
     console.log('Start movement');
@@ -27,13 +37,13 @@ socket.on('startMovement', () => {
     document.addEventListener('mousemove', (event) => {
         cursor.x = event.clientX;
         cursor.y = event.clientY;
-
         socket.emit('move', {roomId : room.id, position : cursor});
     });
 
     socket.on('sendPositions', (data) => {
-        console.log('Position joueur 1', data.player1.position);
-        console.log('Position joueur 2', data.player2.position);
+        // console.log('Position joueur 1', data.players[0].position);
+        // console.log('Position joueur 2', data.players[1].position);
         currentRoom = data;
+        // console.log('Current room', currentRoom);
     });
 });

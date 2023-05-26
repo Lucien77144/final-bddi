@@ -1,3 +1,4 @@
+import Experience from '@/WebGL/Experience.js';
 import { socket } from './socket.js';
 
 /**
@@ -10,7 +11,9 @@ import { socket } from './socket.js';
  */
 
 export let room;
-let currentPlayer;
+export let currentPlayer;
+export let roomIdText;
+
 
 /**
  * Page Sections
@@ -19,8 +22,16 @@ let currentPlayer;
 
 const landingPage = document.querySelector('#landingPage');
 const roleSelection = document.querySelector('#roleSelection');
+const waitingRoom = document.querySelector('#waitingRoom');
+const waitSelection = document.querySelector('#waitSelection');
+const enterCode = document.querySelector('#enterCode');
 const scene = document.querySelector('#scene');
 const roomInfo = document.querySelector('#roomInfo');
+const joinRoomSection = document.querySelector('#joinRoom');
+
+
+// Copy room id to clipboard
+
 
 /**
  * Room Selection
@@ -29,8 +40,12 @@ const roomInfo = document.querySelector('#roomInfo');
 
 const createRoomButton = document.querySelector('#create');
 const joinRoomButton = document.querySelector('#join');
+const confirmJoinRoomButton = document.querySelector('#confirmRoom');
 const roomInput = document.querySelector('#roomInput');
 const showRoomId = document.querySelector('.showRoomId');
+
+const continueButton = document.querySelector('.continue-button');
+const waitingPlayerText = document.querySelector('.waiting-player-text');
 
 createRoomButton.addEventListener('click', () => {
     console.log('Create room');
@@ -38,14 +53,23 @@ createRoomButton.addEventListener('click', () => {
 });
 
 joinRoomButton.addEventListener('click', () => {
+    landingPage.classList.add('hidden');
+    joinRoomSection.classList.remove('hidden');
+});
+
+confirmJoinRoomButton.addEventListener('click', () => {
     console.log('Join room');
     socket.emit('joinRoom', roomInput.value);
 });
 
 // On createRoom
 socket.on('createRoom', (roomId) => {
+    roomIdText = roomId;
     console.log('Create room', roomId);
-    showRoomId.innerHTML = `Room ID : ${roomId}`;
+    showRoomId.innerHTML = `${roomId}`;
+    console.log(showRoomId);
+    waitingRoom.classList.remove('hidden');
+    landingPage.classList.add('hidden');
 });
 
 // On joinRoom
@@ -55,9 +79,23 @@ socket.on('joinRoom', (data) => {
         console.log(data.error);
     } else {
         room = data.success;
-        currentPlayer = room.player1.id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
-        landingPage.classList.add('hidden');
+        currentPlayer = room.players[0].id === socket.id ? {name: 'player1', role: null} : {name: 'player2', role: null};
+        // landingPage.classList.add('hidden');
+
     }
+})
+
+socket.on('displayWaitingRoom', () => {
+    console.log('Display waiting room');
+    waitSelection.classList.remove('hidden');
+    enterCode.classList.add('hidden');
+});
+
+socket.on('player2Joined', () => {
+    console.log('Player 2 joined');
+    // Remove disable state of the button
+    continueButton.disabled = false;
+    waitingPlayerText.innerHTML = 'Le joueur 2 a rejoint la partie!';
 })
 
 /**
@@ -69,20 +107,27 @@ socket.on('joinRoom', (data) => {
 const selectionUrma = document.querySelector('#selectionUrma');
 const selectionHeda = document.querySelector('#selectionHeda');
 
-socket.on('selectRole', () => {
+continueButton.addEventListener('click', () => {
+    showRoleSelection();
+})
+
+// socket.on('selectRole', () => {
+//     console.log('Select role');
+//     roleSelection.classList.remove('hidden');
+// });
+
+function showRoleSelection() {
     console.log('Select role');
+    waitingRoom.classList.add('hidden');
     roleSelection.classList.remove('hidden');
-});
+}
 
-selectionUrma.addEventListener('click', () => {
-    console.log('Urma');
-    socket.emit('roleSelect', {roomId : room.id, role: 'urma'});
-});
 
-selectionHeda.addEventListener('click', () => {
-    console.log('Heda');
-    socket.emit('roleSelect', {roomId : room.id, role: 'heda'});
-});
+
+export function roleSelectionEvent(role) {
+    console.log('Select role');
+    socket.emit('roleSelect', {roomId : room.id, role: role});
+}
 
 socket.on('role', (playerRole) => {
     currentPlayer.role = playerRole;
@@ -90,10 +135,12 @@ socket.on('role', (playerRole) => {
     roleSelection.classList.add('hidden');
     roomInfo.innerHTML = `
         <p>Room ID : ${room.id}</p>
-        <p>Player 1 : ${room.player1.id}</p>
-        <p>Player 2 : ${room.player2.id}</p>
+        <p>Player 1 : ${room.players[0].id}</p>
+        <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
+    const experience = new Experience(document.querySelector("canvas#webgl"));
+    experience.setUp();
     scene.classList.remove('hidden');
 });
 

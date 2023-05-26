@@ -2,6 +2,8 @@ import Experience from "webgl/Experience.js";
 import Sizes from "utils/Sizes.js";
 import PathUrma from "components/Urma/PathUrma";
 import * as THREE from "three";
+import { currentPlayer } from "@/scripts/room";
+import { currentRoom } from "@/scripts/movement";
 
 let instance = null;
 export default class MouseMove {
@@ -31,28 +33,37 @@ export default class MouseMove {
   }
 
   buildEvent() {
-    window.addEventListener("mousemove", (event) => {
-      this.handleMouseMove(event);
-    });
+    // window.addEventListener("mousemove", (event) => {
+    //   this.handleMouseMove(event);
+    // });
   }
 
-  buildEvent() {
-    window.addEventListener("mousemove", (event) => {
-      this.handleMouseMove(event);
-    });
-  }
+  // handleMouseMove(event) {
+  //   this.cursor.x = (event.clientX / this.sizes.width) * 2 - 1;
+  //   this.cursor.y = -(event.clientY / this.sizes.height) * 2 + 1;
+  // }
 
-  handleMouseMove(event) {
-    this.cursor.x = (event.clientX / this.sizes.width) * 2 - 1;
-    this.cursor.y = -(event.clientY / this.sizes.height) * 2 + 1;
+    update = () => {
+      if(currentRoom) {
 
-    this.dir = this.cursor;
+          //Find Heda's position from the players array in currentRoom.
+          let heda = currentRoom.players.find(player => player.role === "heda");
+          if(heda){
+            // Assign Heda's position to this.cursor
+            this.cursor.x = (heda.position.x / this.sizes.width) * 2 - 1;
+            this.cursor.y = -(heda.position.y / this.sizes.height) * 2 + 1;
+          } else {
+            console.log("Heda not found");
+        }
+    
+      }
+      let vector = new THREE.Vector3(this.cursor.x, this.cursor.y, this.cursor.z);
+      vector.unproject(this.camera);
+      let dir = vector.sub(this.camera.position).normalize();
+      let distance = -this.camera.position.x / dir.x + (this.path.position.x + .35) / dir.x;
+      let pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
+      this.cursor = pos;
 
-    let vector = new THREE.Vector3(this.cursor.x, this.cursor.y, this.cursor.z);
-    vector.unproject(this.camera);
-    let dir = vector.sub(this.camera.position).normalize();
-    let distance = -this.camera.position.x / dir.x + (this.path.position.x + .35) / dir.x;
-    let pos = this.camera.position.clone().add(dir.multiplyScalar(distance));
-    this.cursor = pos;
-  }
+      // Keep the loop going
+    }  
 }

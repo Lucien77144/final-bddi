@@ -26,6 +26,10 @@ export default class Experience {
     // Options
     this.canvas = _canvas;
 
+    // Set Ressources
+  }
+  
+  setUp() {
     // Setup
     this.sizes = new Sizes();
     this.time = new Time();

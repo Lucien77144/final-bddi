@@ -193,8 +193,7 @@ export default class OutlineModule {
             if (obj.interactive === true) {
                 const object = obj;
                 this.outlinePass.selectedObjects = [object];
-                // add click listener
-                
+
                 // Translate interact text on top of object position
                 const screenPosition = object.position.clone();
                 screenPosition.project(this.camera);

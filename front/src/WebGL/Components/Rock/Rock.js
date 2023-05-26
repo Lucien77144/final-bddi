@@ -29,6 +29,7 @@ export default class Rock {
   }
 
   setModel() {
+    console.log(this.resource);
     this.model = SkeletonUtils.clone(this.resource.scene);
 
     this.model.position.copy(this.position);

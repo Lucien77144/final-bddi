@@ -37,6 +37,11 @@ export default class Cloud {
     shadowM.wrapT = THREE.RepeatWrapping;
     shadowM.repeat.set(1, 1);
 
+    const FogM = this.resources.items.mountainF;
+    FogM.wrapS = THREE.RepeatWrapping;
+    FogM.wrapT = THREE.RepeatWrapping;
+    FogM.repeat.set(1, 1);
+
     const floorColors = this.activeScene?.floors && this.activeScene?.floors[0].grassParameters?.colors;
 
     this.material = new THREE.ShaderMaterial({
@@ -45,10 +50,12 @@ export default class Cloud {
         uBack: { value: textureB },
         uMountain: { value: textureM },
         uMountainS: { value: shadowM },
+        uFogM: { value: FogM },
         uPrimary: { value: floorColors?.base || (new THREE.Color('#11382a')) },
         uSecondary: { value: new THREE.Color('#fafafa') },
         uSecondary2: { value: new THREE.Color('#777777') },
         uShadowColor: { value: new THREE.Color('#161616') },
+        uFogColor: { value: new THREE.Color('#d8d8d8') },
       },
       vertexShader,
       fragmentShader,

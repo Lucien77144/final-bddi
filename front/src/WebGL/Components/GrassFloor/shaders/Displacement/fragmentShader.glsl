@@ -4,6 +4,7 @@ uniform sampler2D uMask;
 uniform sampler2D uBaseTexture;
 uniform sampler2D uSecondTexture;
 
+varying vec3 vPosition;
 varying vec2 vUv;
 
 vec4 getTexture2D(sampler2D map) {
@@ -21,5 +22,7 @@ vec3 getTextureColor(sampler2D texture) {
 
 void main() {
 	vec3 color = mix(uBaseColor, getTextureColor(uSecondTexture), getTexture2D(uMask).r + getTexture2D(uMask).b);
-	gl_FragColor = vec4(mix(color, getTextureColor(uBaseTexture), getTexture2D(uMask).b), 1.);
+	float distX = (vPosition.x + 20.5) * 4. / uSize.x;
+
+	gl_FragColor = vec4(mix(color, getTextureColor(uBaseTexture), getTexture2D(uMask).b), distX);
 }

@@ -70,13 +70,17 @@ export default [
   {
     name: "mountain",
     type: "texture",
-    // path: "textures/background/moutain.png",
-    path: "textures/background/moutain2.jpg",
+    path: "textures/background/moutain.jpg",
   },
   {
     name: "mountainS",
     type: "texture",
     path: "textures/background/moutain_shadow.jpg",
+  },
+  {
+    name: "mountainF",
+    type: "texture",
+    path: "textures/background/moutain_fog.jpg",
   },
 
   // jpg :
@@ -123,12 +127,12 @@ export default [
     name: "environmentMapTexture",
     type: "cubeTexture",
     path: [
-      "textures/environmentMap/px.jpg",
-      "textures/environmentMap/nx.jpg",
-      "textures/environmentMap/py.jpg",
-      "textures/environmentMap/ny.jpg",
-      "textures/environmentMap/pz.jpg",
-      "textures/environmentMap/nz.jpg",
+      "textures/environmentMap/px.png",
+      "textures/environmentMap/nx.png",
+      "textures/environmentMap/py.png",
+      "textures/environmentMap/ny.png",
+      "textures/environmentMap/pz.png",
+      "textures/environmentMap/nz.png",
     ],
   },
 ];

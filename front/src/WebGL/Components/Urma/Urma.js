@@ -167,11 +167,11 @@ setInputs() {
       x -= (dist - baseDist) * .75;
     }
 
-    gsap.to(cameraPos, {
-      duration: .5,
-      ease: "power2.out",
-      x,
-    });
+    // gsap.to(cameraPos, {
+    //   duration: .5,
+    //   ease: "power2.out",
+    //   x,
+    // });
   }
 
   orientateBody() {

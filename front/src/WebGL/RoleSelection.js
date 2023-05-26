@@ -7,6 +7,7 @@ import Camera from './Camera';
 import Renderer from './Renderer';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { roleSelectionEvent } from '../scripts/room';
+import gsap from 'gsap';
 
 let instance = null
 
@@ -59,6 +60,13 @@ export default class RoleSelection {
     // Controls
     this.controls = new OrbitControls(this.camera, this.canvas)
     this.controls.enableDamping = true
+
+    this.cubePositions = [
+      { x: 0, y: 0, z: 3 },   // Position for cube1
+      { x: 8, y: 0, z: 3 }    // Position for cube2
+    ];
+
+    this.cubes = [cubeMesh, cubeMesh2];
     
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -77,11 +85,6 @@ export default class RoleSelection {
 
     // Make background transparent
     this.renderer.setClearColor(0x000000, 0);
-
-    this.swipeButton.addEventListener('click', () => {
-    })
-
-    
 
     this.tick = () =>
     {
@@ -103,11 +106,25 @@ export default class RoleSelection {
   switchRole() {
     if (this.selectedRole === 'urma') {
       this.selectedRole = 'heda';
-      this.roleDescription.innerHTML = "heda"
+      this.roleDescription.innerHTML = "heda";
+      this.currentCube = 1;
     } else {
       this.selectedRole = 'urma';
-      this.roleDescription.innerHTML = "urma"
+      this.roleDescription.innerHTML = "urma";
+      this.currentCube = 0;
     }
+    console.log(this.cubes[this.currentCube].position);
+    gsap.to(this.camera.position, {
+      x: this.cubePositions[this.currentCube].x,
+      y: this.cubePositions[this.currentCube].y,
+      z: this.cubePositions[this.currentCube].z,
+      duration: 1,  // adjust as needed
+      onUpdate: () => {
+        this.camera.updateProjectionMatrix();  // important to keep the scene visually correct
+        this.camera.lookAt(this.cubes[this.currentCube].position);  // Look at the currently active cube
+      }
+    });
   }
+  
 }
 

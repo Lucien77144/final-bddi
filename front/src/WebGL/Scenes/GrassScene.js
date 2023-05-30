@@ -52,12 +52,12 @@ export default class GrassScene {
     });
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column(new Vector3(0, -.35, 0));
+    this.column = new Column(new Vector3(0, -0.35, 0));
 
     // Setting the environment :
     this.environment = new Environment();
     this.fairyDust = new FairyDust();
-    this.tree = new Tree(new Vector3(0, 5, 0));
+    this.tree = new Tree(new Vector3(-8, 0, -25));
 
     // this.collision = new Collision();
     this.collisionV1 = new CollisionV1();
@@ -65,7 +65,7 @@ export default class GrassScene {
     // this.rock1 = new Rock(new Vector3(0, 3, 0))
     // this.rock2 = new Rock(new Vector3(3, 3, 3))
     // this.rock3 = new Rock(new Vector3(6, 3, 6))
-    this.urma = new Urma(new Vector3(0, 5, 8));
+    this.urma = new Urma(new Vector3(0, 5, 0));
 
     // Setting Fairy :
     // this.fairy = new Fairy();

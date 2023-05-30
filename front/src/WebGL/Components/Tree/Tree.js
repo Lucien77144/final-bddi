@@ -13,6 +13,7 @@ import {
 import vertexShader from "./shaders/vertexShader.glsl";
 import fragmentShader from "./shaders/fragmentShader.glsl";
 import { Color } from "three";
+import cloneGltf from "@/WebGL/Utils/GltfClone";
 
 let instance = null;
 export default class Tree {
@@ -27,6 +28,7 @@ export default class Tree {
     this.scene = this.experience.scene;
     this.camera = this.experience.camera.instance;
     this.resources = this.experience.resources;
+    this.trunkModel = this.resources.items.treeModel;
     // this.debug = this.experience.debug;
     this.position = _position;
 
@@ -34,6 +36,7 @@ export default class Tree {
     this.setGeometry();
     this.setMaterial();
     this.setMesh();
+    this.setModel();
 
     // if (this.debug.active) this.setDebug();
   }
@@ -44,8 +47,24 @@ export default class Tree {
     this.scene.add(this.treeGroup);
   }
 
+  setModel() {
+    this.model = cloneGltf(this.trunkModel).scene;
+    // this.model.scale.set(0.2, 0.2, 0.2);
+    this.model.position.copy(this.position);
+    this.model.name = "trunk";
+    this.treeGroup.add(this.model);
+    this.model.position.set(0, 2.5, 0);
+    this.model.rotation.y = -Math.PI / 2;
+
+    for (const child of this.model.children) {
+      if (child instanceof Mesh) {
+        child.castShadow = true;
+      }
+    }
+  }
+
   setGeometry() {
-    this.geometry = new PlaneGeometry(2, 2, 250, 250);
+    this.geometry = new PlaneGeometry(8, 8, 250, 250);
   }
 
   setMaterial() {
@@ -67,14 +86,22 @@ export default class Tree {
   }
 
   setMesh() {
-    this.mesh = new Mesh(this.geometry, this.material);
-    this.treeGroup.add(this.mesh);
-    this.mesh.rotation.y = Math.PI / 2;
+    this.leafMeshes = [];
+    const leafCount = 3;
+    for (let i = 0; i < leafCount; i++) {
+      const mesh = new Mesh(this.geometry, this.material);
+      mesh.rotation.y = Math.PI / 2;
+      this.treeGroup.add(mesh);
+      this.leafMeshes.push(mesh);
+    }
+    this.leafMeshes[0].position.set(2, 10, -5);
+    this.leafMeshes[1].position.set(2, 10, 2);
+    this.leafMeshes[2].position.set(1, 12, -1);
   }
 
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
-      title: "Tree",
+      title: "leaves",
       expanded: true,
     });
 
@@ -83,29 +110,49 @@ export default class Tree {
         min: 0,
         max: Math.PI * 2,
         step: 0.1,
-        label: "Tree y",
+        label: "leaves y",
       })
       .onChange((value) => {
         this.mesh.rotation.y = value;
       });
   }
 
+  // setOrientation() {
+  //   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+  //   const targetPosition = this.camera.position.clone();
+
+  //   this.mesh.lookAt(targetPosition);
+
+  //   const meshRotation = this.mesh.rotation.clone();
+  //   const targetRotationY = clamp(meshRotation.y, 0.9, 1.05);
+  //   const smoothness = 0.05; // Valeur pour ajuster la vitesse de rotation (plus la valeur est petite, plus la rotation sera lente)
+
+  //   meshRotation.y = MathUtils.lerp(
+  //     meshRotation.y,
+  //     targetRotationY,
+  //     smoothness
+  //   );
+  //   this.mesh.rotation.copy(meshRotation);
+  // }
+
   setOrientation() {
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
     const targetPosition = this.camera.position.clone();
 
-    this.mesh.lookAt(targetPosition);
+    for (const mesh of this.leafMeshes) {
+      mesh.lookAt(targetPosition);
 
-    const meshRotation = this.mesh.rotation.clone();
-    const targetRotationY = clamp(meshRotation.y, 0.9, 1.05);
-    const smoothness = 0.05; // Valeur pour ajuster la vitesse de rotation (plus la valeur est petite, plus la rotation sera lente)
+      const meshRotation = mesh.rotation.clone();
+      const targetRotationY = clamp(meshRotation.y, 0.9, 1.05);
+      const smoothness = 0.05; // Valeur pour ajuster la vitesse de rotation (plus la valeur est petite, plus la rotation sera lente)
 
-    meshRotation.y = MathUtils.lerp(
-      meshRotation.y,
-      targetRotationY,
-      smoothness
-    );
-    this.mesh.rotation.copy(meshRotation);
+      meshRotation.y = MathUtils.lerp(
+        meshRotation.y,
+        targetRotationY,
+        smoothness
+      );
+      mesh.rotation.copy(meshRotation);
+    }
   }
 
   update() {

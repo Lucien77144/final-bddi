@@ -51,6 +51,11 @@ export default [
     type: "glb",
     path: "models/River/Bridge.glb",
   },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/Tree.glb",
+  },
 
   // --------------------
   // Textures :

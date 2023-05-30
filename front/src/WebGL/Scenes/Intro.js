@@ -38,7 +38,7 @@ export default class Intro {
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
         _size: new Vector3(54, 2, 95),
-        _count: 250000,
+        _count: 300000,
       }),
     ];
     this.river = new River({

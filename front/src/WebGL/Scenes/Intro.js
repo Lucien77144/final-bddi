@@ -13,6 +13,7 @@ import Cloud from "../Components/Cloud/Cloud";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
+import Letter from "../Components/Letter/Letter";
 
 export default class Intro {
   constructor() {
@@ -60,6 +61,9 @@ export default class Intro {
     this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+
+    // Setting letter : 
+    this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
 
     // Setting Fairy :
     this.fairy = new Fairy();

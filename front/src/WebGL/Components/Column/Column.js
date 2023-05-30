@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { MeshBasicMaterial, MeshStandardMaterial, Vector3 } from "three";
+import { MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, Vector3, sRGBEncoding } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class Column {
@@ -28,6 +28,12 @@ export default class Column {
 
   setModel() {
     this.model = SkeletonUtils.clone(this.resource.scene);
+
+    this.model.children[0].material.map = this.resources.items.columnTexture;
+    this.model.children[0].material.map.flipY = false;
+    this.model.children[0].material.map.encoding = sRGBEncoding;
+    this.model.children[0].material.map.wrapS = RepeatWrapping;
+    this.model.children[0].material.map.wrapT = RepeatWrapping;
 
     this.model.position.copy(this.position);
     this.model.name = this.name;

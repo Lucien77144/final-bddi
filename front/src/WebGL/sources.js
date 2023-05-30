@@ -150,6 +150,13 @@ export default [
     path: "textures/water/gPz7iPX.jpg",
   },
 
+  // webp :
+  {
+    name: "columnTexture",
+    type: "texture",
+    path: "textures/column/column.webp",
+  },
+
   // --------------------
   // Cube Textures :
   // --------------------

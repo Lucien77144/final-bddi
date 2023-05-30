@@ -41,6 +41,7 @@ export default class Cube {
     this.mesh.position.copy(this.position);
     this.mesh.name = "cube";
     this.mesh.interactive = true;
+    this.mesh.type = "letter";
     this.scene.add(this.mesh);
   }
 

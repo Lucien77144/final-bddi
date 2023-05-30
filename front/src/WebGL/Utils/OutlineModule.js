@@ -31,6 +31,8 @@ export default class OutlineModule {
 
         this.mouseDown = false;
 
+        this.handleLetterClick = this.handleLetterClick.bind(this);
+
         window.addEventListener('mousedown', (event) => {
             this.mouseDown = true;
         });
@@ -44,19 +46,25 @@ export default class OutlineModule {
         window.addEventListener('click', (event) => {
             if (this.outlinePass.selectedObjects[0]?.interactive === true) {
                 this.activeObject = this.outlinePass.selectedObjects[0];
-                this.controlPanelChildren = this.activeObject.parent.children;
-                this.controlPanelChildren.forEach((child) => {
-                    if (child.name.includes('Disk')) {
-                        child.interactive = true;
-                    }});
-                if (this.activeObject.base) {
-                    console.log(this.activeObject);
-                    this.base = this.activeObject;
-                    console.log(this.base);
-                    this.handleBaseClick();
-                } else if (this.activeObject.disk) {
-                    this.handleDiskClick();
+                if(this.activeObject.name === 'controlPanelBase') {
+                    this.controlPanelChildren = this.activeObject.parent.children;
+                    this.controlPanelChildren.forEach((child) => {
+                        if (child.name.includes('Disk')) {
+                            child.interactive = true;
+                        }});
+                    if (this.activeObject.base) {
+                        console.log(this.activeObject);
+                        this.base = this.activeObject;
+                        console.log(this.base);
+                        this.handleBaseClick();
+                    } else if (this.activeObject.disk) {
+                        this.handleDiskClick();
+                    }
+                } else if (this.activeObject.name === 'letter') {
+                    this.handleLetterClick();
                 }
+
+
             }
         });
 
@@ -91,6 +99,40 @@ export default class OutlineModule {
             });
         }
     }
+
+    handleLetterClick() {
+        // Define how far in front of the camera the object should appear
+        const distanceInFrontOfCamera = 5;
+    
+        // Get a new position in front of the camera
+        const direction = new THREE.Vector3();
+        this.camera.getWorldDirection(direction);
+        const newPosition = new THREE.Vector3();
+        newPosition.copy(this.camera.position).add(direction.multiplyScalar(distanceInFrontOfCamera));
+    
+        // Define the new scale you want for the object
+        const newScale = new THREE.Vector3(2, 2, 2); // Scale up by 3
+    
+        // Use GSAP to animate the letter's scale and position
+        gsap.to(this.activeObject.scale, {
+            duration: 1, // duration of the animation in seconds
+            x: newScale.x,
+            y: newScale.y,
+            z: newScale.z,
+            ease: "power1.out", // easing function for the animation
+        });
+    
+        gsap.to(this.activeObject.position, {
+            duration: 1, // duration of the animation in seconds
+            x: newPosition.x,
+            y: newPosition.y,
+            z: newPosition.z,
+            ease: "power1.out", // easing function for the animation
+        });
+    }
+    
+    
+    
 
     moveCamera() {
         this.grassScene.onGame = true;

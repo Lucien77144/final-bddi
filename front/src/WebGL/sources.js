@@ -61,6 +61,11 @@ export default [
     type: "glb",
     path: "models/ControlPanel/Reference.glb",
   },
+  {
+    name: "letterModel",
+    type: "glb",
+    path: "models/Letter/Letter.glb",
+  },
 
   // --------------------
   // Audios :

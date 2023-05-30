@@ -51,24 +51,25 @@ varying vec2 vUv;
 varying vec3 vNormal;
 varying vec3 vPosition;
 
-
 void main() {
-		vec3 worldPosition = ( modelMatrix * vec4( vPosition, 1.0 )).xyz;
-		vec3 worldNormal = normalize( vec3( modelMatrix * vec4( vNormal, 0.0 ) ) );
-		vec3 lightVector = normalize( lightPosition - worldPosition );
-		float brightness = dot( worldNormal, lightVector );
+    vec3 worldPosition = (modelMatrix * vec4(vPosition, 1.0)).xyz;
+    vec3 worldNormal = normalize(vec3(modelMatrix * vec4(vNormal, 0.0)));
+    vec3 lightVector = normalize(lightPosition - worldPosition);
+    float brightness = dot(worldNormal, lightVector);
 
     float redIntensity = texture2D(uMask, vUv).r;
+    float blueIntensity = texture2D(uMask, vUv).b;
 
-    if (redIntensity != 0.0) {
-			float smoothness = 1.;
-			redIntensity = pow(redIntensity, 1.0 / smoothness);
+    if (redIntensity != 0.0 && blueIntensity == 0.0) {
+        float smoothness = 1.0;
+        redIntensity = pow(redIntensity, 1.0 / smoothness);
 
-			vec3 mixedColor = mix(colorLight, colorDark, redIntensity);
-			vec3 finalColor = mixedColor * brightness;
+        vec3 mixedColor = mix(colorLight, colorDark, redIntensity);
+        vec3 finalColor = mixedColor * brightness;
 
-      gl_FragColor = vec4(finalColor, 1.0);
+        gl_FragColor = vec4(finalColor, 1.0);
     } else {
         discard;
     }
 }
+

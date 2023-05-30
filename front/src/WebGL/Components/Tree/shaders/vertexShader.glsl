@@ -35,7 +35,7 @@ void main(){
     vPosition = position;
 
     float redness = texture2D(uMask, vUv).r;
-    vPosition = vPosition + normal * redness * .5;
+    vPosition = vPosition + normal * redness * 5.;
 
 	gl_Position = projectionMatrix * modelViewMatrix * vec4(vPosition, 1.0);
 }

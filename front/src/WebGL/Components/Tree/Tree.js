@@ -94,9 +94,9 @@ export default class Tree {
       this.treeGroup.add(mesh);
       this.leafMeshes.push(mesh);
     }
-    this.leafMeshes[0].position.set(2, 10, -5);
-    this.leafMeshes[1].position.set(2, 10, 2);
-    this.leafMeshes[2].position.set(1, 12, -1);
+    this.leafMeshes[0].position.set(-2, 10, -5);
+    this.leafMeshes[1].position.set(0, 10, 2);
+    this.leafMeshes[2].position.set(-2, 12, -1);
   }
 
   setDebug() {
@@ -156,6 +156,6 @@ export default class Tree {
   }
 
   update() {
-    this.setOrientation();
+    // this.setOrientation();
   }
 }

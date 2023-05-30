@@ -22,6 +22,14 @@ export default class Bridge {
   setModel() {
     this.model = SkeletonUtils.clone(this.resource.scene);
 
+    console.log(this.model);
+
+    // this.model.children[0].material.map = this.resources.items.bridgeTexture;
+    // this.model.children[0].material.map.flipY = false;
+    // this.model.children[0].material.map.encoding = sRGBEncoding;
+    // this.model.children[0].material.map.wrapS = RepeatWrapping;
+    // this.model.children[0].material.map.wrapT = RepeatWrapping;
+
     this.model.position.copy(this.position);
     this.model.name = this.name;
 

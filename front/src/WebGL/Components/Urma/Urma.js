@@ -4,6 +4,7 @@ import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import Fairy from "../Fairy/Fairy";
+import AudioManager from "@/WebGL/Utils/AudioManager";
 import { gsap } from "gsap";
 
 const SIZE_FACTOR = 1.25;
@@ -55,6 +56,11 @@ export default class Urma {
     this.resource = this.resources.items.urmaModel;
 
     this.position = _position;
+    
+    this.sound = new AudioManager({
+      _path: "runUrmaAudio",
+      _status: false,
+    });
 
     this.keyState = {
       right: false,
@@ -80,11 +86,11 @@ export default class Urma {
     const runClip = this.resource.animations.find((animation) => animation.name === "Run");
   
     this.animation = {
-        mixer: new AnimationMixer(this.model),
-        actions: {
-            idle: null,
-            run: null,
-        },
+      mixer: new AnimationMixer(this.model),
+      actions: {
+        idle: null,
+        run: null,
+      },
     };
   
     this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
@@ -104,12 +110,23 @@ export default class Urma {
     }
   }
 
+  setInputs() {
+    ["right", 'left'].forEach((dir) => {
+      InputManager.on(dir, (val) => {
+        if (val) {
+          this.animation?.action && (this.animation.action.paused = false);
 
-setInputs() {
-  ["right", 'left'].forEach((dir) => {
-    InputManager.on(dir, (val) => {
+          if (!this.sound?.isPlaying) {
+            this.sound.play();
+          }
+        } else {
+          this.animation?.action && (this.animation.action.paused = true);
 
-
+          if (this.sound?.isPlaying) {
+            this.sound.stop();
+          }
+        }
+  
         if (val && !data.status[dir].start) {
           this.animation.play('run');
           data.status[dir].start = true;
@@ -122,7 +139,6 @@ setInputs() {
           data.status[dir].end = true;
           data.time.end = this.time.current;
           this.orientateBody();  // Appel à la méthode orientateBody() lorsque la direction du mouvement change
-         
         }
       });
     })
@@ -147,9 +163,8 @@ setInputs() {
 
       this.updateCameraX(cameraPos, modelPos);
 
-      this.animation.mixer.update(this.time.delta * 0.00025);
+      this.animation.mixer.update(this.time.delta * 0.001);
     }
-
   }
 
   updateCameraX(cameraPos, modelPos) {
@@ -201,13 +216,10 @@ setInputs() {
     data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
-    
 
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
-    this.animation.mixer.update(this.time.delta * 0.001);
-
-
+    this.animation.mixer.update(this.time.delta * 0.00025);
   }
 }

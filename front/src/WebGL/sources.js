@@ -11,21 +11,6 @@ export default [
   },
 
   // glb :
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground.glb",
-  // },
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground_V3.glb",
-  // },
-  // {
-  //   name: "stoneModel",
-  //   type: "glb",
-  //   path: "models/Rock/Stone.glb",
-  // },
   {
     name: "columnModel",
     type: "glb",
@@ -51,9 +36,6 @@ export default [
     type: "glb",
     path: "models/River/Bridge.glb",
   },
-
-  // Control Panel
-
   {
     name: "controlBaseModel",
     type: "glb",
@@ -78,6 +60,26 @@ export default [
     name: "controlReferenceModel",
     type: "glb",
     path: "models/ControlPanel/Reference.glb",
+  },
+
+  // --------------------
+  // Audios :
+  // --------------------
+
+  {
+    name: "forestAudio",
+    type: "audio",
+    path: "/sounds/forest.mp3",
+  },
+  {
+    name: "runUrmaAudio",
+    type: "audio",
+    path: "/sounds/dirtRun.mp3",
+  },
+  {
+    name: "runWingsAudio",
+    type: "audio",
+    path: "/sounds/wings.wav",
   },
 
   // --------------------

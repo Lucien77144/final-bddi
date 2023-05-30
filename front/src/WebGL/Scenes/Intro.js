@@ -6,16 +6,15 @@ import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
 import River from "../Components/River/River";
 import CollisionV1 from "../Components/Fairy/Collision.js";
-import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
-import Stele from "../Components/Stele/Stele";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
+import ControlPanel from "../Components/ControlPanel/ControlPanel";
 
-export default class GrassScene {
+export default class Intro {
   constructor() {
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -37,15 +36,18 @@ export default class GrassScene {
     this.setWorld(-.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
-        _position: new Vector3(-7, 0, -14),
-        _size: new Vector3(27, 2, 95),
-        _count: 175000,
+        _position: new Vector3(-20.5, 0, -14),
+        _size: new Vector3(54, 2, 95),
+        _count: 250000,
       }),
     ];
     this.river = new River({
-      _position: new Vector3(-5, 1.35, -10),
-      _size: new Vector2(13, 30),
+      _position: new Vector3(-17, 1.35, -10),
+      _size: new Vector2(13, 60),
     });
+    // this.rocks = [
+    //   new Rock(new Vector3(0, 3, 0)),
+    // ]
     this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -.35, 0));
@@ -53,9 +55,9 @@ export default class GrassScene {
     // Setting the environment :
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(150, 15, 50));
-    this.fireflies = new Fireflies();
     this.dialogueBox = new DialogueBox();
-    this.stele = new Stele();
+    // this.stele = new Stele();
+    this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
 
@@ -75,7 +77,6 @@ export default class GrassScene {
     this.urma?.update();
 
     this.fairy?.update();
-
 
     this.floors?.forEach((floor) => {
       floor.update();

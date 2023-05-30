@@ -11,6 +11,7 @@ import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
+import AudioManager from "@/WebGL/Utils/AudioManager";
 import FairyDust from "./FairyDust";
 import Collision from "./Collision";
 
@@ -33,6 +34,12 @@ export default class Fairy extends EventEmitter {
     this.floors = activeScene.floors;
     this.fairyDust = new FairyDust();
     this.collision = new Collision();
+
+    this.sound = new AudioManager({
+      _path: "runWingsAudio",
+      _status: false,
+      _loop: true,
+    });
 
     this.mouseMove = new MouseMove();
 
@@ -101,6 +108,17 @@ export default class Fairy extends EventEmitter {
       this.model.position.y,
       this.model.position.z,
     ]);
+
+    // Check if the fairy is moving
+    if (this.isFairyMoving()) {
+      if (!this.sound.isPlaying) {
+        this.sound.play();  // If the fairy is moving, play the sound
+      }
+    } else {
+      if (this.sound.isPlaying) {
+        this.sound.stop();  // If the fairy is not moving, stop the sound
+      }
+    }
   }
 
   isFairyMoving() {

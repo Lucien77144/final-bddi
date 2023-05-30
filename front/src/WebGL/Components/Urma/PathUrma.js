@@ -1,7 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { CatmullRomCurve3, Vector3 } from "three";
 
-const SPEED = .6;
+const SPEED = .4;
 
 let instance = null;
 export default class PathUrma {

@@ -10,8 +10,8 @@ void main()
 {
     float life = mod(uTime * .85 + (vUv.x + vUv.y) * 2000., 2000.); // vie qui va de 0 à 1000
 
-    float fadeInTime = 200.0;
-    float fadeOutTime = 1000.0;
+    float fadeInTime = 600.0;
+    float fadeOutTime = 800.0;
     float minSize = 0.001;
     float maxSize = 0.07;
     float size;

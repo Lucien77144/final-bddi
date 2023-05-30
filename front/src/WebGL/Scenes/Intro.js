@@ -13,6 +13,7 @@ import Cloud from "../Components/Cloud/Cloud";
 import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
+import Cube from "../Components/Cube/Cube";
 
 export default class Intro {
   constructor() {
@@ -33,7 +34,7 @@ export default class Intro {
   // Setup
   buildScene() {
     // Setting the world :
-    this.setWorld(-.1); // value is rotation on z axis
+    this.setWorld(-0.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
@@ -50,7 +51,7 @@ export default class Intro {
     // ]
     // this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column(new Vector3(0, -.35, 0));
+    this.column = new Column(new Vector3(0, -0.35, 0));
 
     // Setting the environment :
     this.environment = new Environment();
@@ -60,6 +61,12 @@ export default class Intro {
     this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+
+    // debug path :
+    this.debugPath = new Cube({
+      _pos: new Vector3(-5.49, 2.348, 15.0),
+      _size: new Vector3(0.1, 0.1, 0.1),
+    });
 
     // Setting Fairy :
     this.fairy = new Fairy();
@@ -80,9 +87,9 @@ export default class Intro {
 
     this.floors?.forEach((floor) => {
       floor.update();
-    })
+    });
     this.river?.update();
-    
+
     this.fireflies?.update();
     this.clouds?.update();
   }

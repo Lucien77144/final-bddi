@@ -3,7 +3,11 @@ import Experience from '../Experience';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { OutlinePass } from 'three/examples/jsm/postprocessing/OutlinePass';
+import { FilmPass } from 'three/examples/jsm/postprocessing/FilmPass.js';
 import gsap from 'gsap';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass';
+import vertexShader from '../Components/worldShaders/vertexShader.glsl';
+import fragmentShader from '../Components/worldShaders/fragmentShader.glsl';
 
 export default class OutlineModule {
     constructor() {
@@ -209,7 +213,16 @@ export default class OutlineModule {
         // this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
+
         this.composer.addPass(this.outlinePass);
+
+        this.filmPath = new FilmPass(0.2, 0, 0, false);
+        this.filmPath.clear = true;
+        this.composer.addPass( this.filmPath );
+
+        this.setShaderPath();
+        this.shaderPath = new ShaderPass(this.shader);
+        this.composer.addPass(this.shaderPath);
 
         this.composer.renderer.physicallyCorrectLights = false;
 
@@ -222,6 +235,19 @@ export default class OutlineModule {
                 this.handleDiskHover();
             }
         });
+    }
+
+    setShaderPath() {
+        this.shader = {
+            uniforms: {
+            "tDiffuse": { value: null },
+            "vignette": { value: 0.5 },
+            "exposure": { value: 1 },
+            "color": { value: new THREE.Color("#ffffff") }
+            },
+            vertexShader,
+            fragmentShader,
+        };
     }
 
     getInteractiveObjects() {

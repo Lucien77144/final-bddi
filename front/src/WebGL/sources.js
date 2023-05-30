@@ -59,7 +59,7 @@ export default [
   {
     name: "controlReferenceModel",
     type: "glb",
-    path: "models/ControlPanel/Reference.glb",
+    path: "models/ControlPanel/ControlPanel.glb",
   },
 
   // --------------------

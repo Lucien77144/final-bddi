@@ -48,7 +48,7 @@ export default class Intro {
     // this.rocks = [
     //   new Rock(new Vector3(0, 3, 0)),
     // ]
-    this.rocksRiver = new RocksRiver();
+    // this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -.35, 0));
 

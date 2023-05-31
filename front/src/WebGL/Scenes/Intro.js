@@ -52,7 +52,21 @@ export default class Intro {
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -0.35, 0));
 
-    this.tree = new Tree(new Vector3(-9.61, 0, -28.804));
+    this.mainTree = new Tree({
+      _position: new Vector3(-9.61, 0, -28.804),
+      _isMain: true,
+    });
+    this.bigTrees = [
+      new Tree({
+        _position: new Vector3(-29.6, .9, -18)
+      }),
+      new Tree({
+        _position: new Vector3(-20, -.5, -25),
+      }),
+      new Tree({
+        _position: new Vector3(-2, -2, -20),
+      }),
+    ];
 
     // Setting the environment :
     this.environment = new Environment();
@@ -99,7 +113,10 @@ export default class Intro {
   }
 
   update() {
-    this.tree?.update();
+    this.mainTree?.update();
+    this.bigTrees?.forEach((tree) => {
+      tree.update();
+    });
 
     this.urma?.update();
 

@@ -12,6 +12,7 @@ import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
+import Letter from "../Components/Letter/Letter";
 import Bush from "../Components/Bush/Bush";
 
 export default class Intro {
@@ -42,13 +43,12 @@ export default class Intro {
       }),
     ];
     this.river = new River({
-      _position: new Vector3(-17, 1.35, -10),
+      _position: new Vector3(-17, 1.35, -10.2),
       _size: new Vector2(13, 60),
     });
     // this.rocks = [
     //   new Rock(new Vector3(0, 3, 0)),
     // ]
-    // this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -0.35, 0));
 
@@ -73,8 +73,15 @@ export default class Intro {
         _rotation: new Vector3(1.5, 0, 0),
         _scale: .6,
       }),
+      new Bush({
+        _position: new Vector3(-2, -1.7, 21.5),
+        _rotation: new Vector3(1.5, 0, 10.33),
+        _scale: .5,
+      }),
     ];
 
+    // Setting letter : 
+    this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
     // debug path :
     // this.debugPath = new Cube({
     //   _pos: new Vector3(-6.2, 2.304, -29.891),
@@ -95,6 +102,8 @@ export default class Intro {
     this.tree?.update();
 
     this.urma?.update();
+
+    this.letter?.update();
 
     this.fairy?.update();
 

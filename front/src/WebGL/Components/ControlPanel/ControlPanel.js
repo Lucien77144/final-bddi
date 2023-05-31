@@ -15,7 +15,7 @@ export default class ControlPanel {
         this.rotation = _rotation;
         this.name = "controlPanel";
 
-        this.resource = this.resources.items.controlReferenceModel;
+        this.resource = this.resources.items.steleModel;
         this.selectedObject = null;
 
         this.setModel();
@@ -146,6 +146,7 @@ export default class ControlPanel {
             } else if(child.name.includes('Cube')){
                 child.interactive = true;
                 child.base = true;
+                child.name = "controlPanelBase"
             }
         });
         this.scene.add(this.model);

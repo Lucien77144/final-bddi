@@ -22,6 +22,7 @@ export default class OutlineModule {
         this.originalPosition = null;
         this.originalUp = null;
         this.onGame = false;
+        this.onLetter = false;
 
         this.outlinePass = new OutlinePass(
             new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -34,6 +35,8 @@ export default class OutlineModule {
         this.base = null;
 
         this.mouseDown = false;
+
+        this.handleLetterClick = this.handleLetterClick.bind(this);
 
         window.addEventListener('mousedown', (event) => {
             this.mouseDown = true;
@@ -48,16 +51,20 @@ export default class OutlineModule {
         window.addEventListener('click', (event) => {
             if (this.outlinePass.selectedObjects[0]?.interactive === true) {
                 this.activeObject = this.outlinePass.selectedObjects[0];
-                this.controlPanelChildren = this.activeObject.parent.children;
-                this.controlPanelChildren.forEach((child) => {
-                    if (child.name.includes('Disk')) {
-                        child.interactive = true;
-                    }});
-                if (this.activeObject.base) {
-                    this.base = this.activeObject;
-                    this.handleBaseClick();
-                } else if (this.activeObject.disk) {
-                    this.handleDiskClick();
+                if(this.activeObject.name === 'controlPanelBase') {
+                    this.controlPanelChildren = this.activeObject.parent.children;
+                    this.controlPanelChildren.forEach((child) => {
+                        if (child.name.includes('Disk')) {
+                            child.interactive = true;
+                        }});
+                    if (this.activeObject.base) {
+                        this.base = this.activeObject;
+                        this.handleBaseClick();
+                    } else if (this.activeObject.disk) {
+                        this.handleDiskClick();
+                    }
+                } else if (this.activeObject.type === 'letter') {
+                    this.handleLetterClick();
                 }
             }
         });
@@ -81,6 +88,11 @@ export default class OutlineModule {
                     });
                     this.base.interactive = true;
                 }
+            } else if(this.onLetter) {
+                if (event.code === 'Space') {
+                    this.returnLetter();
+                    // ... rest of your event listener ...
+                }
             }
         });
                
@@ -93,6 +105,93 @@ export default class OutlineModule {
             });
         }
     }
+
+    handleLetterClick() {
+        this.onLetter = true;
+        // Define how far in front of the camera the object should appear
+        const distanceInFrontOfCamera = 5;
+    
+        // Get a new position in front of the camera
+        const direction = new THREE.Vector3();
+        this.camera.getWorldDirection(direction);
+        const newPosition = new THREE.Vector3();
+        newPosition.copy(this.camera.position).add(direction.multiplyScalar(distanceInFrontOfCamera));
+    
+        // Define the new scale you want for the object
+        const newScale = new THREE.Vector3(1, 1, 1); // Scale up by 3
+        
+        const newRotation = new THREE.Vector3(0, Math.PI / 2, 0);
+        // Use GSAP to animate the letter's scale and position
+        gsap.to(this.activeObject.parent.scale, {
+            duration: 1, // duration of the animation in seconds
+            x: newScale.x,
+            y: newScale.y,
+            z: newScale.z,
+            ease: "power1.out", // easing function for the animation
+        });
+    
+        gsap.to(this.activeObject.parent.position, {
+            duration: 1, // duration of the animation in seconds
+            x: newPosition.x,
+            y: newPosition.y,
+            z: newPosition.z,
+            ease: "power1.out", // easing function for the animation
+        });
+
+        gsap.to(this.activeObject.parent.rotation, {
+            duration: 1, // duration of the animation in seconds
+            x: newRotation.x,
+            y: newRotation.y,
+            z: newRotation.z,
+            ease: "power1.out", // easing function for the animation
+        });
+
+        const dialogBox = document.getElementById('dialogBox');
+        gsap.to(dialogBox.style, {
+
+            duration: 0.5,
+            width: '500px', // The final width of the dialog box
+            height: '300px', // The final height of the dialog box
+            opacity: '1',
+            ease: "power1.out", // easing function for the animation
+        });
+    }
+    
+    returnLetter() {
+        this.onLetter = false;
+    
+        // Hide activeObject
+        this.activeObject.parent.visible = false;
+    
+        // Get the SVG element
+        const letterIcon = document.querySelector('.letter-icon');
+    
+        // Make the SVG visible
+        letterIcon.style.display = 'block';
+        
+        // letterIcon.style.transform = 'scale(2.5)';
+        // gsap.to(letterIcon.style, {
+        //     duration: 1, // duration of the animation in seconds
+        //     left: '0px', // replace with original x position
+        //     top: '0px', // replace with original y position
+        //     scale: 1, // replace with original scale
+        //     ease: "power1.out" // easing function for the animation
+        // });
+
+        //gsap from to
+        gsap.fromTo(letterIcon.style, {
+            left: '-40px', // replace with original x position
+            top: '-25px', // replace with original y position
+            scale: 2, // replace with original scale
+        }, {
+            duration: 1, // duration of the animation in seconds
+            left: '0px', // replace with original x position
+            top: '0px', // replace with original y position
+            scale: 1, // replace with original scale
+            ease: "power1.out" // easing function for the animation
+        });
+    }
+    
 
     moveCamera() {
         this.grassScene.onGame = true;
@@ -235,6 +334,26 @@ export default class OutlineModule {
 
         this.getInteractiveObjects(); // Refresh interactive objects
         this.activeObject = null;
+
+        // After the letter is clicked, show the dialog box
+        const dialogBox = document.getElementById('dialogBox');
+
+        if(dialogBox) {
+            dialogBox.textContent = 'Your text here...';  // Set the text before starting the animation
+
+            // Create a GSAP timeline
+            var tl = gsap.timeline();
+            tl.from(dialogBox, {opacity: 0, duration: 0.1})  // First animate the opacity
+            .to(dialogBox, {
+                paddingLeft: '20px',  // Then animate the padding
+                paddingRight: '20px',  // Then animate the padding
+                duration: 0.5,
+                opacity: 1,
+                ease: "power1.out",
+            });
+        } else {
+            console.log("Dialog box element not found");
+        }      
     }
 
     handleDiskClick() {
@@ -282,6 +401,7 @@ export default class OutlineModule {
                 (this.outlinePass && this.outlinePass?.selectedObjects != []) && (this.outlinePass.selectedObjects = []);
             }
         }
+        this.camera.updateMatrixWorld(); // Update the camera's matrix
         this.composer?.render();
     }
 }

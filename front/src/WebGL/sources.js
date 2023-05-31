@@ -42,29 +42,14 @@ export default [
     path: "models/River/Bridge.glb",
   },
   {
-    name: "controlBaseModel",
+    name: "steleModel",
     type: "glb",
-    path: "models/ControlPanel/Base.glb",
+    path: "models/ControlPanel/Stele.glb",
   },
   {
-    name: "diskOneModel",
+    name: "letterModel",
     type: "glb",
-    path: "models/ControlPanel/Disk_1.glb",
-  },
-  {
-    name: "diskTwoModel",
-    type: "glb",
-    path: "models/ControlPanel/Disk_2.glb",
-  },
-  {
-    name: "diskThreeModel",
-    type: "glb",
-    path: "models/ControlPanel/Disk_3.glb",
-  },
-  {
-    name: "controlReferenceModel",
-    type: "glb",
-    path: "models/ControlPanel/ControlPanel.glb",
+    path: "models/Letter/Letter_Inventaryy.glb",
   },
 
   // --------------------

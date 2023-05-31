@@ -1,6 +1,6 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Group, Vector2, Vector3 } from "three";
+import { Color, Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
 import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
@@ -14,6 +14,7 @@ import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 import Cube from "../Components/Cube/Cube";
+import Bush from "../Components/Bush/Bush";
 
 export default class Intro {
   constructor() {
@@ -61,6 +62,18 @@ export default class Intro {
     this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+    this.bushs = [
+      new Bush({
+        _position: new Vector3(-2, -1.25, 2),
+        _rotation: new Vector3(0, 0, 0),
+        _scale: .45,
+      }),
+      new Bush({
+        _position: new Vector3(-20, 0, 15),
+        _rotation: new Vector3(1.5, 0, 0),
+        _scale: .6,
+      }),
+    ];
 
     // debug path :
     // this.debugPath = new Cube({

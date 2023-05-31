@@ -9,6 +9,11 @@ export default [
     type: "gltf",
     path: "models/Fox/glTF/Fox.gltf",
   },
+  {
+    name: "bushModel",
+    type: "gltf",
+    path: "models/Bush/Bush.gltf",
+  },
 
   // glb :
   {

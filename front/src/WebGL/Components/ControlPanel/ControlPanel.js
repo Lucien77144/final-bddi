@@ -15,7 +15,7 @@ export default class ControlPanel {
         this.rotation = _rotation;
         this.name = "controlPanel";
 
-        this.resource = this.resources.items.controlReferenceModel;
+        this.resource = this.resources.items.steleModel;
         this.selectedObject = null;
 
         this.setModel();

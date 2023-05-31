@@ -13,7 +13,6 @@ import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
 import AudioManager from "@/WebGL/Utils/AudioManager";
 import FairyDust from "./FairyDust";
-import Collision from "./Collision";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -33,7 +32,6 @@ export default class Fairy extends EventEmitter {
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
     this.fairyDust = new FairyDust();
-    this.collision = new Collision();
 
     this.sound = new AudioManager({
       _path: "runWingsAudio",
@@ -155,12 +153,12 @@ export default class Fairy extends EventEmitter {
 
     this.minY = Math.max(
       ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
-    );
+    ) * 1.5;
   }
 
   update() {
+    this.moveFairy();
     this.fairyDust?.update();
-    this.collision?.update();
     this.getYLimit();
     if (this.distFairyToMouse) {
       this.animation.mixer.update(

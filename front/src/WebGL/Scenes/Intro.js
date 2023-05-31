@@ -2,21 +2,17 @@ import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
 import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import FairyDust from "components/Fairy/FairyDust.js";
 import Tree from "components/Tree/Tree.js";
-import Rock from "../Components/Rock/Rock.js";
 import Cube from "../Components/Cube/Cube.js";
-// import Collision from "@/WebGL/Utils/Collision.js";
-import CollisionV1 from "../Components/Fairy/Collision.js";
+import Column from "../Components/Column/Column";
+import River from "../Components/River/River";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
-import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
-import River from "../Components/River/River.js";
-import Column from "../Components/Column/Column.js";
+import Bush from "../Components/Bush/Bush";
 
 export default class Intro {
   constructor() {
@@ -66,17 +62,27 @@ export default class Intro {
     this.controPanel = new ControlPanel();
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+    this.bushs = [
+      new Bush({
+        _position: new Vector3(-2, -1.25, 2),
+        _rotation: new Vector3(0, 0, 0),
+        _scale: .45,
+      }),
+      new Bush({
+        _position: new Vector3(-20, 0, 15),
+        _rotation: new Vector3(1.5, 0, 0),
+        _scale: .6,
+      }),
+    ];
 
     // debug path :
-    this.debugPath = new Cube({
-      _pos: new Vector3(-6.2, 2.304, -29.891),
-      _size: new Vector3(0.1, 0.1, 0.1),
-    });
+    // this.debugPath = new Cube({
+    //   _pos: new Vector3(-6.2, 2.304, -29.891),
+    //   _size: new Vector3(0.1, 0.1, 0.1),
+    // });
 
     // Setting Fairy :
     this.fairy = new Fairy();
-    // this.fairyDust = new FairyDust();
-    // this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {

@@ -65,7 +65,7 @@ export default class Tree {
   }
 
   setGeometry() {
-    this.geometry = new PlaneGeometry(8, 8, 250, 250);
+    this.geometry = new PlaneGeometry(8, 8, 1500, 1500);
   }
 
   setMaterial() {
@@ -95,8 +95,8 @@ export default class Tree {
       this.treeGroup.add(mesh);
       this.leafMeshes.push(mesh);
     }
-    this.leafMeshes[0].position.set(-1, 10, -1);
-    this.leafMeshes[0].scale.set(2, 2, 2);
+    this.leafMeshes[0].position.set(-1, 9.5, -2);
+    this.leafMeshes[0].scale.set(2.2, 2.2, 2.2);
     // this.leafMeshes[1].position.set(0, 10, 2);
     // this.leafMeshes[2].position.set(-2, 12, -1);
   }

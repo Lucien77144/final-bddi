@@ -60,8 +60,8 @@ void main() {
     float redIntensity = texture2D(uMask, vUv).r;
     float blueIntensity = texture2D(uMask, vUv).b;
 
-    if (redIntensity != 0.0 && blueIntensity == 0.0) {
-        float smoothness = 1.0;
+    if (redIntensity != 0.0 && blueIntensity < 0.8) {
+        float smoothness = .5;
         redIntensity = pow(redIntensity, 1.0 / smoothness);
 
         vec3 mixedColor = mix(colorLight, colorDark, redIntensity);

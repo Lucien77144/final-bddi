@@ -4,7 +4,7 @@ import Experience from '@/WebGL/Experience';
 
 export default class ControlPanel {
     constructor (
-        _position = new Vector3(-5, 2.5, 9),
+        _position = new Vector3(-6, 2.7, 8),
         _rotation = new Vector3(0, 0, 0)
     ) {
         this.experience = new Experience();

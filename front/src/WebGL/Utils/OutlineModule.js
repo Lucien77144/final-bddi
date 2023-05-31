@@ -107,7 +107,7 @@ export default class OutlineModule {
         targetPosition.y += 0;
         targetPosition.z += 10;
     
-        const newPosition = {x: -5, y: 8, z: 3};
+        const newPosition = {x: -6, y: 6, z: 5};
         const newUp = {x: 0, y: 6, z: 0};
 
         this.originalPosition = this.camera.position.clone();
@@ -127,7 +127,7 @@ export default class OutlineModule {
             onUpdate: () => {
                 // Ensure the camera's up vector is set to signify the y-axis as up
                 this.camera.up.set(newUp.x, newUp.y, newUp.z);
-                this.camera.lookAt(-5, 2.5, 9);
+                this.camera.lookAt(-6, 2.7, 8);
             },
             onComplete: () => {
                 this.onGame = this.grassScene.onGame;

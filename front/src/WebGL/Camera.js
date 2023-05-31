@@ -87,12 +87,27 @@ export default class Camera {
       })
       .on("click", this.resetControls.bind(this));
 
-    this.debugFolder.addInput(this.instance.position, "x", {
-      label: "Position X",
-      min: -20,
-      max: 100,
-      step: 0.01,
-    });
+    this.debugFolder
+      .addInput(this.instance.position, "x", {
+        label: "Position X",
+        min: -20,
+        max: 100,
+        step: 0.01,
+      })
+    this.debugFolder
+      .addInput(this.instance.position, "z", {
+        label: "Position Z",
+        min: -20,
+        max: 100,
+        step: 0.01,
+      })
+    this.debugFolder
+      .addInput(this.instance.position, "y", {
+        label: "Position Y",
+        min: -20,
+        max: 100,
+        step: 0.01,
+      })
 
     if (this.controls) {
       this.debugFolder.addInput(this.controls, "enabled", {

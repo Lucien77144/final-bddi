@@ -246,19 +246,14 @@ export default class Urma {
       data.status.left.end && (data.status.left.end = false);
     }
 
-    let endVelocity =
-      ((this.time.current - data.time.end) / OPTIONS.SPEEDEASE) * 2;
+    let endVelocity = (this.time.current - data.time.end) / OPTIONS.SPEEDEASE * 2;
     endVelocity = endVelocity > 1 ? 1 : endVelocity;
 
-    data.move.velocity =
-      (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
+    data.move.velocity = (this.time.current - data.time.start) / OPTIONS.SPEEDEASE;
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
-    data.move.velocity -=
-      data.status.left.end || data.status.right.end
-        ? data.move.velocity * endVelocity
-        : 0;
+    data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
 
-    this.path.update(data.move.delta);
+    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.00025);

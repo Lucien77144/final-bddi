@@ -212,18 +212,18 @@ export default class OutlineModule {
   moveCamera() {
     this.grassScene.onGame = true;
 
-    const targetPosition = new THREE.Vector3();
-
-    // Copy the intersected object's position
-    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-
-    // Move the target position a bit to the left (negative x) and up (positive y)
-    targetPosition.x -= -3;
-    targetPosition.y += 0;
-    targetPosition.z += 10;
-
-    const newPosition = { x: -5, y: 8, z: 3 };
-    const newUp = { x: 0, y: 6, z: 0 };
+        const targetPosition = new THREE.Vector3();
+    
+        // Copy the intersected object's position
+        this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+    
+        // Move the target position a bit to the left (negative x) and up (positive y)
+        targetPosition.x -= -3;
+        targetPosition.y += 0;
+        targetPosition.z += 10;
+    
+        const newPosition = {x: -6, y: 6, z: 5};
+        const newUp = {x: 0, y: 6, z: 0};
 
     this.originalPosition = this.camera.position.clone();
     this.originalUp = this.camera.up.clone();
@@ -233,23 +233,23 @@ export default class OutlineModule {
     this.originalTarget = new THREE.Vector3();
     this.originalTarget.copy(this.camera.position).add(direction);
 
-    // Use GSAP to animate the camera's movement
-    gsap.to(this.camera.position, {
-      duration: 1, // duration of the animation in seconds
-      x: newPosition.x,
-      y: newPosition.y,
-      z: newPosition.z,
-      onUpdate: () => {
-        // Ensure the camera's up vector is set to signify the y-axis as up
-        this.camera.up.set(newUp.x, newUp.y, newUp.z);
-        this.camera.lookAt(-5, 2.5, 9);
-      },
-      onComplete: () => {
-        this.onGame = this.grassScene.onGame;
-      },
-      ease: "power1.out", // easing function for the animation
-    });
-  }
+        // Use GSAP to animate the camera's movement
+        gsap.to(this.camera.position, {
+            duration: 1, // duration of the animation in seconds
+            x: newPosition.x,
+            y: newPosition.y,
+            z: newPosition.z,
+            onUpdate: () => {
+                // Ensure the camera's up vector is set to signify the y-axis as up
+                this.camera.up.set(newUp.x, newUp.y, newUp.z);
+                this.camera.lookAt(-6, 2.7, 8);
+            },
+            onComplete: () => {
+                this.onGame = this.grassScene.onGame;
+            },
+            ease: "power1.out", // easing function for the animation
+        });
+    }
 
   returnCamera() {
     if (this.originalPosition && this.originalUp) {

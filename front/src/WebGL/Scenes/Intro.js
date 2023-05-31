@@ -80,6 +80,8 @@ export default class Intro {
   update() {
     this.urma?.update();
 
+    this.letter?.update();
+
     this.fairy?.update();
 
     this.floors?.forEach((floor) => {

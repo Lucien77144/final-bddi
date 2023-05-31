@@ -268,7 +268,12 @@ export default class OutlineModule {
                 if (obj.interactive === true) {
                     const object = obj;
                     this.outlinePass.selectedObjects = [object];
-                    
+                    if(object.name === 'Cube006') {
+                        console.log(object.parent.children);
+                        const base = object.parent.children.find((child) => child.name === 'Cylinder009');
+                        this.outlinePass.selectedObjects.push(base);
+                        console.log(this.outlinePass.selectedObjects);
+                    }
                     // Translate interact text on top of object position
                     const screenPosition = object.position.clone();
                     screenPosition.project(this.camera);

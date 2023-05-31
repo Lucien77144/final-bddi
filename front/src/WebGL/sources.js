@@ -127,7 +127,7 @@ export default [
   {
     name: "treeMask",
     type: "texture",
-    path: "textures/tree/mask.png",
+    path: "textures/tree/mask3.png",
   },
   {
     name: "dirtTexture",

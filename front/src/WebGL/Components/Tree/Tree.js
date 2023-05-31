@@ -45,6 +45,7 @@ export default class Tree {
     this.treeGroup = new Group();
     this.treeGroup.position.copy(this.position);
     this.scene.add(this.treeGroup);
+    // this.treeGroup.rotation.y = Math.PI / 2;
   }
 
   setModel() {
@@ -87,16 +88,17 @@ export default class Tree {
 
   setMesh() {
     this.leafMeshes = [];
-    const leafCount = 3;
+    const leafCount = 1;
     for (let i = 0; i < leafCount; i++) {
       const mesh = new Mesh(this.geometry, this.material);
       mesh.rotation.y = Math.PI / 2;
       this.treeGroup.add(mesh);
       this.leafMeshes.push(mesh);
     }
-    this.leafMeshes[0].position.set(-2, 10, -5);
-    this.leafMeshes[1].position.set(0, 10, 2);
-    this.leafMeshes[2].position.set(-2, 12, -1);
+    this.leafMeshes[0].position.set(-1, 10, -1);
+    this.leafMeshes[0].scale.set(2, 2, 2);
+    // this.leafMeshes[1].position.set(0, 10, 2);
+    // this.leafMeshes[2].position.set(-2, 12, -1);
   }
 
   setDebug() {

@@ -1,16 +1,13 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Color, Group, Vector2, Vector3 } from "three";
+import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import FairyDust from "components/Fairy/FairyDust.js";
 import Column from "../Components/Column/Column";
 import River from "../Components/River/River";
-import CollisionV1 from "../Components/Fairy/Collision.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
-import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 import Cube from "../Components/Cube/Cube";
@@ -83,8 +80,6 @@ export default class Intro {
 
     // Setting Fairy :
     this.fairy = new Fairy();
-    // this.fairyDust = new FairyDust();
-    // this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {

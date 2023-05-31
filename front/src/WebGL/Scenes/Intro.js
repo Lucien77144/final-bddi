@@ -34,7 +34,7 @@ export default class Intro {
   // Setup
   buildScene() {
     // Setting the world :
-    this.setWorld(-.1); // value is rotation on z axis
+    this.setWorld(-0.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
@@ -49,9 +49,9 @@ export default class Intro {
     // this.rocks = [
     //   new Rock(new Vector3(0, 3, 0)),
     // ]
-    this.rocksRiver = new RocksRiver();
+    // this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column(new Vector3(0, -.35, 0));
+    this.column = new Column(new Vector3(0, -0.35, 0));
 
     // Setting the environment :
     this.environment = new Environment();
@@ -86,9 +86,9 @@ export default class Intro {
 
     this.floors?.forEach((floor) => {
       floor.update();
-    })
+    });
     this.river?.update();
-    
+
     this.fireflies?.update();
     this.clouds?.update();
   }

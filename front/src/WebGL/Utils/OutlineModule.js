@@ -270,7 +270,6 @@ export default class OutlineModule {
         );
         this.outlinePass.visibleEdgeColor.set('#ffffff');
         this.outlinePass.hiddenEdgeColor.set('#ffffff');
-        // this.outlinePass.edgeThickness = 5;
         this.outlinePass.edgeStrength = 5;
         this.outlinePass.edgeGlow = 0;
 
@@ -280,8 +279,7 @@ export default class OutlineModule {
         this.filmPath.clear = true;
         this.composer.addPass( this.filmPath );
 
-        this.setShaderPath();
-        this.shaderPath = new ShaderPass(this.shader);
+        this.shaderPath = this.setShaderPath();
         this.composer.addPass(this.shaderPath);
 
         this.composer.renderer.physicallyCorrectLights = false;
@@ -298,7 +296,7 @@ export default class OutlineModule {
     }
 
     setShaderPath() {
-        this.shader = {
+        return new ShaderPass({
             uniforms: {
             "tDiffuse": { value: null },
             "vignette": { value: 0.5 },
@@ -307,7 +305,7 @@ export default class OutlineModule {
             },
             vertexShader,
             fragmentShader,
-        };
+        });
     }
 
     getInteractiveObjects() {

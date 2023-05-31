@@ -22,19 +22,19 @@ export default class Collision {
   initArrowHelpers() {
     this.arrowHelpers.down = new ArrowHelper(
       new Vector3(0, -1, 0),
-      this.fairy.model.position,
+      this.fairy.model?.position,
       2,
       0xff0000
     );
     this.arrowHelpers.left = new ArrowHelper(
       new Vector3(0, 0, -1),
-      this.fairy.model.position,
+      this.fairy.model?.position,
       2,
       0x00ff00
     );
     this.arrowHelpers.right = new ArrowHelper(
       new Vector3(0, 0, 1),
-      this.fairy.model.position,
+      this.fairy.model?.position,
       2,
       0x0000ff
     );

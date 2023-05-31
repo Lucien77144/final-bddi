@@ -32,7 +32,7 @@ export default class FairyDust {
     };
 
     this._options = {
-      width: 100,
+      width: 50,
     };
 
     this._setGeometry();
@@ -93,6 +93,7 @@ export default class FairyDust {
         uFadeOut: { value: 0.5 },
         uTime: { value: 0 },
         uFairyDistance: { value: 0 },
+        uFairyPosition: { value: new Vector3(0, 0, 0) },
       },
       vertexShader: fairyDustVertexShader,
       fragmentShader: fairyDustFragmentShader,
@@ -125,7 +126,10 @@ export default class FairyDust {
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
-      this.positionVariable.material.uniforms.uFairyPosition.value = new Vector3(x, y, z);
+      this.positionVariable.material.uniforms.uFairyPosition.value =
+        new Vector3(x, y, z);
+        this._material.uniforms.uFairyPosition.value =
+        new Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
@@ -140,13 +144,12 @@ export default class FairyDust {
   }
 
   update() {
-    if (this.fairy) this.fairy.update();
-
     this.positionVariable.material.uniforms.uTime.value += this.time.delta;
     this._material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
-    this._material.uniforms.positionTexture.value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+    this._material.uniforms.positionTexture.value =
+      this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
     if (this.fairy.distFairyToMouse > 0.5 != this.fairyParams.status) {
       this.fairyParams.status = this.fairy.distFairyToMouse > 0.5;
@@ -162,7 +165,8 @@ export default class FairyDust {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
+    const time =
+      1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
     this.positionVariable.material.uniforms.uFairyDistance.value = time;
     this._material.uniforms.uFairyDistance.value = time;
   }

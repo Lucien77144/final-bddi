@@ -11,21 +11,6 @@ export default [
   },
 
   // glb :
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground.glb",
-  // },
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground_V3.glb",
-  // },
-  // {
-  //   name: "stoneModel",
-  //   type: "glb",
-  //   path: "models/Rock/Stone.glb",
-  // },
   {
     name: "columnModel",
     type: "glb",
@@ -52,6 +37,51 @@ export default [
     path: "models/River/Bridge.glb",
   },
   {
+    name: "controlBaseModel",
+    type: "glb",
+    path: "models/ControlPanel/Base.glb",
+  },
+  {
+    name: "diskOneModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_1.glb",
+  },
+  {
+    name: "diskTwoModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_2.glb",
+  },
+  {
+    name: "diskThreeModel",
+    type: "glb",
+    path: "models/ControlPanel/Disk_3.glb",
+  },
+  {
+    name: "controlReferenceModel",
+    type: "glb",
+    path: "models/ControlPanel/Reference.glb",
+  },
+
+  // --------------------
+  // Audios :
+  // --------------------
+
+  {
+    name: "forestAudio",
+    type: "audio",
+    path: "/sounds/forest.mp3",
+  },
+  {
+    name: "runUrmaAudio",
+    type: "audio",
+    path: "/sounds/dirtRun.mp3",
+  },
+  {
+    name: "runWingsAudio",
+    type: "audio",
+    path: "/sounds/wings.wav",
+  },
+  {
     name: "treeModel",
     type: "glb",
     path: "models/Tree/Tree.glb",
@@ -75,13 +105,17 @@ export default [
   {
     name: "mountain",
     type: "texture",
-    // path: "textures/background/moutain.png",
-    path: "textures/background/moutain2.jpg",
+    path: "textures/background/moutain.jpg",
   },
   {
     name: "mountainS",
     type: "texture",
     path: "textures/background/moutain_shadow.jpg",
+  },
+  {
+    name: "mountainF",
+    type: "texture",
+    path: "textures/background/moutain_fog.jpg",
   },
 
   // jpg :
@@ -133,12 +167,12 @@ export default [
     name: "environmentMapTexture",
     type: "cubeTexture",
     path: [
-      "textures/environmentMap/px.jpg",
-      "textures/environmentMap/nx.jpg",
-      "textures/environmentMap/py.jpg",
-      "textures/environmentMap/ny.jpg",
-      "textures/environmentMap/pz.jpg",
-      "textures/environmentMap/nz.jpg",
+      "textures/environmentMap/px.png",
+      "textures/environmentMap/nx.png",
+      "textures/environmentMap/py.png",
+      "textures/environmentMap/ny.png",
+      "textures/environmentMap/pz.png",
+      "textures/environmentMap/nz.png",
     ],
   },
 ];

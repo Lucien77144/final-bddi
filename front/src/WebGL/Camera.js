@@ -22,7 +22,7 @@ export default class Camera {
       },
       rotate: {
         x: 0,
-        y: Math.PI/2,
+        y: Math.PI / 2,
         z: 0,
       },
     };
@@ -47,13 +47,13 @@ export default class Camera {
       this.options.position.z
     );
 
-    this.instance.position.x = 9;
+    this.instance.position.x = 7;
 
     this.instance.rotation.set(
       this.options.rotate.x,
       this.options.rotate.y,
       this.options.rotate.z
-    )
+    );
 
     this.scene.add(this.instance);
   }
@@ -87,24 +87,24 @@ export default class Camera {
       })
       .on("click", this.resetControls.bind(this));
 
-    this.debugFolder
-      .addInput(this.instance.position, "x", {
-        label: "Position X",
-        min: -20,
-        max: 100,
-        step: 0.01,
-      })
+    this.debugFolder.addInput(this.instance.position, "x", {
+      label: "Position X",
+      min: -20,
+      max: 100,
+      step: 0.01,
+    });
 
-    if(this.controls) {
-      this.debugFolder
-        .addInput(this.controls, "enabled", {
-          label: "Orbit Controls",
-        });
+    if (this.controls) {
+      this.debugFolder.addInput(this.controls, "enabled", {
+        label: "Orbit Controls",
+      });
     }
   }
 
   update() {
-    if(this.controls) this.controls.update();
-    if(!this.mouseMove) { this.mouseMove = new MouseMove(); }
+    if (this.controls) this.controls.update();
+    if (!this.mouseMove) {
+      this.mouseMove = new MouseMove();
+    }
   }
 }

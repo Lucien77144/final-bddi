@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { MeshBasicMaterial, MeshStandardMaterial, Vector3 } from "three";
+import { MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, Vector3, sRGBEncoding } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class Column {

@@ -49,7 +49,7 @@ export default class Intro {
     // this.rocks = [
     //   new Rock(new Vector3(0, 3, 0)),
     // ]
-    this.rocksRiver = new RocksRiver();
+    // this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
     this.column = new Column(new Vector3(0, -0.35, 0));
 
@@ -63,10 +63,10 @@ export default class Intro {
     this.urma = new Urma(new Vector3(0, 5, 8));
 
     // debug path :
-    this.debugPath = new Cube({
-      _pos: new Vector3(-5.49, 2.348, 15.0),
-      _size: new Vector3(0.1, 0.1, 0.1),
-    });
+    // this.debugPath = new Cube({
+    //   _pos: new Vector3(-5.49, 2.348, 15.0),
+    //   _size: new Vector3(0.1, 0.1, 0.1),
+    // });
 
     // Setting Fairy :
     this.fairy = new Fairy();

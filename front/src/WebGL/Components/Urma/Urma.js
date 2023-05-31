@@ -93,7 +93,6 @@ export default class Urma {
       });
     };
     traverseModel(this.model);
-    console.log(this.height);
   }
 
   setAnimation() {

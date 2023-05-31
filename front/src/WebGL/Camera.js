@@ -47,7 +47,7 @@ export default class Camera {
       this.options.position.z
     );
 
-    this.instance.position.x = -4.3;
+    this.instance.position.x = 7;
 
     this.instance.rotation.set(
       this.options.rotate.x,

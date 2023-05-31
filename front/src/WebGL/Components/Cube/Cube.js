@@ -44,6 +44,8 @@ export default class Cube {
     this.mesh = new Mesh(this.geometry, this.material);
     this.mesh.position.copy(this.position);
     this.mesh.name = "cube";
+    this.mesh.interactive = true;
+    this.mesh.type = "letter";
     this.scene.add(this.mesh);
   }
 
@@ -60,7 +62,7 @@ export default class Cube {
         step: 0.001,
       });
       this.debugFolder.addInput(this.mesh.position, "z", {
-        min: 10,
+        min: -40,
         max: 25,
         step: 0.001,
       });

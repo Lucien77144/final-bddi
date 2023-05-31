@@ -7,7 +7,7 @@ let instance = null;
 export default class PathUrma {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _factor = 0.75,
+    _factor = 0.15,
   } = {}) {
     // Singleton
     if (instance) {
@@ -47,9 +47,9 @@ export default class PathUrma {
       new Vector3(-5.9, 3.6, -13.261),
       new Vector3(-5.9, 3.5, -14.239),
       new Vector3(-5.9, 3.4, -14.729),
-      new Vector3(-5.5, 3.3, -15.381),
-      new Vector3(-6.5, 3.2, -15.7076),
-      new Vector3(-6.5, 3.1, -16.196),
+      new Vector3(-6, 3.3, -15.381),
+      new Vector3(-6, 3.2, -15.7076),
+      new Vector3(-6.2, 3.1, -16.196),
       new Vector3(-6.5, 2.87, -16.522),
       new Vector3(-6.5, 2.652, -16.848),
       new Vector3(-6.5, 2.565, -18.478),
@@ -59,6 +59,7 @@ export default class PathUrma {
       new Vector3(-8.32, 2.609, -26.087),
       new Vector3(-8.28, 2.609, -27.064),
       new Vector3(-7.61, 2.435, -28.804),
+      new Vector3(-6.2, 2.304, -29.891),
     ]);
   }
 

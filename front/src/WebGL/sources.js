@@ -9,6 +9,11 @@ export default [
     type: "gltf",
     path: "models/Fox/glTF/Fox.gltf",
   },
+  {
+    name: "bushModel",
+    type: "gltf",
+    path: "models/Bush/Bush.gltf",
+  },
 
   // glb :
   {
@@ -61,6 +66,11 @@ export default [
     type: "glb",
     path: "models/ControlPanel/Reference.glb",
   },
+  {
+    name: "letterModel",
+    type: "glb",
+    path: "models/Letter/Letter_Inventaryy.glb",
+  },
 
   // --------------------
   // Audios :
@@ -80,6 +90,11 @@ export default [
     name: "runWingsAudio",
     type: "audio",
     path: "/sounds/wings.wav",
+  },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/Tree.glb",
   },
 
   // --------------------
@@ -118,6 +133,11 @@ export default [
     name: "cloudTexture",
     type: "texture",
     path: "img/cloud.jpg",
+  },
+  {
+    name: "treeMask",
+    type: "texture",
+    path: "textures/tree/mask3.png",
   },
   {
     name: "dirtTexture",

@@ -58,19 +58,14 @@ export default class OutlineModule {
                             child.interactive = true;
                         }});
                     if (this.activeObject.base) {
-                        console.log(this.activeObject);
                         this.base = this.activeObject;
-                        console.log(this.base);
                         this.handleBaseClick();
                     } else if (this.activeObject.disk) {
                         this.handleDiskClick();
                     }
                 } else if (this.activeObject.type === 'letter') {
-                    console.log(this.activeObject);
                     this.handleLetterClick();
                 }
-
-
             }
         });
 
@@ -222,7 +217,6 @@ export default class OutlineModule {
         this.originalTarget = new THREE.Vector3();
         this.originalTarget.copy(this.camera.position).add(direction);
 
-    
         // Use GSAP to animate the camera's movement
         gsap.to(this.camera.position, {
             duration: 1, // duration of the animation in seconds
@@ -298,10 +292,8 @@ export default class OutlineModule {
     setShaderPath() {
         return new ShaderPass({
             uniforms: {
-            "tDiffuse": { value: null },
-            "vignette": { value: 0.5 },
-            "exposure": { value: 1 },
-            "color": { value: new THREE.Color("#ffffff") }
+                tDiffuse: { value: null },
+                vignette: { value: 0.5 },
             },
             vertexShader,
             fragmentShader,

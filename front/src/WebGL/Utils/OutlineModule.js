@@ -388,7 +388,6 @@ export default class OutlineModule {
                     const object = obj;
                     this.outlinePass.selectedObjects = [object];
                     if(object.name === 'controlPanelBase') {
-                        console.log(object.parent.children);
                         const base = object.parent.children.find((child) => child.name === 'Cylinder009');
                         this.outlinePass.selectedObjects.push(base);
                     }

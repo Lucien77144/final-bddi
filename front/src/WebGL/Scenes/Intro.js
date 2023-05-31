@@ -42,7 +42,7 @@ export default class Intro {
       }),
     ];
     this.river = new River({
-      _position: new Vector3(-17, 1.35, -10),
+      _position: new Vector3(-17, 1.35, -10.2),
       _size: new Vector2(13, 60),
     });
     // this.rocks = [

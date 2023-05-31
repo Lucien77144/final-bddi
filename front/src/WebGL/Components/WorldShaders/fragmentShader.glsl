@@ -1,7 +1,5 @@
 uniform sampler2D tDiffuse;
 uniform float vignette;
-uniform float exposure;
-uniform vec3 color;
 varying vec2 vUv;
 
 void main() {

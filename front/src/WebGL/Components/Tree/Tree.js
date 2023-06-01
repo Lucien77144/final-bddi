@@ -72,8 +72,8 @@ export default class Tree {
     this.material = new ShaderMaterial({
       uniforms: {
         uMask: { value: this.resources.items.treeMask },
-        colorLight: { value: new Color("#1e363f") },
-        colorDark: { value: new Color("#427062") },
+        colorLight: { value: new Color("#073b27") },
+        colorDark: { value: new Color("#0b714a") },
         brightnessThresholds: { value: [0.7, 0.3, 0.001] },
         lightPosition: {
           value: new Vector3(12, 6, -4),

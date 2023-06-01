@@ -53,7 +53,7 @@ export default class Intro {
     this.column = new Column(new Vector3(0, -0.35, 0));
 
     this.mainTree = new Tree({
-      _position: new Vector3(-9.61, 0, -28.804),
+      _position: new Vector3(-11, 0, -28.804),
       _isMain: true,
     });
     this.bigTrees = [
@@ -66,14 +66,31 @@ export default class Intro {
       new Tree({
         _position: new Vector3(-2, -2, -20),
       }),
+      new Tree({
+        _position: new Vector3(-18, 0, -32),
+      }),
+      new Tree({
+        _position: new Vector3(-30, 0, -40),
+      }),
+      new Tree({
+        _position: new Vector3(-15, -1, -40),
+      }),
+      new Tree({
+        _position: new Vector3(-25, -.25, -50),
+      }),
+      new Tree({
+        _position: new Vector3(1, -2, -33),
+      }),
     ];
 
     // Setting the environment :
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.dialogueBox = new DialogueBox();
-    // this.stele = new Stele();
-    this.controPanel = new ControlPanel();
+    this.controPanel = new ControlPanel({
+      _position: new Vector3(-6, 2.7, 8),
+      _rotation: new Vector3(0, -Math.PI/6, -.1),
+    });
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.bushs = [

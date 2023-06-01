@@ -67,7 +67,7 @@ export default class Tree {
   }
 
   setGeometry() {
-    this.geometry = new PlaneGeometry(8, 8, 100, 100);
+    this.geometry = new PlaneGeometry(8, 8, 15, 15);
   }
 
   setMaterial() {
@@ -105,8 +105,8 @@ export default class Tree {
 
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
-      title: "leaves",
-      expanded: true,
+      title: "big tree",
+      expanded: false,
     });
 
     this.debugFolder
@@ -119,25 +119,25 @@ export default class Tree {
 
     this.debugFolder
       .addInput(this.treeGroup.position, "x", {
-        min: -40,
-        max: 40,
-        step: .1,
+        min: -75,
+        max: 75,
+        step: 1,
         label: "position x",
       })
 
     this.debugFolder
       .addInput(this.treeGroup.position, "y", {
-        min: -40,
-        max: 40,
+        min: -5,
+        max: 5,
         step: .1,
         label: "position y",
       })
 
     this.debugFolder
       .addInput(this.treeGroup.position, "z", {
-        min: -40,
-        max: 40,
-        step: .1,
+        min: -75,
+        max: 75,
+        step: 1,
         label: "position z",
       })
   }

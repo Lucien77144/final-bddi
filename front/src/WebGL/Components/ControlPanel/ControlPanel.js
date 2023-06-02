@@ -10,15 +10,17 @@ export default class ControlPanel {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
+        this.debug = this.experience.debug;
 
         this.position = _position;
         this.rotation = _rotation;
-        this.name = "controlPanel";
+        this.name = "Control Panel";
 
         this.resource = this.resources.items.steleModel;
         this.selectedObject = null;
 
         this.setModel();
+        this.setDebug();
 
         this.correctSections = {
             'Disk_0003': 0,  // Replace these values with the correct angles for your disks
@@ -151,5 +153,19 @@ export default class ControlPanel {
             }
         });
         this.scene.add(this.model);
+    }
+
+    setDebug() {
+        this.debugFolder = this.debug.ui.addFolder({
+            title: "Control Panel",
+            expanded: true,
+        });
+  
+        this.debugFolder.addInput(this.model.position, "y", {
+            min: -5,
+            max: 5,
+            step: .1,
+            label: "panel y",
+        })
     }
 }

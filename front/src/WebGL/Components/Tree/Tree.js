@@ -40,7 +40,7 @@ export default class Tree {
     this.setMesh();
     this.setModel();
 
-    if (this.debug?.active) this.setDebug();
+    // if (this.debug?.active) this.setDebug();
   }
 
   setGroup() {

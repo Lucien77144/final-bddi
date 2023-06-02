@@ -209,6 +209,10 @@ export default class OutlineModule {
     );
   }
 
+  forestFilter(factor) {
+    console.log("factor", factor);
+  }
+
   moveCamera() {
     this.grassScene.onGame = true;
 

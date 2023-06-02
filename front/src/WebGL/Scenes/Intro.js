@@ -81,6 +81,15 @@ export default class Intro {
       new Tree({
         _position: new Vector3(1, -2, -33),
       }),
+      new Tree({
+        _position: new Vector3(-25, .25, 2.5),
+      }),
+      new Tree({
+        _position: new Vector3(-15, 0, 30),
+      }),
+      new Tree({
+        _position: new Vector3(-32.5, 0, 25),
+      }),
     ];
 
     // Setting the environment :
@@ -88,7 +97,7 @@ export default class Intro {
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.dialogueBox = new DialogueBox();
     this.controPanel = new ControlPanel({
-      _position: new Vector3(-6, 2.7, 8),
+      _position: new Vector3(-6, 2.5, 8),
       _rotation: new Vector3(0, -Math.PI/6, -.1),
     });
     // Setting Urma :

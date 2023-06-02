@@ -69,7 +69,7 @@ export default [
   {
     name: "letterModel",
     type: "glb",
-    path: "models/Letter/Letter_Inventaryy.glb",
+    path: "models/Letter/Letter_Inventary.glb",
   },
 
   // --------------------

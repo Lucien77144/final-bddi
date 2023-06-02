@@ -29,7 +29,7 @@ export default class OutlineModule {
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
         title: "vignette",
-        expanded: true,
+        expanded: false,
       });
     }
 
@@ -207,6 +207,10 @@ export default class OutlineModule {
         ease: "power1.out", // easing function for the animation
       }
     );
+  }
+
+  forestFilter(factor) {
+    console.log("factor", factor);
   }
 
   moveCamera() {

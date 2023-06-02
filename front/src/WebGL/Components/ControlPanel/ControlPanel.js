@@ -3,22 +3,24 @@ import * as THREE from 'three';
 import Experience from '@/WebGL/Experience';
 
 export default class ControlPanel {
-    constructor (
+    constructor ({
         _position = new Vector3(-6, 2.7, 8),
         _rotation = new Vector3(0, 0, 0)
-    ) {
+    } = {}) {
         this.experience = new Experience();
         this.scene = this.experience.scene;
         this.resources = this.experience.resources;
+        this.debug = this.experience.debug;
 
         this.position = _position;
         this.rotation = _rotation;
-        this.name = "controlPanel";
+        this.name = "Control Panel";
 
         this.resource = this.resources.items.steleModel;
         this.selectedObject = null;
 
         this.setModel();
+        this.setDebug();
 
         this.correctSections = {
             'Disk_0003': 0,  // Replace these values with the correct angles for your disks
@@ -136,6 +138,7 @@ export default class ControlPanel {
     setModel() {
         this.model = this.resource.scene;
         this.model.position.copy(this.position);
+        this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
         this.model.scale.set(1.5, 1.5, 1.5);
         this.model.name = this.name;
         this.model.interactive = true;
@@ -150,5 +153,19 @@ export default class ControlPanel {
             }
         });
         this.scene.add(this.model);
+    }
+
+    setDebug() {
+        this.debugFolder = this.debug.ui.addFolder({
+            title: "Control Panel",
+            expanded: true,
+        });
+  
+        this.debugFolder.addInput(this.model.position, "y", {
+            min: -5,
+            max: 5,
+            step: .1,
+            label: "panel y",
+        })
     }
 }

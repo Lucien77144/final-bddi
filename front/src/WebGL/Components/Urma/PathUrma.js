@@ -7,7 +7,7 @@ let instance = null;
 export default class PathUrma {
   constructor({
     _position = new Vector3(0, 0, 0),
-    _factor = 0.15,
+    _factor = 0.2,
   } = {}) {
     // Singleton
     if (instance) {
@@ -17,6 +17,7 @@ export default class PathUrma {
 
     this.experience = new Experience();
     this.scene = this.experience.scene;
+    this.outlineModule = this.experience.outlineModule;
     this.position = _position;
     this.factor = _factor;
 
@@ -81,5 +82,7 @@ export default class PathUrma {
     const point = this.curve.getPointAt(this.factor);
     this.position.copy(point);
     // this.position.y += height / 2;
+
+    this.outlineModule.forestFilter(this.factor);
   }
 }

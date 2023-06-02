@@ -179,5 +179,15 @@ export default [
     name: "symbol2",
     type: "texture",
     path: "svg/Symbol_2.svg",
-  }
+  },
+  {
+    name: "symbol14",
+    type: "texture",
+    path: "svg/Symbol_14.svg",
+  },
+  {
+    name: "symbol21",
+    type: "texture",
+    path: "svg/Symbol_21.svg",
+  },
 ];

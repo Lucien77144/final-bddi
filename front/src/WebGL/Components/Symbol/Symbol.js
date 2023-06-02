@@ -59,6 +59,6 @@ export default class Symbol {
     update() {
         //make the symbol float
         // this.model.position.y = Math.sin(this.experience.time.elapsed * 0.001) * 0.1;
-        console.log(this.model.position.y);
+        // console.log(this.model.position.y);
     }
 }

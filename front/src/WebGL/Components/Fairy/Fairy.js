@@ -11,6 +11,8 @@ import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
 import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
+import AudioManager from "@/WebGL/Utils/AudioManager";
+import FairyDust from "./FairyDust";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -29,6 +31,13 @@ export default class Fairy extends EventEmitter {
     this.position = _position || new PathUrma().getPositionAt();
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
+    this.fairyDust = new FairyDust();
+
+    this.sound = new AudioManager({
+      _path: "runWingsAudio",
+      _status: false,
+      _loop: true,
+    });
 
     this.mouseMove = new MouseMove();
 
@@ -78,14 +87,14 @@ export default class Fairy extends EventEmitter {
       .copy(this.model.position)
       .add(fairyDir.multiplyScalar(0.2));
 
-    const canGoDown = (newPos.y > this.minY);
+    const canGoDown = newPos.y > this.minY;
 
     const resPos = {
       ...new Vector3().copy(this.model.position),
       x: newPos.x,
-      y: canGoDown || (this.model.position.y < newPos.y) ? newPos.y : this.minY,
+      y: canGoDown || this.model.position.y < newPos.y ? newPos.y : this.minY,
       z: newPos.z,
-    }
+    };
 
     const logDist = Math.log(this.distFairyToMouse + 1);
     let speed = (MathUtils.clamp(logDist, 0, 4) / 4) * 0.8;
@@ -97,6 +106,17 @@ export default class Fairy extends EventEmitter {
       this.model.position.y,
       this.model.position.z,
     ]);
+
+    // Check if the fairy is moving
+    if (this.isFairyMoving()) {
+      if (!this.sound.isPlaying) {
+        this.sound.play();  // If the fairy is moving, play the sound
+      }
+    } else {
+      if (this.sound.isPlaying) {
+        this.sound.stop();  // If the fairy is not moving, stop the sound
+      }
+    }
   }
 
   isFairyMoving() {
@@ -124,18 +144,21 @@ export default class Fairy extends EventEmitter {
 
   getYLimit() {
     const filteredFloors = this.floors.filter((floor) => {
-      const pos = new Vector3(
-        0,
-        0,
-        floor.position.z - floor.size.z / 2
+      const pos = new Vector3(0, 0, floor.position.z - floor.size.z / 2);
+      return (
+        pos.z < this.model?.position.z &&
+        this.model?.position.z < pos.z + floor.size.z
       );
-      return pos.z < this.model?.position.z && this.model?.position.z < pos.z + floor.size.z;
     });
-    
-    this.minY = Math.max(...filteredFloors.map(floor => floor.position.y + floor.size.y));
+
+    this.minY = Math.max(
+      ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
+    ) * 1.5;
   }
 
   update() {
+    this.moveFairy();
+    this.fairyDust?.update();
     this.getYLimit();
     if (this.distFairyToMouse) {
       this.animation.mixer.update(

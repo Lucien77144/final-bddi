@@ -9,23 +9,13 @@ export default [
     type: "gltf",
     path: "models/Fox/glTF/Fox.gltf",
   },
+  {
+    name: "bushModel",
+    type: "gltf",
+    path: "models/Bush/Bush.gltf",
+  },
 
   // glb :
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground.glb",
-  // },
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground_V3.glb",
-  // },
-  // {
-  //   name: "stoneModel",
-  //   type: "glb",
-  //   path: "models/Rock/Stone.glb",
-  // },
   {
     name: "columnModel",
     type: "glb",
@@ -50,6 +40,41 @@ export default [
     name: "bridgeModel",
     type: "glb",
     path: "models/River/Bridge.glb",
+  },
+  {
+    name: "steleModel",
+    type: "glb",
+    path: "models/ControlPanel/Stele.glb",
+  },
+  {
+    name: "letterModel",
+    type: "glb",
+    path: "models/Letter/Letter_Inventaryy.glb",
+  },
+
+  // --------------------
+  // Audios :
+  // --------------------
+
+  {
+    name: "forestAudio",
+    type: "audio",
+    path: "/sounds/forest.mp3",
+  },
+  {
+    name: "runUrmaAudio",
+    type: "audio",
+    path: "/sounds/dirtRun.mp3",
+  },
+  {
+    name: "runWingsAudio",
+    type: "audio",
+    path: "/sounds/wings.wav",
+  },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/Tree.glb",
   },
 
   // --------------------
@@ -88,6 +113,11 @@ export default [
     name: "cloudTexture",
     type: "texture",
     path: "img/cloud.jpg",
+  },
+  {
+    name: "treeMask",
+    type: "texture",
+    path: "textures/tree/mask3.png",
   },
   {
     name: "dirtTexture",

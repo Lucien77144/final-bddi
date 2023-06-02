@@ -6,8 +6,8 @@ import { OutlinePass } from "three/examples/jsm/postprocessing/OutlinePass";
 import { FilmPass } from "three/examples/jsm/postprocessing/FilmPass.js";
 import gsap from "gsap";
 import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
-import vertexShader from "../Components/worldShaders/vertexShader.glsl";
-import fragmentShader from "../Components/worldShaders/fragmentShader.glsl";
+import vertexShader from "../Components/WorldShaders/vertexShader.glsl";
+import fragmentShader from "../Components/WorldShaders/fragmentShader.glsl";
 
 export default class OutlineModule {
   constructor() {

@@ -165,4 +165,19 @@ export default [
       "textures/environmentMap/nz.png",
     ],
   },
+
+  // --------------------
+  // SVG :
+  // --------------------
+
+  {
+    name: "symbol1",
+    type: "svg",
+    path: "svg/Symbol_1.svg",
+  },
+  {
+    name: "symbol2",
+    type: "texture",
+    path: "svg/Symbol_2.svg",
+  }
 ];

@@ -14,6 +14,7 @@ import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 import Letter from "../Components/Letter/Letter";
 import Bush from "../Components/Bush/Bush";
+import Symbol from "../Components/Symbol/Symbol.js";
 
 export default class Intro {
   constructor() {
@@ -79,7 +80,16 @@ export default class Intro {
         _scale: .5,
       }),
     ];
-
+    this.symbols = [
+      new Symbol({
+        _symbolName : "symbol2",
+        _position: new Vector3(-18, 4, 15),
+      }),
+      new Symbol({
+        _symbolName : "symbol2",
+        _position: new Vector3(-8, 5, -30.25),
+      }),
+    ]
     // Setting letter : 
     this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
     // debug path :
@@ -110,6 +120,11 @@ export default class Intro {
     this.floors?.forEach((floor) => {
       floor.update();
     });
+
+    this.symbols?.forEach((symbol) => {
+      symbol.update();
+    });
+    
     this.river?.update();
 
     this.fireflies?.update();

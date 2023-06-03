@@ -14,7 +14,7 @@ export default class GrassFloor {
     _count = 125000,
     _maps = {
       displacementMap: "displacementMap",
-      mask: "mask",
+      mask: "grassMask",
       baseTexture: "dirtTexture",
       secondTexture: "mudTexture",
     },

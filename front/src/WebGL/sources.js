@@ -5,11 +5,6 @@ export default [
 
   // gltf :
   {
-    name: "foxModel",
-    type: "gltf",
-    path: "models/Fox/glTF/Fox.gltf",
-  },
-  {
     name: "bushModel",
     type: "gltf",
     path: "models/Bush/Bush.gltf",
@@ -32,24 +27,19 @@ export default [
     path: "models/Urma/Urma.glb",
   },
   {
-    name: "riverRocksModel",
-    type: "glb",
-    path: "models/River/Rocks_river.glb",
-  },
-  {
     name: "bridgeModel",
     type: "glb",
-    path: "models/River/Bridge.glb",
+    path: "models/Bridge/Bridge.glb",
   },
   {
     name: "steleModel",
     type: "glb",
-    path: "models/ControlPanel/Stele.glb",
+    path: "models/Stele/Stele.glb",
   },
   {
     name: "letterModel",
     type: "glb",
-    path: "models/Letter/Letter_Inventaryy.glb",
+    path: "models/Letter/Letter.glb",
   },
   {
     name: "stairsModel",
@@ -60,6 +50,11 @@ export default [
     name: "entranceModel",
     type: "glb",
     path: "models/Temple/Entrance.glb",
+  },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/Tree.glb",
   },
 
   // --------------------
@@ -81,11 +76,6 @@ export default [
     type: "audio",
     path: "/sounds/wings.wav",
   },
-  {
-    name: "treeModel",
-    type: "glb",
-    path: "models/Tree/Tree.glb",
-  },
 
   // --------------------
   // Textures :
@@ -93,42 +83,17 @@ export default [
 
   // png :
   {
-    name: "transition",
+    name: "dudvMapWater",
     type: "texture",
-    path: "textures/transitions/transition.png",
-  },
-  {
-    name: "dudvMap",
-    type: "texture",
-    path: "textures/water/hOIsXiZ.png",
-  },
-  {
-    name: "mountain",
-    type: "texture",
-    path: "textures/background/moutain.jpg",
-  },
-  {
-    name: "mountainS",
-    type: "texture",
-    path: "textures/background/moutain_shadow.jpg",
-  },
-  {
-    name: "mountainF",
-    type: "texture",
-    path: "textures/background/moutain_fog.jpg",
-  },
-
-  // jpg :
-  {
-    name: "cloudTexture",
-    type: "texture",
-    path: "img/cloud.jpg",
+    path: "textures/water/dudv.png",
   },
   {
     name: "treeMask",
     type: "texture",
-    path: "textures/tree/mask3.png",
+    path: "textures/tree/mask.png",
   },
+
+  // jpg :
   {
     name: "dirtTexture",
     type: "texture",
@@ -145,19 +110,34 @@ export default [
     path: "textures/grass/displacement.jpg",
   },
   {
-    name: "mask",
+    name: "grassMask",
     type: "texture",
     path: "textures/grass/mask.jpg",
   },
   {
-    name: "cloudBack",
+    name: "cloudsBack",
     type: "texture",
     path: "textures/background/back.jpg",
   },
   {
-    name: "noiseMap",
+    name: "noiseMapWater",
     type: "texture",
-    path: "textures/water/gPz7iPX.jpg",
+    path: "textures/water/noise.jpg",
+  },
+  {
+    name: "mountain",
+    type: "texture",
+    path: "textures/background/moutain.jpg",
+  },
+  {
+    name: "mountainShadow",
+    type: "texture",
+    path: "textures/background/moutain_shadow.jpg",
+  },
+  {
+    name: "mountainFog",
+    type: "texture",
+    path: "textures/background/moutain_fog.jpg",
   },
 
   // --------------------

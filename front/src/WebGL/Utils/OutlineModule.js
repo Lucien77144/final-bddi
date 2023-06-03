@@ -56,9 +56,9 @@ export default class OutlineModule {
     window.addEventListener("click", (event) => {
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "controlPanelBase") {
-          this.controlPanelChildren = this.activeObject.parent.children;
-          this.controlPanelChildren.forEach((child) => {
+        if (this.activeObject.name === "steleBase") {
+          this.steleChildren = this.activeObject.parent.children;
+          this.steleChildren.forEach((child) => {
             if (child.name.includes("Disk")) {
               child.interactive = true;
             }

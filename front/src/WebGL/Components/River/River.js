@@ -17,12 +17,12 @@ export default class River {
     this.position = _position;
     this.size = _size;
 
-    this.noiseMap = this.resources.items.noiseMap;
+    this.noiseMap = this.resources.items.noiseMapWater;
     this.noiseMap.wrapS = this.noiseMap.wrapT = THREE.RepeatWrapping;
     this.noiseMap.minFilter = THREE.NearestFilter;
     this.noiseMap.magFilter = THREE.NearestFilter;
 
-    this.dudvMap = this.resources.items.dudvMap;
+    this.dudvMap = this.resources.items.dudvMapWater;
     this.dudvMap.wrapS = this.dudvMap.wrapT = THREE.RepeatWrapping;
 
     this.envMap = this.resources.items.environmentMapTexture

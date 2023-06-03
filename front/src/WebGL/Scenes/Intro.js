@@ -11,7 +11,7 @@ import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
 import Bridge from "../Components/Bridge/Bridge";
-import ControlPanel from "../Components/ControlPanel/ControlPanel";
+import Stele from "../Components/Stele/Stele";
 import Letter from "../Components/Letter/Letter";
 import Bush from "../Components/Bush/Bush";
 import Stairs from "../Components/Stairs/Stairs.js";
@@ -98,7 +98,7 @@ export default class Intro {
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(200, 15, 50));
     this.dialogueBox = new DialogueBox();
-    this.controPanel = new ControlPanel({
+    this.controPanel = new Stele({
       _position: new Vector3(-5, 2.4, 6),
       _rotation: new Vector3(-.1, -Math.PI/6, -.125),
     });

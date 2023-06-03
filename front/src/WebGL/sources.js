@@ -51,6 +51,16 @@ export default [
     type: "glb",
     path: "models/Letter/Letter_Inventaryy.glb",
   },
+  {
+    name: "stairsModel",
+    type: "glb",
+    path: "models/Stairs/Stairs.glb",
+  },
+  {
+    name: "entranceModel",
+    type: "glb",
+    path: "models/Temple/Entrance.glb",
+  },
 
   // --------------------
   // Audios :

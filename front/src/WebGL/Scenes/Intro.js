@@ -14,6 +14,8 @@ import Bridge from "../Components/Bridge/Bridge";
 import ControlPanel from "../Components/ControlPanel/ControlPanel";
 import Letter from "../Components/Letter/Letter";
 import Bush from "../Components/Bush/Bush";
+import Stairs from "../Components/Stairs/Stairs.js";
+import Entrance from "../Components/Entrance/Entrance.js";
 
 export default class Intro {
   constructor() {
@@ -105,55 +107,87 @@ export default class Intro {
     this.bushs = [
       new Bush({
         _position: new Vector3(-2, -1.25, 2),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .45,
       }),
       new Bush({
         _position: new Vector3(-20, 0, 15),
-        _rotation: new Vector3(1.5, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .6,
       }),
       new Bush({
         _position: new Vector3(-2, -1.7, 21.5),
-        _rotation: new Vector3(1.5, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .5,
       }),
       new Bush({
         _position: new Vector3(-30, .7, 3.9),
-        _rotation: new Vector3(1.5, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .6,
       }),
       new Bush({
         _position: new Vector3(-30, .7, -22.8),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .6,
       }),
       new Bush({
         _position: new Vector3(-3.3, -.7, -18.3),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .45,
       }),
       new Bush({
         _position: new Vector3(-14.1, .7, -32.6),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .5,
       }),
       new Bush({
         _position: new Vector3(-14.1, .7, -32.6),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .5,
       }),
       new Bush({
         _position: new Vector3(-19.6, 1.8, -39.1),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .35,
       }),
       new Bush({
         _position: new Vector3(2.2, -1.8, -32.6),
-        _rotation: new Vector3(0, 0, Math.random() * 2 * Math.PI),
+        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
         _scale: .5,
       }),
     ];
+
+    this.stairs = new Stairs({
+      _position: new Vector3(-17.4, 1.1, 18.5),
+      _rotation: new Vector3(0, .8, 0),
+      _scale: .0075,
+    });
+
+    this.entrances = [
+      new Entrance({
+        _position: new Vector3(-13.0, 2.7, -2.2),
+        _rotation: new Vector3(0, 2, 0.1),
+        _scale: 2,
+      }),
+      new Entrance({
+        _position: new Vector3(-32.6, 2.2, 9.8),
+        _rotation: new Vector3(0, 1, -0.05),
+        _scale: 2,
+      }),
+    ];
+
+    this.destroyed = [
+      this.entrance = new Entrance({
+        _position: new Vector3(-17.4, 1.1, -2.2),
+        _rotation: new Vector3(Math.PI, 2.2, 0),
+        _scale: 2,
+      }),
+      this.entrance = new Entrance({
+        _position: new Vector3(-15.2, 1.1, 2.2),
+        _rotation: new Vector3(Math.PI, 2.2, 0.1),
+        _scale: 2,
+      }),
+    ]
 
     // Setting letter : 
     this.letter = new Letter(new Vector3(-8.5, 3, -28.5));

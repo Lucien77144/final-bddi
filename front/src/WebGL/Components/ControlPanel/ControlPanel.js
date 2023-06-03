@@ -158,7 +158,7 @@ export default class ControlPanel {
     setDebug() {
         this.debugFolder = this.debug.ui.addFolder({
             title: "Control Panel",
-            expanded: true,
+            expanded: false,
         });
   
         this.debugFolder.addInput(this.model.position, "y", {

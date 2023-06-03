@@ -97,8 +97,8 @@ export default class Intro {
     this.clouds = new Cloud(new Vector3(150, 15, 50));
     this.dialogueBox = new DialogueBox();
     this.controPanel = new ControlPanel({
-      _position: new Vector3(-6, 2.5, 8),
-      _rotation: new Vector3(0, -Math.PI/6, -.1),
+      _position: new Vector3(-5, 2.4, 6),
+      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
     });
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));

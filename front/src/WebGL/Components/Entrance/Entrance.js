@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Vector3 } from "three";
+import { Color, Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 
 export default class Entrance {
@@ -28,6 +28,9 @@ export default class Entrance {
 
   setModel() {
     this.model = SkeletonUtils.clone(this.resource.scene);
+
+    // To remove on refacto of this model :
+    this.model = this.model.children[0]?.children[0]?.children[0]?.children[0];
 
     this.model.position.copy(this.position);
     this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);

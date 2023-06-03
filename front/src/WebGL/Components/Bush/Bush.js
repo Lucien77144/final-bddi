@@ -57,20 +57,20 @@ export default class Bush {
     if (this.debug.active) {
       this.debugFolder.addInput(this.model.position, "x", {
         label: "positionX",
-        min: -30,
-        max: 30,
+        min: -50,
+        max: 50,
         step: 0.1,
       });
       this.debugFolder.addInput(this.model.position, "y", {
         label: "positionY",
-        min: -30,
-        max: 30,
+        min: -3,
+        max: 3,
         step: 0.1,
       });
       this.debugFolder.addInput(this.model.position, "z", {
         label: "positionZ",
-        min: -30,
-        max: 30,
+        min: -50,
+        max: 50,
         step: .1,
       });
     }

@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { Color, DoubleSide, Mesh, MeshBasicMaterial, NearestFilter, PlaneGeometry, ShaderMaterial, Vector3 } from "three";
+import { Color, DoubleSide, Mesh, MeshBasicMaterial, MirroredRepeatWrapping, NearestFilter, PlaneGeometry, RepeatWrapping, ShaderMaterial, Vector3 } from "three";
 import dispVertex from "./shaders/Displacement/vertexShader.glsl";
 import dispFragment from "./shaders/Displacement/fragmentShader.glsl";
 import grassVertex from "./shaders/Grass/vertexShader.glsl";

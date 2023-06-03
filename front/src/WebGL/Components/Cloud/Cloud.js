@@ -68,7 +68,7 @@ export default class Cloud {
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
     this.mesh.name = "cloudBackground";
-    this.mesh.position.set(-this.size.x/2, this.size.y + 8, 0);
+    this.mesh.position.set(-150/2, this.size.y + 8, 0);
     this.mesh.rotation.set(0, Math.PI/2, 0);
 
     this.scene.add(this.mesh);

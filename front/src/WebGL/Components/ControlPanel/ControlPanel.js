@@ -20,7 +20,7 @@ export default class ControlPanel {
         this.selectedObject = null;
 
         this.setModel();
-        this.setDebug();
+        this.debug.active && this.setDebug();
 
         this.correctSections = {
             'Disk_0003': 0,  // Replace these values with the correct angles for your disks

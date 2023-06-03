@@ -94,7 +94,7 @@ export default class Intro {
 
     // Setting the environment :
     this.environment = new Environment();
-    this.clouds = new Cloud(new Vector3(150, 15, 50));
+    this.clouds = new Cloud(new Vector3(200, 15, 50));
     this.dialogueBox = new DialogueBox();
     this.controPanel = new ControlPanel({
       _position: new Vector3(-5, 2.4, 6),

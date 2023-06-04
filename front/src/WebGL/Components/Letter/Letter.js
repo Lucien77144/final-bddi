@@ -50,7 +50,6 @@ export default class Letter {
     this.animation.actions.current = this.animation.actions.letter;
     this.animation.actions.current.setLoop(THREE.LoopOnce);
     this.animation.actions.current.timeScale = 0.0005;
-    console.log("ici", this.animation.actions);
   }
 
   startAnimation() {

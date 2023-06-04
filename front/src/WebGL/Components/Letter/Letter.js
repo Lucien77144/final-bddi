@@ -1,6 +1,7 @@
 import Experience from "@/WebGL/Experience";
 import * as THREE from "three";
-import Cube from "../Cube/Cube";
+import OutlineModule from "@/WebGL/Utils/OutlineModule";
+//import Cube from "../Cube/Cube";
 
 export default class Letter {
   constructor(_position = new THREE.Vector3(0, 0, 0)) {
@@ -8,19 +9,13 @@ export default class Letter {
     this.resources = this.experience.resources;
     this.resource = this.resources.items.letterModel;
     this.scene = this.experience.scene;
+    this.outlineModule = new OutlineModule();
 
     this.position = _position;
-    // Setting letter
+
     this.setModel();
     this.setAnimation();
-
-    // on click
-    window.addEventListener("click", () => {
-      console.log(this.animation.actions.current);
-      this.animation.actions.current.stop();
-      this.animation.actions.current.play();
-      this.model.interactive = false;
-    });
+    this.animationStarted = false;
   }
 
   setModel() {
@@ -54,9 +49,23 @@ export default class Letter {
     this.animation.actions.letter = this.animation.mixer.clipAction(letterClip);
     this.animation.actions.current = this.animation.actions.letter;
     this.animation.actions.current.setLoop(THREE.LoopOnce);
+    this.animation.actions.current.timeScale = 0.0005;
+    console.log("ici", this.animation.actions);
+  }
+
+  startAnimation() {
+    this.animation.actions.current.stop();
+    this.animation.actions.current.play();
+    this.animationStarted = true;
   }
 
   update() {
+    if (
+      this.outlineModule.isLetterAnimationFinished &&
+      !this.animationStarted
+    ) {
+      this.startAnimation();
+    }
     this.animation?.mixer.update(this.experience.time.delta * 1);
   }
 }

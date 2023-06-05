@@ -20,12 +20,13 @@ export default class Stele {
         this.selectedObject = null;
 
         this.setModel();
+        this.setAnimation();
         this.debug.active && this.setDebug();
 
         this.correctSections = {
-            'Disk_0003': 0,  // Replace these values with the correct angles for your disks
-            'Disk_1003': 4,
-            'Disk_2004': 6
+            'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+            'Disk_1004': 0,
+            'Disk_0004': 0
         };        
 
         this.raycaster = new Raycaster();
@@ -102,6 +103,8 @@ export default class Stele {
 
             if (this.checkGameWon()) {
                 console.log("You won the game!");
+                this.animation.play('open');
+                console.log(this.model);
             }
         });
 
@@ -125,6 +128,8 @@ export default class Stele {
                 // Determine the current section of the disk
                 const currentSection = Math.floor(normalizedAngle / 45);
                 // Check if the disk's current section is the correct one
+                console.log(currentSection, this.correctSections[child.name]);
+                console.log(child.name);
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
                 }
@@ -153,6 +158,46 @@ export default class Stele {
             }
         });
         this.scene.add(this.model);
+    }
+
+    setAnimation() {
+            console.log(this.resource.animations);
+            const openClip = this.resource.animations.find(
+                (animation) => animation.name === "Open"
+            )
+            const cubeClip = this.resource.animations.find(
+                (animation) => animation.name === "Cube.006"
+            )
+            const cylinderClip = this.resource.animations.find(
+                (animation) => animation.name === "Cylinder.009"
+            )
+
+            this.animation = {
+                mixer: new THREE.AnimationMixer(this.model),
+                actions: {
+                    open : null,
+                    cube : null,
+                    cylinder : null,
+                },
+            }
+
+            this.animation.actions.open = this.animation.mixer.clipAction(openClip);
+            this.animation.actions.cube = this.animation.mixer.clipAction(cubeClip);
+            this.animation.actions.cylinder = this.animation.mixer.clipAction(cylinderClip);
+
+            this.animation.actions.current = this.animation.actions.open;
+            this.animation.actions.current.play();
+
+            this.animation.play = (name) => {
+                const action = this.animation.actions[name];
+                const oldAction = this.animation.actions.current;
+                console.log(action);
+                action.reset();
+                action.play();
+                // action.crossFadeFrom(oldAction, 0.5);
+
+                this.animation.actions.current = action;
+            }
     }
 
     setDebug() {

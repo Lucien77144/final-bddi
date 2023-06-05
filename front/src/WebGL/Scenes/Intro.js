@@ -104,58 +104,58 @@ export default class Intro {
     });
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
-    this.bushs = [
-      new Bush({
-        _position: new Vector3(-2, -1.25, 2),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .45,
-      }),
-      new Bush({
-        _position: new Vector3(-20, 0, 15),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
-      }),
-      new Bush({
-        _position: new Vector3(-2, -1.7, 21.5),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
-      }),
-      new Bush({
-        _position: new Vector3(-30, .7, 3.9),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
-      }),
-      new Bush({
-        _position: new Vector3(-30, .7, -22.8),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
-      }),
-      new Bush({
-        _position: new Vector3(-3.3, -.7, -18.3),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .45,
-      }),
-      new Bush({
-        _position: new Vector3(-14.1, .7, -32.6),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
-      }),
-      new Bush({
-        _position: new Vector3(-14.1, .7, -32.6),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
-      }),
-      new Bush({
-        _position: new Vector3(-19.6, 1.8, -39.1),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .35,
-      }),
-      new Bush({
-        _position: new Vector3(2.2, -1.8, -32.6),
-        _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
-      }),
-    ];
+    // this.bushs = [
+    //   new Bush({
+    //     _position: new Vector3(-2, -1.25, 2),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .45,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-20, 0, 15),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-2, -1.7, 21.5),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-30, .7, 3.9),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-30, .7, -22.8),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-3.3, -.7, -18.3),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .45,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-14.1, .7, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-14.1, .7, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-19.6, 1.8, -39.1),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .35,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(2.2, -1.8, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    // ];
 
     this.stairs = new Stairs({
       _position: new Vector3(-17.4, 1.1, 18.5),
@@ -208,7 +208,10 @@ export default class Intro {
   }
 
   update() {
-    this.tree?.update();
+    this.mainTree?.update();
+    this.bigTrees?.forEach((tree) => {
+      tree.update();
+    });
 
     this.urma?.update();
 

@@ -17,6 +17,7 @@ import Bush from "../Components/Bush/Bush";
 import Symbol from "../Components/Symbol/Symbol.js";
 import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
+import { currentPlayer } from "@/scripts/room.js";
 
 export default class Intro {
   constructor() {
@@ -176,20 +177,23 @@ export default class Intro {
         _scale: 2,
       }),
     ];
-    this.symbols = [
-      new Symbol({
-        _symbolName : "symbol14",
-        _position: new Vector3(-18, 4, 15),
-      }),
-      new Symbol({
-        _symbolName : "symbol2",
-        _position: new Vector3(-10, 5, -30.25),
-      }),
-      new Symbol({
-        _symbolName : "symbol21",
-        _position: new Vector3(-1, 3.5, -21.5),
-      }),
-    ]
+
+    if (currentPlayer.role === "heda") {
+      this.symbols = [
+        new Symbol({
+          _symbolName : "symbol14",
+          _position: new Vector3(-18, 4, 15),
+        }),
+        new Symbol({
+          _symbolName : "symbol2",
+          _position: new Vector3(-10, 5, -30.25),
+        }),
+        new Symbol({
+          _symbolName : "symbol21",
+          _position: new Vector3(-1, 3.5, -21.5),
+        }),
+      ]
+    }
 
     this.destroyed = [
       this.entrance = new Entrance({

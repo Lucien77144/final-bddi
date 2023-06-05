@@ -11,6 +11,7 @@ import fragmentShader from "../Components/WorldShaders/fragmentShader.glsl";
 import { currentPlayer } from "@/scripts/room";
 
 
+let instance = null;
 export default class OutlineModule {
   constructor() {
     // Singleton

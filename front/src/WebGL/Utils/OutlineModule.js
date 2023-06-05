@@ -154,14 +154,14 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    const dialogBox = document.getElementById("dialogBox");
-    gsap.to(dialogBox.style, {
-      duration: 0.5,
-      width: "500px", // The final width of the dialog box
-      height: "300px", // The final height of the dialog box
-      opacity: "1",
-      ease: "power1.out", // easing function for the animation
-    });
+    // const dialogBox = document.getElementById("dialogBox");
+    // gsap.to(dialogBox.style, {
+    //   duration: 0.5,
+    //   width: "500px", // The final width of the dialog box
+    //   height: "300px", // The final height of the dialog box
+    //   opacity: "1",
+    //   ease: "power1.out", // easing function for the animation
+    // });
   }
 
   returnLetter() {
@@ -385,24 +385,24 @@ export default class OutlineModule {
     this.activeObject = null;
 
     // After the letter is clicked, show the dialog box
-    const dialogBox = document.getElementById("dialogBox");
+    // const dialogBox = document.getElementById("dialogBox");
 
-    if (dialogBox) {
-      dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
+    // if (dialogBox) {
+    //   dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
 
-      // Create a GSAP timeline
-      var tl = gsap.timeline();
-      tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
-        .to(dialogBox, {
-          paddingLeft: "20px", // Then animate the padding
-          paddingRight: "20px", // Then animate the padding
-          duration: 0.5,
-          opacity: 1,
-          ease: "power1.out",
-        });
-    } else {
-      console.log("Dialog box element not found");
-    }
+    //   // Create a GSAP timeline
+    //   var tl = gsap.timeline();
+    //   tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
+    //     .to(dialogBox, {
+    //       paddingLeft: "20px", // Then animate the padding
+    //       paddingRight: "20px", // Then animate the padding
+    //       duration: 0.5,
+    //       opacity: 1,
+    //       ease: "power1.out",
+    //     });
+    // } else {
+    //   console.log("Dialog box element not found");
+    // }
   }
 
   handleDiskClick() {

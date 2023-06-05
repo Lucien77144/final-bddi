@@ -84,8 +84,11 @@ export default class Stele {
                 // Calculate the sign of the cross product of initialVector and currentVector
                 let crossSign = Math.sign(this.initialVector.x * currentVector.y - this.initialVector.y * currentVector.x);
         
+                // Determine the direction of mouse movement
+                let mouseDirection = (event.clientX - this.previousMousePosition.x) >= 0 ? 1 : -1;
+        
                 // Apply the rotation to the disk
-                this.selectedObject.rotation.y -= angle * crossSign;
+                this.selectedObject.rotation.y -= angle * crossSign * mouseDirection;
         
                 // Update the initial vector and the previous mouse position for the next mouse move event
                 this.initialVector = currentVector;
@@ -95,6 +98,7 @@ export default class Stele {
                 };
             }
         });
+        
         
         this.experience.renderer.instance.domElement.addEventListener('mouseup', (event) => {
             mouseDown = false;
@@ -186,7 +190,7 @@ export default class Stele {
             this.animation.actions.cylinder = this.animation.mixer.clipAction(cylinderClip);
 
             this.animation.actions.current = this.animation.actions.open;
-            this.animation.actions.current.play();
+            // this.animation.actions.current.play();
 
             this.animation.play = (name) => {
                 const action = this.animation.actions[name];

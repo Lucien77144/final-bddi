@@ -20,12 +20,13 @@ export default class Stele {
         this.selectedObject = null;
 
         this.setModel();
+        this.setAnimation();
         this.debug.active && this.setDebug();
 
         this.correctSections = {
-            'Disk_0003': 0,  // Replace these values with the correct angles for your disks
-            'Disk_1003': 4,
-            'Disk_2004': 6
+            'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+            'Disk_1004': 0,
+            'Disk_0004': 0
         };        
 
         this.raycaster = new Raycaster();
@@ -83,8 +84,11 @@ export default class Stele {
                 // Calculate the sign of the cross product of initialVector and currentVector
                 let crossSign = Math.sign(this.initialVector.x * currentVector.y - this.initialVector.y * currentVector.x);
         
+                // Determine the direction of mouse movement
+                let mouseDirection = (event.clientX - this.previousMousePosition.x) >= 0 ? 1 : -1;
+        
                 // Apply the rotation to the disk
-                this.selectedObject.rotation.y -= angle * crossSign;
+                this.selectedObject.rotation.y -= angle * crossSign * mouseDirection;
         
                 // Update the initial vector and the previous mouse position for the next mouse move event
                 this.initialVector = currentVector;
@@ -95,13 +99,15 @@ export default class Stele {
             }
         });
         
+        
         this.experience.renderer.instance.domElement.addEventListener('mouseup', (event) => {
             mouseDown = false;
             this.previousAngle = null;
             this.selectedObject = null;
 
             if (this.checkGameWon()) {
-                console.log("You won the game!");
+                // console.log("You won the game!");
+                this.animation.play('open');
             }
         });
 
@@ -153,6 +159,45 @@ export default class Stele {
             }
         });
         this.scene.add(this.model);
+    }
+
+    setAnimation() {
+            const openClip = this.resource.animations.find(
+                (animation) => animation.name === "Open"
+            )
+            const cubeClip = this.resource.animations.find(
+                (animation) => animation.name === "Cube.006"
+            )
+            const cylinderClip = this.resource.animations.find(
+                (animation) => animation.name === "Cylinder.009"
+            )
+
+            this.animation = {
+                mixer: new THREE.AnimationMixer(this.model),
+                actions: {
+                    open : null,
+                    cube : null,
+                    cylinder : null,
+                },
+            }
+
+            this.animation.actions.open = this.animation.mixer.clipAction(openClip);
+            this.animation.actions.cube = this.animation.mixer.clipAction(cubeClip);
+            this.animation.actions.cylinder = this.animation.mixer.clipAction(cylinderClip);
+
+            this.animation.actions.current = this.animation.actions.open;
+            // this.animation.actions.current.play();
+
+            this.animation.play = (name) => {
+                const action = this.animation.actions[name];
+                const oldAction = this.animation.actions.current;
+                // console.log(action);
+                action.reset();
+                action.play();
+                // action.crossFadeFrom(oldAction, 0.5);
+
+                this.animation.actions.current = action;
+            }
     }
 
     setDebug() {

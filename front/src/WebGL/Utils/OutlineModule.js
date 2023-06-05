@@ -174,14 +174,14 @@ export default class OutlineModule {
       },
     });
 
-    const dialogBox = document.getElementById("dialogBox");
-    gsap.to(dialogBox.style, {
-      duration: 0.5,
-      width: "500px", // The final width of the dialog box
-      height: "300px", // The final height of the dialog box
-      opacity: "1",
-      ease: "power1.out", // easing function for the animation
-    });
+    // const dialogBox = document.getElementById("dialogBox");
+    // gsap.to(dialogBox.style, {
+    //   duration: 0.5,
+    //   width: "500px", // The final width of the dialog box
+    //   height: "300px", // The final height of the dialog box
+    //   opacity: "1",
+    //   ease: "power1.out", // easing function for the animation
+    // });
   }
 
   returnLetter() {
@@ -288,18 +288,18 @@ export default class OutlineModule {
   moveCamera() {
     this.grassScene.onGame = true;
 
-    const targetPosition = new THREE.Vector3();
-
-    // Copy the intersected object's position
-    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-
-    // Move the target position a bit to the left (negative x) and up (positive y)
-    targetPosition.x -= -3;
-    targetPosition.y += 0;
-    targetPosition.z += 10;
-
-    const newPosition = { x: -5, y: 8, z: 3 };
-    const newUp = { x: 0, y: 6, z: 0 };
+        const targetPosition = new THREE.Vector3();
+    
+        // Copy the intersected object's position
+        this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+    
+        // Move the target position a bit to the left (negative x) and up (positive y)
+        targetPosition.x -= -3;
+        targetPosition.y += 0;
+        targetPosition.z += 10;
+        
+        const newPosition = {x: -5, y: 6, z: 3};
+        const newUp = {x: 0, y: 6, z: 0};
 
     this.originalPosition = this.camera.position.clone();
     this.originalUp = this.camera.up.clone();
@@ -309,23 +309,23 @@ export default class OutlineModule {
     this.originalTarget = new THREE.Vector3();
     this.originalTarget.copy(this.camera.position).add(direction);
 
-    // Use GSAP to animate the camera's movement
-    gsap.to(this.camera.position, {
-      duration: 1, // duration of the animation in seconds
-      x: newPosition.x,
-      y: newPosition.y,
-      z: newPosition.z,
-      onUpdate: () => {
-        // Ensure the camera's up vector is set to signify the y-axis as up
-        this.camera.up.set(newUp.x, newUp.y, newUp.z);
-        this.camera.lookAt(-5, 2.5, 9);
-      },
-      onComplete: () => {
-        this.onGame = this.grassScene.onGame;
-      },
-      ease: "power1.out", // easing function for the animation
-    });
-  }
+        // Use GSAP to animate the camera's movement
+        gsap.to(this.camera.position, {
+            duration: 1, // duration of the animation in seconds
+            x: newPosition.x,
+            y: newPosition.y,
+            z: newPosition.z,
+            onUpdate: () => {
+                // Ensure the camera's up vector is set to signify the y-axis as up
+                this.camera.up.set(newUp.x, newUp.y, newUp.z);
+                this.camera.lookAt(-5, 2.4, 6);
+            },
+            onComplete: () => {
+              this.onGame = this.grassScene.onGame;
+            },
+            ease: "power1.out", // easing function for the animation
+        });
+    }
 
   returnCamera() {
     if (this.originalPosition && this.originalUp) {
@@ -385,6 +385,9 @@ export default class OutlineModule {
       uniforms: {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
+        uTime: { value: 0 },
+        uSteamColor: { value: new THREE.Color("#43795a") },
+        uPosZ: { value: 0 },
       },
       vertexShader,
       fragmentShader,
@@ -427,24 +430,24 @@ export default class OutlineModule {
     this.activeObject = null;
 
     // After the letter is clicked, show the dialog box
-    const dialogBox = document.getElementById("dialogBox");
+    // const dialogBox = document.getElementById("dialogBox");
 
-    if (dialogBox) {
-      dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
+    // if (dialogBox) {
+    //   dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
 
-      // Create a GSAP timeline
-      var tl = gsap.timeline();
-      tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
-        .to(dialogBox, {
-          paddingLeft: "20px", // Then animate the padding
-          paddingRight: "20px", // Then animate the padding
-          duration: 0.5,
-          opacity: 1,
-          ease: "power1.out",
-        });
-    } else {
-      console.log("Dialog box element not found");
-    }
+    //   // Create a GSAP timeline
+    //   var tl = gsap.timeline();
+    //   tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
+    //     .to(dialogBox, {
+    //       paddingLeft: "20px", // Then animate the padding
+    //       paddingRight: "20px", // Then animate the padding
+    //       duration: 0.5,
+    //       opacity: 1,
+    //       ease: "power1.out",
+    //     });
+    // } else {
+    //   console.log("Dialog box element not found");
+    // }
   }
 
   handleDiskClick() {
@@ -464,6 +467,20 @@ export default class OutlineModule {
   }
 
   update() {
+    // if (
+    //   this.shaderPath &&
+    //   this.shaderPath.uniforms &&
+    //   this.shaderPath.uniforms.vignette
+    // ) {
+    //   this.shaderPath.uniforms.vignette.value =
+    //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
+    // }
+
+    if(this.shaderPath) {
+      this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
+      this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
+    }
+
     // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {
       const intersects = this.raycaster?.intersectObjects(

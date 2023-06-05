@@ -364,18 +364,20 @@ input[type="text"] {
   left: 50%;
   transform: translate(-50%, -50%);
   background-color: #f1f1f1;
-  width: auto;    /* Width based on content */
-  height : 42px;
+  width: auto;
+  /* Width based on content */
+  height: 42px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.3);
   border: 1px solid #E6E8EA;
   backdrop-filter: blur(4px);
   border-radius: 2px;
-  transition: padding 0.5s; /* Transition on padding instead of width */
-  z-index : 9999;
-  display : flex;
-  align-items : center;
-  opacity : 0;
+  transition: padding 0.5s;
+  /* Transition on padding instead of width */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  opacity: 0;
 }
 
 .inventory {
@@ -389,13 +391,13 @@ input[type="text"] {
   border: 1px solid #E6E8EA;
   backdrop-filter: blur(4px);
   border-radius: 2px;
-  position : absolute;
-  right : 5vh;
-  bottom : 5vh;
-  z-index : 10;
+  position: absolute;
+  right: 5vh;
+  bottom: 5vh;
+  z-index: 10;
   font-family: 'Amatic SC', cursive;
-  color : white;
-  font-size : 1.5rem;
+  color: white;
+  font-size: 1.5rem;
 }
 
 .inventory-box {
@@ -403,14 +405,31 @@ input[type="text"] {
   height: 60px;
   border: 1px solid #E6E8EA;
   border-radius: 2px;
-  display : flex;
-  justify-content : center;
-  align-items : center;
-  cursor : pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 }
 
 .letter-icon {
   display: none;
   /* transform scale & translate to center the icon */
 
+}
+
+.letter-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 350px;
+  max-height: 500px;
+  width: 100%;
+  height: 100%;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }

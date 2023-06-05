@@ -23,7 +23,7 @@ export default class Stairs {
     this.resource = this.resources.items.stairsModel;
 
     this.setModel();
-    if(this.debug.active) this.setDebug();
+    // if(this.debug.active) this.setDebug();
   }
 
   setModel() {
@@ -43,7 +43,7 @@ export default class Stairs {
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: this.name,
-      expanded: true,
+      expanded: false,
     });
 
     this.debugFolder.addInput(this.model.position, "x", {

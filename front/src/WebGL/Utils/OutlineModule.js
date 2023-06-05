@@ -269,7 +269,7 @@ export default class OutlineModule {
                 this.camera.lookAt(-5, 2.4, 6);
             },
             onComplete: () => {
-                this.onGame = this.grassScene.onGame;
+              this.onGame = this.grassScene.onGame;
             },
             ease: "power1.out", // easing function for the animation
         });
@@ -335,6 +335,9 @@ export default class OutlineModule {
       uniforms: {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
+        uTime: { value: 0 },
+        uSteamColor: { value: new THREE.Color("#43795a") },
+        uPosZ: { value: 0 },
       },
       vertexShader,
       fragmentShader,
@@ -430,6 +433,11 @@ export default class OutlineModule {
     //   this.shaderPath.uniforms.vignette.value =
     //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
     // }
+
+    if(this.shaderPath) {
+      this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
+      this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
+    }
 
     // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {

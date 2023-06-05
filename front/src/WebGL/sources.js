@@ -139,6 +139,11 @@ export default [
     type: "texture",
     path: "textures/background/moutain_fog.jpg",
   },
+  {
+    name: "stairsTexture",
+    type: "texture",
+    path: "textures/stairs/texture.jpg",
+  },
 
   // --------------------
   // Cube Textures :
@@ -154,5 +159,30 @@ export default [
       "textures/environmentMap/pz.png",
       "textures/environmentMap/nz.png",
     ],
+  },
+
+  // --------------------
+  // SVG :
+  // --------------------
+
+  {
+    name: "symbol1",
+    type: "svg",
+    path: "svg/Symbol_1.svg",
+  },
+  {
+    name: "symbol2",
+    type: "texture",
+    path: "svg/Symbol_2.svg",
+  },
+  {
+    name: "symbol14",
+    type: "texture",
+    path: "svg/Symbol_14.svg",
+  },
+  {
+    name: "symbol21",
+    type: "texture",
+    path: "svg/Symbol_21.svg",
   },
 ];

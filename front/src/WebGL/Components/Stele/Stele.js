@@ -106,9 +106,8 @@ export default class Stele {
             this.selectedObject = null;
 
             if (this.checkGameWon()) {
-                console.log("You won the game!");
+                // console.log("You won the game!");
                 this.animation.play('open');
-                console.log(this.model);
             }
         });
 
@@ -132,8 +131,6 @@ export default class Stele {
                 // Determine the current section of the disk
                 const currentSection = Math.floor(normalizedAngle / 45);
                 // Check if the disk's current section is the correct one
-                console.log(currentSection, this.correctSections[child.name]);
-                console.log(child.name);
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
                 }
@@ -165,7 +162,6 @@ export default class Stele {
     }
 
     setAnimation() {
-            console.log(this.resource.animations);
             const openClip = this.resource.animations.find(
                 (animation) => animation.name === "Open"
             )
@@ -195,7 +191,7 @@ export default class Stele {
             this.animation.play = (name) => {
                 const action = this.animation.actions[name];
                 const oldAction = this.animation.actions.current;
-                console.log(action);
+                // console.log(action);
                 action.reset();
                 action.play();
                 // action.crossFadeFrom(oldAction, 0.5);

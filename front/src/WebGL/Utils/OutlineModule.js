@@ -24,6 +24,10 @@ export default class OutlineModule {
     this.onGame = false;
     this.onLetter = false;
     this.debug = this.experience.debug;
+    this.activeObject = null;
+    this.base = null;
+    this.mouseDown = false;
+    this.isInForest = false;
 
     // Debug
     if (this.debug.active) {
@@ -33,21 +37,11 @@ export default class OutlineModule {
       });
     }
 
-    this.originalPosition = null;
-    this.originalUp = null;
-    this.onGame = false;
-
     this.outlinePass = new OutlinePass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
       this.scene,
       this.camera
     );
-    this.backupCamPosition = this.camera.position.clone();
-
-    this.activeObject = null;
-    this.base = null;
-
-    this.mouseDown = false;
 
     window.addEventListener("mousedown", (event) => {
       this.mouseDown = true;
@@ -62,9 +56,9 @@ export default class OutlineModule {
     window.addEventListener("click", (event) => {
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "controlPanelBase") {
-          this.controlPanelChildren = this.activeObject.parent.children;
-          this.controlPanelChildren.forEach((child) => {
+        if (this.activeObject.name === "steleBase") {
+          this.steleChildren = this.activeObject.parent.children;
+          this.steleChildren.forEach((child) => {
             if (child.name.includes("Disk")) {
               child.interactive = true;
             }
@@ -210,7 +204,33 @@ export default class OutlineModule {
   }
 
   forestFilter(factor) {
-    console.log("factor", factor);
+    if(factor > .7 && !this.isInForest) { // entering forest
+      this.isInForest = true;
+      gsap.to(this.shaderPath.uniforms.vignette, {
+        duration: 2,
+        value: .75,
+        ease: "power1.out",
+      });
+
+      gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
+        duration: 2,
+        ...(new THREE.Color("#43795a")),
+        ease: "power1.out",
+      });
+    } else if (factor <= .7 && this.isInForest) { // leaving forest
+      this.isInForest = false;
+      gsap.to(this.shaderPath.uniforms.vignette, {
+        duration: 2,
+        value: .5,
+        ease: "power1.out",
+      });
+
+      gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
+        duration: 2,
+        ...(new THREE.Color("#d8d8d8")),
+        ease: "power1.out",
+      });
+    }
   }
 
   moveCamera() {
@@ -402,14 +422,14 @@ export default class OutlineModule {
   }
 
   update() {
-    if (
-      this.shaderPath &&
-      this.shaderPath.uniforms &&
-      this.shaderPath.uniforms.vignette
-    ) {
-      this.shaderPath.uniforms.vignette.value =
-        this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
-    }
+    // if (
+    //   this.shaderPath &&
+    //   this.shaderPath.uniforms &&
+    //   this.shaderPath.uniforms.vignette
+    // ) {
+    //   this.shaderPath.uniforms.vignette.value =
+    //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
+    // }
 
     // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {

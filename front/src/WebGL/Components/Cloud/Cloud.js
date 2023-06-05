@@ -22,7 +22,7 @@ export default class Cloud {
   }
 
   setMaterial() {
-    const textureB = this.resources.items.cloudBack;
+    const textureB = this.resources.items.cloudsBack;
     textureB.wrapS = THREE.RepeatWrapping;
     textureB.wrapT = THREE.RepeatWrapping;
     textureB.repeat.set(1, 1);
@@ -32,12 +32,12 @@ export default class Cloud {
     textureM.wrapT = THREE.RepeatWrapping;
     textureM.repeat.set(1, 1);
 
-    const shadowM = this.resources.items.mountainS;
+    const shadowM = this.resources.items.mountainShadow;
     shadowM.wrapS = THREE.RepeatWrapping;
     shadowM.wrapT = THREE.RepeatWrapping;
     shadowM.repeat.set(1, 1);
 
-    const FogM = this.resources.items.mountainF;
+    const FogM = this.resources.items.mountainFog;
     FogM.wrapS = THREE.RepeatWrapping;
     FogM.wrapT = THREE.RepeatWrapping;
     FogM.repeat.set(1, 1);
@@ -67,8 +67,8 @@ export default class Cloud {
     this.setMaterial();
 
     this.mesh = new THREE.Mesh(this.geometry, this.material);
-    this.mesh.name = "cloudBackground";
-    this.mesh.position.set(-this.size.x/2, this.size.y + 8, 0);
+    this.mesh.name = "cloudsBackground";
+    this.mesh.position.set(-150/2, this.size.y + 8, 0);
     this.mesh.rotation.set(0, Math.PI/2, 0);
 
     this.scene.add(this.mesh);

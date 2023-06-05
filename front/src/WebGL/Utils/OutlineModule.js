@@ -264,12 +264,12 @@ export default class OutlineModule {
             y: newPosition.y,
             z: newPosition.z,
             onUpdate: () => {
-                // Ensure the camera's up vector is set to signify the y-axis as up
-                this.camera.up.set(newUp.x, newUp.y, newUp.z);
-                this.camera.lookAt(-6, 2.7, 8);
+              // Ensure the camera's up vector is set to signify the y-axis as up
+              this.camera.up.set(newUp.x, newUp.y, newUp.z);
+              this.camera.lookAt(-6, 2.7, 8);
             },
             onComplete: () => {
-                this.onGame = this.grassScene.onGame;
+              this.onGame = this.grassScene.onGame;
             },
             ease: "power1.out", // easing function for the animation
         });

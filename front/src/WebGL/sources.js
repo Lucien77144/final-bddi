@@ -139,6 +139,11 @@ export default [
     type: "texture",
     path: "textures/background/moutain_fog.jpg",
   },
+  {
+    name: "stairsTexture",
+    type: "texture",
+    path: "textures/stairs/texture.jpg",
+  },
 
   // --------------------
   // Cube Textures :

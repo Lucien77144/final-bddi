@@ -28,10 +28,9 @@ export default class Entrance {
 
   setModel() {
     this.model = SkeletonUtils.clone(this.resource.scene);
-
-    // To remove on refacto of this model :
     this.model = this.model.children[0]?.children[0]?.children[0]?.children[0];
 
+    this.model.material.emissive = new Color("#2c2a21");
     this.model.position.copy(this.position);
     this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
     this.model.scale.set(this.scale, this.scale, this.scale);
@@ -70,6 +69,20 @@ export default class Entrance {
       min: -Math.PI,
       max: Math.PI,
       step: .1,
+    });
+
+    this.debugFolder.addInput(this.model.material, "emissive", {
+      view: "color",
+      label: "emissive",
+      value: this.model.material.emissive,
+    }).on("change", (e) => {
+      console.log(e.value);
+      let color = new Color(e.value);
+      color.r /= 255;
+      color.g /= 255;
+      color.b /= 255;
+
+      this.model.material.emissive = color;
     });
     
     // this.debugFolder.addBlade({

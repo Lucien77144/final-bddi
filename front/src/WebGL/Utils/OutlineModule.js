@@ -49,18 +49,17 @@ export default class OutlineModule {
       this.mouseDown = true;
     });
 
-        window.addEventListener('mousedown', (event) => {
-            if ( currentPlayer.role === "heda" ) return;
-            this.mouseDown = true;
-        });
-      
+    window.addEventListener('mousedown', (event) => {
+        if ( currentPlayer.role === "heda" ) return;
+        this.mouseDown = true;
+    });
 
-        window.addEventListener('mouseup', (event) => {
-            if ( currentPlayer.role === "heda" ) return;
-            this.mouseDown = false;
-            this.activeObject = null;  // clear active object on mouse up
-            this.getInteractiveObjects();  // refresh interactive objects
-        });
+    window.addEventListener('mouseup', (event) => {
+        if ( currentPlayer.role === "heda" ) return;
+        this.mouseDown = false;
+        this.activeObject = null;  // clear active object on mouse up
+        this.getInteractiveObjects();  // refresh interactive objects
+    });
 
         window.addEventListener('click', (event) => {
             if ( currentPlayer.role === "heda" ) return;
@@ -78,20 +77,11 @@ export default class OutlineModule {
                     this.handleBaseClick();
                 } else if (this.activeObject.disk) {
                     this.handleDiskClick();
+                } else if (this.activeObject.type === "letter") {
+                  this.handleLetterClick();
                 }
             }
           });
-          if (this.activeObject.base) {
-            this.base = this.activeObject;
-            this.handleBaseClick();
-          } else if (this.activeObject.disk) {
-            this.handleDiskClick();
-          }
-        } else if (this.activeObject.type === "letter") {
-          this.handleLetterClick();
-        }
-      }
-    });
 
         window.addEventListener('keydown', (event) => {
             if ( currentPlayer.role === "heda" ) return;
@@ -113,24 +103,13 @@ export default class OutlineModule {
                     });
                     this.base.interactive = true;
                 }
+            } else if (this.onLetter) {
+              if (event.code === "Space") {
+                this.returnLetter();
+                // ... rest of your event listener ...
+              }
             }
         });
-               
-        // Wait for resources
-        if (this.resources.loaded == this.resources.toLoad) {
-            this.buildUtils();
-        } else {
-            this.resources.on("ready", () => {
-                this.buildUtils();
-            });
-        }
-      } else if (this.onLetter) {
-        if (event.code === "Space") {
-          this.returnLetter();
-          // ... rest of your event listener ...
-        }
-      }
-    });
 
     // Wait for resources
     if (this.resources.loaded == this.resources.toLoad) {

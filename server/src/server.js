@@ -77,6 +77,13 @@ io.on('connection', (socket) => {
     io.to(heda.id).emit('updateUrmaPosition', data);
   });
 
+  socket.on('updateUrmaAnimation', (data) => {
+    // Send data to heda
+    let room = rooms.find(room => room.id === data.roomId);
+    let heda = room.players.find(player => player.role === 'heda');
+    io.to(heda.id).emit('updateUrmaAnimation', data);
+  });
+
 });
 
 function generateRandomId() {

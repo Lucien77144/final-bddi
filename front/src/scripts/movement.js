@@ -14,14 +14,24 @@ import { socket } from "./socket";
 
 export let currentRoom = room;
 export let urmaPosition = {x : 0, y : 0, z : 0};
+export let urmaAnimation = {dir : 'right', val: false};
 
 export let updateUrmaPosition = (urmaPos) => {
     socket.emit('updateUrmaPosition', {roomId : room.id, urmaPos});
 }
 
+export let updateUrmaAnimation = (currentAnimation) => {
+    socket.emit('updateUrmaAnimation', {roomId : room.id, currentAnimation});
+}
+
 socket.on('updateUrmaPosition', (data) => {
     // console.log('Update urma position', data);
     urmaPosition = data.urmaPos;
+});
+
+socket.on('updateUrmaAnimation', (data) => {
+    // console.log('Update urma animation', data);
+    urmaAnimation = data.currentAnimation;
 });
 
 socket.on('startMovement', () => {

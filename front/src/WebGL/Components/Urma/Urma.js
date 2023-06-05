@@ -70,9 +70,7 @@ export default class Urma {
 
     this.setModel();
     this.setAnimation();
-    if(currentPlayer.role === "urma") {
     this.setInputs();
-    }
   }
 
   setModel() {
@@ -132,8 +130,12 @@ export default class Urma {
   }
 
   setInputs() {
+    if(currentPlayer.role === "urma") {
     ["right", "left"].forEach((dir) => {
       InputManager.on(dir, (val) => {
+        console.log("val", val);
+        console.log("dir", dir);
+        MOVE.updateUrmaAnimation({ dir : dir, val : val })
         if (val) {
           this.animation?.action && (this.animation.action.paused = false);
 
@@ -163,6 +165,41 @@ export default class Urma {
         }
       });
     });
+  }
+}
+
+  setInputsForFairy() {
+    let dir = MOVE.urmaAnimation.dir;
+    let val = MOVE.urmaAnimation.val;
+    if (val) {
+      this.animation?.action && (this.animation.action.paused = false);
+
+      if (!this.sound?.isPlaying) {
+        this.sound.play();
+      }
+    } else {
+      this.animation?.action && (this.animation.action.paused = true);
+
+      if (this.sound?.isPlaying) {
+        this.sound.stop();
+      }
+    }
+
+    if (val && !data.status[dir].start) {
+      this.animation.play("run");
+      data.status[dir].start = true;
+      data.time.start = this.time.current;
+      data.lastDirection = dir; // Ajoutez cette ligne
+      this.orientateBody(); // Appel à la méthode orientateBody() lorsque la direction du mouvement change
+    }
+    if (!val && data.status[dir].start && data.move.flag) {
+      this.animation.play("idle");
+      data.move.flag = false;
+      data.status[dir].end = true;
+      data.time.end = this.time.current;
+      this.orientateBody(); // Appel à la méthode orientateBody() lorsque la direction du mouvement change
+    }
+
   }
 
   updatePosition() {
@@ -198,6 +235,7 @@ export default class Urma {
 
       this.animation.mixer.update(this.time.delta * 0.001);
       MOVE.updateUrmaPosition(modelPos);
+      // send without capital letter
     }
     } else {
         const { model, camera, time } = this;
@@ -206,15 +244,30 @@ export default class Urma {
     
         const isOneWay = (data.status.left.start !== data.status.right.start);
     
+        data.move.delta = isOneWay
+        ? data.move.velocity *
+          (OPTIONS.SPEED / 1000) *
+          (data.status.left.start ? 1 : -1)
+        : data.move.delta * 0.95;
+
         modelPos.copy(MOVE.urmaPosition);
-        data.move.delta = isOneWay ? data.move.velocity * (OPTIONS.SPEED / 1000) * (data.status.left.start ? 1 : -1): data.move.delta*.95;
-        
-        cameraPos.z = modelPos.z - data.move.delta*5;
-        
-        const rdmCamera = Math.abs(data.move.delta)*2 + ((Math.cos(time.current/200) * data.move.velocity / 15) * data.move.delta*4);
-        cameraPos.y = 4 - rdmCamera;
-        
-        cameraRot.z = cameraRot.z < data.move.delta/10 ? cameraRot.z/2 : data.move.delta/10;
+
+        cameraPos.z = modelPos.z - data.move.delta * 5;
+        const rdmCamera =
+          Math.abs(data.move.delta) * 2 +
+          ((Math.cos(time.current / 200) * data.move.velocity) / 15) *
+            data.move.delta *
+            4;
+        cameraPos.y = 3 - rdmCamera;
+        cameraRot.z =
+          cameraRot.z < data.move.delta / 10
+            ? cameraRot.z / 2
+            : data.move.delta / 10;
+
+        this.updateCameraX(cameraPos, modelPos);
+        // this.animation.play(MOVE.urmaAnimation);
+        this.animation.mixer.update(this.time.delta * 0.001);
+
     }
   }
 
@@ -279,5 +332,8 @@ export default class Urma {
     this.updatePosition();
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.00025);
+    if (currentPlayer.role === "heda") {
+      this.setInputsForFairy();
+    }
   }
 }

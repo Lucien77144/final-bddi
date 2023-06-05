@@ -31,6 +31,7 @@ export default class Letter {
       child.interactive = true;
       child.type = "letter";
     });
+
   }
 
   showContentDiv() {

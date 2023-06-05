@@ -288,18 +288,18 @@ export default class OutlineModule {
   moveCamera() {
     this.grassScene.onGame = true;
 
-        const targetPosition = new THREE.Vector3();
-    
-        // Copy the intersected object's position
-        this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-    
-        // Move the target position a bit to the left (negative x) and up (positive y)
-        targetPosition.x -= -3;
-        targetPosition.y += 0;
-        targetPosition.z += 10;
-        
-        const newPosition = {x: -5, y: 6, z: 3};
-        const newUp = {x: 0, y: 6, z: 0};
+    const targetPosition = new THREE.Vector3();
+
+    // Copy the intersected object's position
+    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+
+    // Move the target position a bit to the left (negative x) and up (positive y)
+    targetPosition.x -= -3;
+    targetPosition.y += 0;
+    targetPosition.z += 10;
+
+    const newPosition = { x: -5, y: 6, z: 3 };
+    const newUp = { x: 0, y: 6, z: 0 };
 
     this.originalPosition = this.camera.position.clone();
     this.originalUp = this.camera.up.clone();
@@ -309,23 +309,23 @@ export default class OutlineModule {
     this.originalTarget = new THREE.Vector3();
     this.originalTarget.copy(this.camera.position).add(direction);
 
-        // Use GSAP to animate the camera's movement
-        gsap.to(this.camera.position, {
-            duration: 1, // duration of the animation in seconds
-            x: newPosition.x,
-            y: newPosition.y,
-            z: newPosition.z,
-            onUpdate: () => {
-                // Ensure the camera's up vector is set to signify the y-axis as up
-                this.camera.up.set(newUp.x, newUp.y, newUp.z);
-                this.camera.lookAt(-5, 2.4, 6);
-            },
-            onComplete: () => {
-              this.onGame = this.grassScene.onGame;
-            },
-            ease: "power1.out", // easing function for the animation
-        });
-    }
+    // Use GSAP to animate the camera's movement
+    gsap.to(this.camera.position, {
+      duration: 1, // duration of the animation in seconds
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      onUpdate: () => {
+        // Ensure the camera's up vector is set to signify the y-axis as up
+        this.camera.up.set(newUp.x, newUp.y, newUp.z);
+        this.camera.lookAt(-5, 2.4, 6);
+      },
+      onComplete: () => {
+        this.onGame = this.grassScene.onGame;
+      },
+      ease: "power1.out", // easing function for the animation
+    });
+  }
 
   returnCamera() {
     if (this.originalPosition && this.originalUp) {
@@ -365,6 +365,7 @@ export default class OutlineModule {
     this.composer.addPass(this.filmPath);
 
     this.shaderPath = this.setShaderPath();
+
     this.composer.addPass(this.shaderPath);
 
     this.composer.renderer.physicallyCorrectLights = false;
@@ -386,6 +387,7 @@ export default class OutlineModule {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
         uTime: { value: 0 },
+        isLetterOpen: { value: false },
         uSteamColor: { value: new THREE.Color("#43795a") },
         uPosZ: { value: 0 },
       },
@@ -476,9 +478,10 @@ export default class OutlineModule {
     //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
     // }
 
-    if(this.shaderPath) {
+    if (this.shaderPath) {
       this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
       this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
+      this.shaderPath.uniforms.isLetterOpen.value = this.onLetter;
     }
 
     // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.

@@ -7,6 +7,7 @@ import Fairy from "../Fairy/Fairy";
 import AudioManager from "@/WebGL/Utils/AudioManager";
 import { gsap } from "gsap";
 
+const SIZE_FACTOR = 3;
 const OPTIONS = {
   SPEED: 90,
   SPEEDEASE: 1000,
@@ -252,7 +253,7 @@ export default class Urma {
     data.move.velocity = data.move.velocity > 1 ? 1 : data.move.velocity;
     data.move.velocity -= (data.status.left.end || data.status.right.end) ? data.move.velocity * endVelocity : 0;
 
-    this.path.update(data.move.delta);
+    this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.00025);

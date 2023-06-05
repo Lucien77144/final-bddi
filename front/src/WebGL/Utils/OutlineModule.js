@@ -33,7 +33,7 @@ export default class OutlineModule {
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
         title: "vignette",
-        expanded: false,
+        expanded: true,
       });
     }
 

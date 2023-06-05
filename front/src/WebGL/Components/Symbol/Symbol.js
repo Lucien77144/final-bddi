@@ -9,9 +9,7 @@ export default class Symbol {
         
         this.symbolName = _symbolName;
         this.resource = this.resources.items[_symbolName];
-        console.log(this.symbolName);
         this.position = _position;
-        console.log(this.position);
         this.model = null;
         this.setSymbol();
     }

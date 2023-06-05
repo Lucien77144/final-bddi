@@ -23,7 +23,7 @@ export default class Entrance {
     this.resource = this.resources.items.entranceModel;
 
     this.setModel();
-    if(this.debug.active) this.setDebug();
+    // if(this.debug.active) this.setDebug();
   }
 
   setModel() {
@@ -42,7 +42,7 @@ export default class Entrance {
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: this.name,
-      expanded: true,
+      expanded: false,
     });
 
     this.debugFolder.addInput(this.model.position, "x", {

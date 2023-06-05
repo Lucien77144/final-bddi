@@ -145,7 +145,7 @@ export default class OutlineModule {
     // Define the new scale you want for the object
     const newScale = new THREE.Vector3(1, 1, 1); // Scale up by 3
 
-    const newRotation = new THREE.Vector3(Math.PI / 2, 0, -Math.PI / 2);
+    const newRotation = new THREE.Vector3(-Math.PI / 2, 0, -Math.PI / 2);
     // Use GSAP to animate the letter's scale and position
     gsap.to(this.activeObject.parent.scale, {
       duration: 1, // duration of the animation in seconds

@@ -5,10 +5,8 @@ import {
   MathUtils,
   Mesh,
   PlaneGeometry,
-  RepeatWrapping,
   ShaderMaterial,
   Vector3,
-  sRGBEncoding,
 } from "three";
 import vertexShader from "./shaders/vertexShader.glsl";
 import fragmentShader from "./shaders/fragmentShader.glsl";
@@ -17,9 +15,12 @@ import cloneGltf from "@/WebGL/Utils/GltfClone";
 
 let instance = null;
 export default class Tree {
-  constructor(_position = new Vector3(0, 0, 0)) {
+  constructor({
+    _position = new Vector3(0, 0, 0),
+    _isMain = false,
+  } = {}) {
     // Singleton
-    if (instance) {
+    if (instance && _isMain) {
       return instance;
     }
     instance = this;
@@ -29,8 +30,9 @@ export default class Tree {
     this.camera = this.experience.camera.instance;
     this.resources = this.experience.resources;
     this.trunkModel = this.resources.items.treeModel;
-    // this.debug = this.experience.debug;
+    this.debug = this.experience.debug;
     this.position = _position;
+    this.isMain = _isMain;
 
     this.setGroup();
     this.setGeometry();
@@ -38,7 +40,7 @@ export default class Tree {
     this.setMesh();
     this.setModel();
 
-    // if (this.debug.active) this.setDebug();
+    // if (this.debug?.active) this.setDebug();
   }
 
   setGroup() {
@@ -65,15 +67,15 @@ export default class Tree {
   }
 
   setGeometry() {
-    this.geometry = new PlaneGeometry(8, 8, 1500, 1500);
+    this.geometry = new PlaneGeometry(8, 8, 15, 15);
   }
 
   setMaterial() {
     this.material = new ShaderMaterial({
       uniforms: {
         uMask: { value: this.resources.items.treeMask },
-        colorLight: { value: new Color("#1e363f") },
-        colorDark: { value: new Color("#427062") },
+        colorLight: { value: new Color("#073b27") },
+        colorDark: { value: new Color("#0b714a") },
         brightnessThresholds: { value: [0.7, 0.3, 0.001] },
         lightPosition: {
           value: new Vector3(12, 6, -4),
@@ -103,39 +105,42 @@ export default class Tree {
 
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
-      title: "leaves",
-      expanded: true,
+      title: "big tree",
+      expanded: false,
     });
 
     this.debugFolder
-      .addInput(this.mesh.rotation, "y", {
+      .addInput(this.leafMeshes[0].rotation, "y", {
         min: 0,
         max: Math.PI * 2,
         step: 0.1,
         label: "leaves y",
       })
-      .onChange((value) => {
-        this.mesh.rotation.y = value;
-      });
+
+    this.debugFolder
+      .addInput(this.treeGroup.position, "x", {
+        min: -75,
+        max: 75,
+        step: 1,
+        label: "position x",
+      })
+
+    this.debugFolder
+      .addInput(this.treeGroup.position, "y", {
+        min: -5,
+        max: 5,
+        step: .1,
+        label: "position y",
+      })
+
+    this.debugFolder
+      .addInput(this.treeGroup.position, "z", {
+        min: -75,
+        max: 75,
+        step: 1,
+        label: "position z",
+      })
   }
-
-  // setOrientation() {
-  //   const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
-  //   const targetPosition = this.camera.position.clone();
-
-  //   this.mesh.lookAt(targetPosition);
-
-  //   const meshRotation = this.mesh.rotation.clone();
-  //   const targetRotationY = clamp(meshRotation.y, 0.9, 1.05);
-  //   const smoothness = 0.05; // Valeur pour ajuster la vitesse de rotation (plus la valeur est petite, plus la rotation sera lente)
-
-  //   meshRotation.y = MathUtils.lerp(
-  //     meshRotation.y,
-  //     targetRotationY,
-  //     smoothness
-  //   );
-  //   this.mesh.rotation.copy(meshRotation);
-  // }
 
   setOrientation() {
     const clamp = (num, min, max) => Math.min(Math.max(num, min), max);

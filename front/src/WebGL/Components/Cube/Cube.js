@@ -4,18 +4,22 @@ import vertexShader from "./shaders/vertexShader.glsl";
 import { BoxGeometry, Mesh, ShaderMaterial, Vector3 } from "three";
 
 export default class Cube {
-  constructor(_position = new Vector3(0, 0, 0)) {
+  constructor({
+    _pos = new Vector3(0, 0, 0),
+    _size = new Vector3(1, 1, 1),
+  } = {}) {
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.debug = this.experience.debug;
 
-    this.position = _position;
+    this.position = _pos;
+    this.size = _size;
 
     // Debug
     if (this.debug.active) {
       this.debugFolder = this.debug.ui.addFolder({
         title: "cube_debug",
-        expanded: false,
+        expanded: true,
       });
     }
 
@@ -26,7 +30,7 @@ export default class Cube {
   }
 
   setGeometry() {
-    this.geometry = new BoxGeometry(1, 1, 1);
+    this.geometry = new BoxGeometry(this.size.x, this.size.y, this.size.z);
   }
 
   setMaterial() {
@@ -40,14 +44,28 @@ export default class Cube {
     this.mesh = new Mesh(this.geometry, this.material);
     this.mesh.position.copy(this.position);
     this.mesh.name = "cube";
+    this.mesh.interactive = true;
+    this.mesh.type = "letter";
     this.scene.add(this.mesh);
   }
 
   setDebug() {
     if (this.debug.active) {
-      this.debugFolder.addInput(this.mesh.position, "x", { min: -15, max: 15, step : .01 });
-      this.debugFolder.addInput(this.mesh.position, "y", { min: -15, max: 15, step : .01 });
-      this.debugFolder.addInput(this.mesh.position, "z", { min: -15, max: 15, step : .01 });
+      this.debugFolder.addInput(this.mesh.position, "x", {
+        min: -50,
+        max: 15,
+        step: 0.01,
+      });
+      this.debugFolder.addInput(this.mesh.position, "y", {
+        min: 0,
+        max: 4,
+        step: 0.001,
+      });
+      this.debugFolder.addInput(this.mesh.position, "z", {
+        min: -40,
+        max: 25,
+        step: 0.001,
+      });
     }
   }
 }

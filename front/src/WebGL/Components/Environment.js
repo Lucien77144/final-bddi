@@ -23,7 +23,8 @@ export default class Environment {
   }
 
   setSunLight() {
-    this.ambiantLight = new AmbientLight("#fffb96", 2);
+    this.ambiantLight = new AmbientLight("#ffffff", .5);
+    // this.ambiantLight = new AmbientLight("#fffb96", 2);
     this.ambiantLight.position.set(3.5, 2, -1.25);
     this.ambiantLight.name = "ambiantLight";
     this.scene.add(this.ambiantLight);
@@ -40,7 +41,7 @@ export default class Environment {
         min: 0,
         max: 10,
         step: 0.001,
-        label: "sunLightIntensity",
+        label: "ambiantLightIntensity",
       });
     }
   }

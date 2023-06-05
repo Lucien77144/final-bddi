@@ -8,6 +8,7 @@ import SceneManager from "utils/SceneManager.js";
 import { Mesh, Scene } from "three";
 import sources from "webgl/sources.js";
 import OutlineModule from "./Utils/OutlineModule";
+import AudioManager from "./Utils/AudioManager";
 
 let instance = null;
 
@@ -39,6 +40,9 @@ export default class Experience {
     this.renderer = new Renderer(this.scene, this.camera);
     this.activeScene = new SceneManager();
     this.outlineModule = new OutlineModule();
+    this.forestSound = new AudioManager({
+      _path: "forestAudio",
+    });
 
     // Resize event
     this.sizes.on("resize", () => {
@@ -68,7 +72,6 @@ export default class Experience {
     this.camera.instance && this.camera.update();
     this.activeScene?.update();
     this.outlineModule?.update();
-    // this.renderer?.update();
     this.debug?.update();
   }
 

@@ -1,21 +1,21 @@
 import Experience from "webgl/Experience.js";
 import Environment from "components/Environment.js";
-import { Fog, Group, Vector2, Vector3 } from "three";
+import { Group, Vector2, Vector3 } from "three";
 import Urma from "components/Urma/Urma.js";
-import FairyDust from "components/Fairy/FairyDust.js";
+import Tree from "components/Tree/Tree.js";
+import Cube from "../Components/Cube/Cube.js";
 import Column from "../Components/Column/Column";
 import River from "../Components/River/River";
-import CollisionV1 from "../Components/Fairy/Collision.js";
-import Fireflies from "../Components/Fireflies/Fireflies.js";
 import GrassFloor from "../Components/GrassFloor/GrassFloor";
 import Fairy from "../Components/Fairy/Fairy";
 import DialogueBox from "../Components/DialogueBox.js";
 import Cloud from "../Components/Cloud/Cloud";
-import Stele from "../Components/Stele/Stele";
-import RocksRiver from "../Components/RocksRiver/RocksRiver";
 import Bridge from "../Components/Bridge/Bridge";
-import Rock from "../Components/Rock/Rock";
-import ControlPanel from "../Components/ControlPanel/ControlPanel";
+import Stele from "../Components/Stele/Stele";
+import Letter from "../Components/Letter/Letter";
+import Bush from "../Components/Bush/Bush";
+import Stairs from "../Components/Stairs/Stairs.js";
+import Entrance from "../Components/Entrance/Entrance.js";
 
 export default class Intro {
   constructor() {
@@ -36,38 +36,169 @@ export default class Intro {
   // Setup
   buildScene() {
     // Setting the world :
-    this.setWorld(-.1); // value is rotation on z axis
+    this.setWorld(-0.1); // value is rotation on z axis
     this.floors = [
       new GrassFloor({
         _position: new Vector3(-20.5, 0, -14),
         _size: new Vector3(54, 2, 95),
-        _count: 250000,
+        _count: 500000,
       }),
     ];
     this.river = new River({
-      _position: new Vector3(-17, 1.35, -10),
+      _position: new Vector3(-17, 1.35, -10.2),
       _size: new Vector2(13, 60),
     });
     // this.rocks = [
     //   new Rock(new Vector3(0, 3, 0)),
     // ]
-    this.rocksRiver = new RocksRiver();
     this.bridge = new Bridge();
-    this.column = new Column(new Vector3(0, -.35, 0));
+    this.column = new Column(new Vector3(0, -0.35, 0));
+
+    this.mainTree = new Tree({
+      _position: new Vector3(-11, 0, -28.804),
+      _isMain: true,
+    });
+    this.bigTrees = [
+      new Tree({
+        _position: new Vector3(-29.6, .9, -18)
+      }),
+      new Tree({
+        _position: new Vector3(-20, -.5, -25),
+      }),
+      new Tree({
+        _position: new Vector3(-2, -2, -20),
+      }),
+      new Tree({
+        _position: new Vector3(-18, 0, -32),
+      }),
+      new Tree({
+        _position: new Vector3(-30, 0, -40),
+      }),
+      new Tree({
+        _position: new Vector3(-15, -1, -40),
+      }),
+      new Tree({
+        _position: new Vector3(-25, -.25, -50),
+      }),
+      new Tree({
+        _position: new Vector3(1, -2, -33),
+      }),
+      new Tree({
+        _position: new Vector3(-25, .25, 2.5),
+      }),
+      new Tree({
+        _position: new Vector3(-15, 0, 30),
+      }),
+      new Tree({
+        _position: new Vector3(-32.5, 0, 25),
+      }),
+    ];
 
     // Setting the environment :
     this.environment = new Environment();
-    this.clouds = new Cloud(new Vector3(150, 15, 50));
+    this.clouds = new Cloud(new Vector3(200, 15, 50));
     this.dialogueBox = new DialogueBox();
-    // this.stele = new Stele();
-    this.controPanel = new ControlPanel();
+    this.controPanel = new Stele({
+      _position: new Vector3(-5, 2.4, 6),
+      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+    });
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
+    // this.bushs = [
+    //   new Bush({
+    //     _position: new Vector3(-2, -1.25, 2),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .45,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-20, 0, 15),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-2, -1.7, 21.5),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-30, .7, 3.9),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-30, .7, -22.8),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .6,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-3.3, -.7, -18.3),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .45,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-14.1, .7, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-14.1, .7, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(-19.6, 1.8, -39.1),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .35,
+    //   }),
+    //   new Bush({
+    //     _position: new Vector3(2.2, -1.8, -32.6),
+    //     _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
+    //     _scale: .5,
+    //   }),
+    // ];
+
+    this.stairs = new Stairs({
+      _position: new Vector3(-17.4, 1.1, 18.5),
+      _rotation: new Vector3(0, .8, 0),
+      _scale: .0075,
+    });
+
+    this.entrances = [
+      new Entrance({
+        _position: new Vector3(-13.0, 2.7, -2.2),
+        _rotation: new Vector3(0, 2, 0.1),
+        _scale: 2,
+      }),
+      new Entrance({
+        _position: new Vector3(-32.6, 2.2, 9.8),
+        _rotation: new Vector3(0, 1, -0.05),
+        _scale: 2,
+      }),
+    ];
+
+    this.destroyed = [
+      this.entrance = new Entrance({
+        _position: new Vector3(-17.4, 1.1, -2.2),
+        _rotation: new Vector3(Math.PI, 2.2, 0),
+        _scale: 2,
+      }),
+      this.entrance = new Entrance({
+        _position: new Vector3(-15.2, 1.1, 2.2),
+        _rotation: new Vector3(Math.PI, 2.2, 0.1),
+        _scale: 2,
+      }),
+    ]
+
+    // Setting letter : 
+    this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
+    // debug path :
+    // this.debugPath = new Cube({
+    //   _pos: new Vector3(-6.2, 2.304, -29.891),
+    //   _size: new Vector3(0.1, 0.1, 0.1),
+    // });
 
     // Setting Fairy :
     this.fairy = new Fairy();
-    this.fairyDust = new FairyDust();
-    this.collisionV1 = new CollisionV1();
   }
 
   setWorld(_rotation) {
@@ -77,18 +208,23 @@ export default class Intro {
   }
 
   update() {
+    this.mainTree?.update();
+    this.bigTrees?.forEach((tree) => {
+      tree.update();
+    });
+
     this.urma?.update();
 
-    this.fairy?.update();
-    this.fairyDust?.update();
-    this.collisionV1?.update();
+    this.letter?.update();
 
-    this.controlPanel?.update();
+    this.fairy?.update();
+
     this.floors?.forEach((floor) => {
       floor.update();
-    })
+    });
     this.river?.update();
-    
+
+    this.fireflies?.update();
     this.clouds?.update();
   }
 }

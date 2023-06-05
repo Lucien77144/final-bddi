@@ -17,12 +17,12 @@ export default class River {
     this.position = _position;
     this.size = _size;
 
-    this.noiseMap = this.resources.items.noiseMap;
+    this.noiseMap = this.resources.items.noiseMapWater;
     this.noiseMap.wrapS = this.noiseMap.wrapT = THREE.RepeatWrapping;
     this.noiseMap.minFilter = THREE.NearestFilter;
     this.noiseMap.magFilter = THREE.NearestFilter;
 
-    this.dudvMap = this.resources.items.dudvMap;
+    this.dudvMap = this.resources.items.dudvMapWater;
     this.dudvMap.wrapS = this.dudvMap.wrapT = THREE.RepeatWrapping;
 
     this.envMap = this.resources.items.environmentMapTexture
@@ -39,10 +39,10 @@ export default class River {
           uTime: { value: this.uTime },
           tNoise: { value: this.noiseMap },
           tDudv: { value: this.dudvMap },
-          topDarkColor : { value: new THREE.Color('#ffffff') },
-          bottomDarkColor : { value: new THREE.Color('#dbdbdb') },
-          topLightColor : { value: new THREE.Color('#334dc1') },
-          bottomLightColor : { value: new THREE.Color('#0d4886') },
+          topDarkColor : { value: new THREE.Color('#ffffff') }, // 8C8C8C
+          bottomDarkColor : { value: new THREE.Color('#dbdbdb') }, // 2D2D2D
+          topLightColor : { value: new THREE.Color('#334dc1') }, //080D22
+          bottomLightColor : { value: new THREE.Color('#0d4886') }, // 031222
           foamColor : { value: new THREE.Color('#ffffff') },
           uColorMask: { value: new THREE.Color('#212032') },
           uEnvMap: { value: this.envMap },

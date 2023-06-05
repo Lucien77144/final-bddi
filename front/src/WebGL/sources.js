@@ -5,27 +5,12 @@ export default [
 
   // gltf :
   {
-    name: "foxModel",
+    name: "bushModel",
     type: "gltf",
-    path: "models/Fox/glTF/Fox.gltf",
+    path: "models/Bush/Bush.gltf",
   },
 
   // glb :
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground.glb",
-  // },
-  // {
-  //   name: "groundModel",
-  //   type: "glb",
-  //   path: "models/Ground/Ground_V3.glb",
-  // },
-  // {
-  //   name: "stoneModel",
-  //   type: "glb",
-  //   path: "models/Rock/Stone.glb",
-  // },
   {
     name: "columnModel",
     type: "glb",
@@ -42,42 +27,54 @@ export default [
     path: "models/Urma/Urma.glb",
   },
   {
-    name: "riverRocksModel",
-    type: "glb",
-    path: "models/River/Rocks_river.glb",
-  },
-  {
     name: "bridgeModel",
     type: "glb",
-    path: "models/River/Bridge.glb",
+    path: "models/Bridge/Bridge.glb",
+  },
+  {
+    name: "steleModel",
+    type: "glb",
+    path: "models/Stele/Stele.glb",
+  },
+  {
+    name: "letterModel",
+    type: "glb",
+    path: "models/Letter/Letter.glb",
+  },
+  {
+    name: "stairsModel",
+    type: "glb",
+    path: "models/Stairs/Stairs.glb",
+  },
+  {
+    name: "entranceModel",
+    type: "glb",
+    path: "models/Temple/Entrance.glb",
+  },
+  {
+    name: "treeModel",
+    type: "glb",
+    path: "models/Tree/Tree.glb",
   },
 
-  // Control Panel
+  // --------------------
+  // Audios :
+  // --------------------
 
   {
-    name: "controlBaseModel",
-    type: "glb",
-    path: "models/ControlPanel/Base.glb",
+    name: "forestAudio",
+    type: "audio",
+    path: "/sounds/forest.mp3",
   },
   {
-    name: "diskOneModel",
-    type: "glb",
-    path: "models/ControlPanel/Disk_1.glb",
+    name: "runUrmaAudio",
+    type: "audio",
+    path: "/sounds/dirtRun.mp3",
   },
   {
-    name: "diskTwoModel",
-    type: "glb",
-    path: "models/ControlPanel/Disk_2.glb",
-  },
-  {
-    name: "diskThreeModel",
-    type: "glb",
-    path: "models/ControlPanel/Disk_3.glb",
-  },
-  {
-    name: "controlReferenceModel",
-    type: "glb",
-    path: "models/ControlPanel/Reference.glb",
+    name: "runWingsAudio",
+    type: "audio",
+    path: "/sounds/wings.wav",
   },
 
   // --------------------
@@ -86,37 +83,17 @@ export default [
 
   // png :
   {
-    name: "transition",
+    name: "dudvMapWater",
     type: "texture",
-    path: "textures/transitions/transition.png",
+    path: "textures/water/dudv.png",
   },
   {
-    name: "dudvMap",
+    name: "treeMask",
     type: "texture",
-    path: "textures/water/hOIsXiZ.png",
-  },
-  {
-    name: "mountain",
-    type: "texture",
-    path: "textures/background/moutain.jpg",
-  },
-  {
-    name: "mountainS",
-    type: "texture",
-    path: "textures/background/moutain_shadow.jpg",
-  },
-  {
-    name: "mountainF",
-    type: "texture",
-    path: "textures/background/moutain_fog.jpg",
+    path: "textures/tree/mask.png",
   },
 
   // jpg :
-  {
-    name: "cloudTexture",
-    type: "texture",
-    path: "img/cloud.jpg",
-  },
   {
     name: "dirtTexture",
     type: "texture",
@@ -133,19 +110,39 @@ export default [
     path: "textures/grass/displacement.jpg",
   },
   {
-    name: "mask",
+    name: "grassMask",
     type: "texture",
     path: "textures/grass/mask.jpg",
   },
   {
-    name: "cloudBack",
+    name: "cloudsBack",
     type: "texture",
     path: "textures/background/back.jpg",
   },
   {
-    name: "noiseMap",
+    name: "noiseMapWater",
     type: "texture",
-    path: "textures/water/gPz7iPX.jpg",
+    path: "textures/water/noise.jpg",
+  },
+  {
+    name: "mountain",
+    type: "texture",
+    path: "textures/background/moutain.jpg",
+  },
+  {
+    name: "mountainShadow",
+    type: "texture",
+    path: "textures/background/moutain_shadow.jpg",
+  },
+  {
+    name: "mountainFog",
+    type: "texture",
+    path: "textures/background/moutain_fog.jpg",
+  },
+  {
+    name: "stairsTexture",
+    type: "texture",
+    path: "textures/stairs/texture.jpg",
   },
 
   // --------------------

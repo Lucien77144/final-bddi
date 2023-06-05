@@ -27,26 +27,19 @@ export default class Bush {
       wood: _woodColor || new Color("#231a0d"),
     }
 
-    // Debug
-    if (this.debug.active) {
-      this.debugFolder = this.debug.ui.addFolder({
-        title: this.name,
-        expanded: false,
-      });
-    }
-
     // Resource
     this.resource = this.resources.items.bushModel;
 
-    this.setMaterial();
     this.setModel();
+
+    // if (this.debug.active) this.setDebug();
   }
 
   setModel() {
     this.model = SkeletonUtils.clone(this.resource.scene);
 
     this.model.position.copy(this.position);
-    this.model.rotation.copy(this.rotation);
+    this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
     this.model.scale.set(this.scale, this.scale, this.scale);
     this.model.name = this.name;
 
@@ -54,31 +47,32 @@ export default class Bush {
     this.model.children[0].children[0].material.color = this.colors.leaves;
     this.model.children[0].material.color = this.colors.wood;
 
-    if (this.debug.active) {
-      this.debugFolder.addInput(this.model.position, "x", {
-        label: "positionX",
-        min: -30,
-        max: 30,
-        step: 0.1,
-      });
-      this.debugFolder.addInput(this.model.position, "y", {
-        label: "positionY",
-        min: -30,
-        max: 30,
-        step: 0.1,
-      });
-      this.debugFolder.addInput(this.model.position, "z", {
-        label: "positionZ",
-        min: -30,
-        max: 30,
-        step: .1,
-      });
-    }
-
     this.scene.add(this.model);
   }
 
-  setMaterial() { }
-
-  update() { }
+  setDebug() {
+    this.debugFolder = this.debug.ui.addFolder({
+      title: this.name,
+      expanded: false,
+    });
+    
+    this.debugFolder.addInput(this.model.position, "x", {
+      label: "positionX",
+      min: -50,
+      max: 50,
+      step: 0.1,
+    });
+    this.debugFolder.addInput(this.model.position, "y", {
+      label: "positionY",
+      min: -3,
+      max: 3,
+      step: 0.1,
+    });
+    this.debugFolder.addInput(this.model.position, "z", {
+      label: "positionZ",
+      min: -50,
+      max: 50,
+      step: .1,
+    });
+  }
 }

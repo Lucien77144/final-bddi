@@ -30,6 +30,19 @@ export default class OutlineModule {
     this.originalUp = null;
     this.onGame = false;
     this.onLetter = false;
+    this.debug = this.experience.debug;
+    this.activeObject = null;
+    this.base = null;
+    this.mouseDown = false;
+    this.isInForest = false;
+
+    // Debug
+    if (this.debug.active) {
+      this.debugFolder = this.debug.ui.addFolder({
+        title: "vignette",
+        expanded: false,
+      });
+    }
 
     this.isLetterAnimationFinished = false;
 
@@ -191,6 +204,36 @@ export default class OutlineModule {
     //     scale: 1, // replace with original scale
     //     ease: "power1.out" // easing function for the animation
     // });
+    const dialogBox = document.getElementById("dialogBox");
+    gsap.to(dialogBox.style, {
+      duration: 0.5,
+      width: "500px", // The final width of the dialog box
+      height: "300px", // The final height of the dialog box
+      opacity: "1",
+      ease: "power1.out", // easing function for the animation
+    });
+  }
+
+  returnLetter() {
+    this.onLetter = false;
+
+    // Hide activeObject
+    this.activeObject.parent.visible = false;
+
+    // Get the SVG element
+    const letterIcon = document.querySelector(".letter-icon");
+
+    // Make the SVG visible
+    letterIcon.style.display = "block";
+
+    // letterIcon.style.transform = 'scale(2.5)';
+    // gsap.to(letterIcon.style, {
+    //     duration: 1, // duration of the animation in seconds
+    //     left: '0px', // replace with original x position
+    //     top: '0px', // replace with original y position
+    //     scale: 1, // replace with original scale
+    //     ease: "power1.out" // easing function for the animation
+    // });
 
     //gsap from to
     gsap.fromTo(
@@ -208,6 +251,38 @@ export default class OutlineModule {
         ease: "power1.out", // easing function for the animation
       }
     );
+  }
+
+  forestFilter(factor) {
+    if (factor > 0.7 && !this.isInForest) {
+      // entering forest
+      this.isInForest = true;
+      gsap.to(this.shaderPath.uniforms.vignette, {
+        duration: 2,
+        value: 0.75,
+        ease: "power1.out",
+      });
+
+      gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
+        duration: 2,
+        ...new THREE.Color("#43795a"),
+        ease: "power1.out",
+      });
+    } else if (factor <= 0.7 && this.isInForest) {
+      // leaving forest
+      this.isInForest = false;
+      gsap.to(this.shaderPath.uniforms.vignette, {
+        duration: 2,
+        value: 0.5,
+        ease: "power1.out",
+      });
+
+      gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
+        duration: 2,
+        ...new THREE.Color("#d8d8d8"),
+        ease: "power1.out",
+      });
+    }
   }
 
   moveCamera() {
@@ -419,7 +494,6 @@ export default class OutlineModule {
           (this.outlinePass.selectedObjects = []);
       }
     }
-    this.camera.updateMatrixWorld(); // Update the camera's matrix
     this.composer?.render();
   }
 }

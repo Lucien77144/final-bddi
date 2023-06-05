@@ -14,6 +14,7 @@ import Bridge from "../Components/Bridge/Bridge";
 import Stele from "../Components/Stele/Stele";
 import Letter from "../Components/Letter/Letter";
 import Bush from "../Components/Bush/Bush";
+import Symbol from "../Components/Symbol/Symbol.js";
 import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
 
@@ -175,6 +176,20 @@ export default class Intro {
         _scale: 2,
       }),
     ];
+    this.symbols = [
+      new Symbol({
+        _symbolName : "symbol14",
+        _position: new Vector3(-18, 4, 15),
+      }),
+      new Symbol({
+        _symbolName : "symbol2",
+        _position: new Vector3(-10, 5, -30.25),
+      }),
+      new Symbol({
+        _symbolName : "symbol21",
+        _position: new Vector3(-1, 3.5, -21.5),
+      }),
+    ]
 
     this.destroyed = [
       this.entrance = new Entrance({
@@ -222,6 +237,11 @@ export default class Intro {
     this.floors?.forEach((floor) => {
       floor.update();
     });
+
+    this.symbols?.forEach((symbol) => {
+      symbol.update();
+    });
+    
     this.river?.update();
 
     this.fireflies?.update();

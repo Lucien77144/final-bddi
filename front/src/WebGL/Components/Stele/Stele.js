@@ -1,6 +1,7 @@
 import { Vector2, Raycaster, Vector3 } from 'three';
 import * as THREE from 'three';
 import Experience from '@/WebGL/Experience';
+import cloneGltf from '@/WebGL/Utils/GltfClone';
 
 export default class Stele {
     constructor ({
@@ -107,7 +108,7 @@ export default class Stele {
 
             if (this.checkGameWon()) {
                 // console.log("You won the game!");
-                this.animation.play('open');
+                this.startAnimation();
             }
         });
 
@@ -142,7 +143,7 @@ export default class Stele {
     }
     
     setModel() {
-        this.model = this.resource.scene;
+        this.model = cloneGltf(this.resource).scene;
         this.model.position.copy(this.position);
         this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
         this.model.scale.set(1.5, 1.5, 1.5);
@@ -162,42 +163,21 @@ export default class Stele {
     }
 
     setAnimation() {
-            const openClip = this.resource.animations.find(
-                (animation) => animation.name === "Open"
-            )
-            const cubeClip = this.resource.animations.find(
-                (animation) => animation.name === "Cube.006"
-            )
-            const cylinderClip = this.resource.animations.find(
-                (animation) => animation.name === "Cylinder.009"
-            )
+        const clip = this.resource.animations[0];
 
-            this.animation = {
-                mixer: new THREE.AnimationMixer(this.model),
-                actions: {
-                    open : null,
-                    cube : null,
-                    cylinder : null,
-                },
-            }
+        this.animation = {
+          mixer: new THREE.AnimationMixer(this.model.children[3]),
+          action: null,
+        };
+    
+        this.animation.action = this.animation.mixer.clipAction(clip);
+        this.animation.action.setLoop(THREE.LoopOnce);
+        this.animation.action.clampWhenFinished = true;
+    }
 
-            this.animation.actions.open = this.animation.mixer.clipAction(openClip);
-            this.animation.actions.cube = this.animation.mixer.clipAction(cubeClip);
-            this.animation.actions.cylinder = this.animation.mixer.clipAction(cylinderClip);
-
-            this.animation.actions.current = this.animation.actions.open;
-            // this.animation.actions.current.play();
-
-            this.animation.play = (name) => {
-                const action = this.animation.actions[name];
-                const oldAction = this.animation.actions.current;
-                // console.log(action);
-                action.reset();
-                action.play();
-                // action.crossFadeFrom(oldAction, 0.5);
-
-                this.animation.actions.current = action;
-            }
+    startAnimation() {
+        this.animation.action.stop();
+        this.animation.action.play();
     }
 
     setDebug() {
@@ -212,5 +192,9 @@ export default class Stele {
             step: .1,
             label: "panel y",
         })
+    }
+
+    update() {
+        this.animation?.mixer.update(this.experience.time.delta * .001);
     }
 }

@@ -166,23 +166,124 @@ export default [
   // --------------------
 
   {
-    name: "symbol1",
+    name: "s1-1",
     type: "svg",
-    path: "svg/Symbol_1.svg",
+    path: "svg/Level 1 - 1.svg",
   },
   {
-    name: "symbol2",
+    name: "s1-2",
     type: "texture",
-    path: "svg/Symbol_2.svg",
+    path: "svg/Level 1 - 2.svg",
   },
   {
-    name: "symbol14",
+    name: "s1-3",
     type: "texture",
-    path: "svg/Symbol_14.svg",
+    path: "svg/Level 1 - 3.svg",
   },
   {
-    name: "symbol21",
+    name: "s1-4",
     type: "texture",
-    path: "svg/Symbol_21.svg",
+    path: "svg/Level 1 - 4.svg",
   },
+  {
+    name: "s1-5",
+    type: "texture",
+    path: "svg/Level 1 - 5.svg",
+  },
+  {
+    name: "s1-6",
+    type: "texture",
+    path: "svg/Level 1 - 6.svg",
+  },
+  {
+    name: "s1-7",
+    type: "texture",
+    path: "svg/Level 1 - 7.svg",
+  },
+  {
+    name: "s1-8",
+    type: "texture",
+    path: "svg/Level 1 - 8.svg",
+  },
+  {
+    name: "s2-1",
+    type: "texture",
+    path: "svg/Level 2 - 1.svg",
+  },
+  {
+    name: "s2-2",
+    type: "texture",
+    path: "svg/Level 2 - 2.svg",
+  },
+  {
+    name: "s2-3",
+    type: "texture",
+    path: "svg/Level 2 - 3.svg",
+  },
+  {
+    name: "s2-4",
+    type: "texture",
+    path: "svg/Level 2 - 4.svg",
+  },
+  {
+    name: "s2-5",
+    type: "texture",
+    path: "svg/Level 2 - 5.svg",
+  },
+  {
+    name: "s2-6",
+    type: "texture",
+    path: "svg/Level 2 - 6.svg",
+  },
+  {
+    name: "s2-7",
+    type: "texture",
+    path: "svg/Level 2 - 7.svg",
+  },
+  {
+    name: "s2-8",
+    type: "texture",
+    path: "svg/Level 2 - 8.svg",
+  },
+  {
+    name: "s3-1",
+    type: "texture",
+    path: "svg/Level 3 - 1.svg",
+  },
+  {
+    name: "s3-2",
+    type: "texture",
+    path: "svg/Level 3 - 2.svg",
+  },
+  {
+    name: "s3-3",
+    type: "texture",
+    path: "svg/Level 3 - 3.svg",
+  },
+  {
+    name: "s3-4",
+    type: "texture",
+    path: "svg/Level 3 - 4.svg",
+  },
+  {
+    name: "s3-5",
+    type: "texture",
+    path: "svg/Level 3 - 5.svg",
+  },
+  {
+    name: "s3-6",
+    type: "texture",
+    path: "svg/Level 3 - 6.svg",
+  },
+  {
+    name: "s3-7",
+    type: "texture",
+    path: "svg/Level 3 - 7.svg",
+  },
+  {
+    name: "s3-8",
+    type: "texture",
+    path: "svg/Level 3 - 8.svg",
+  },
+  
 ];

@@ -99,10 +99,7 @@ export default class Intro {
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(200, 15, 50));
     this.dialogueBox = new DialogueBox();
-    this.controPanel = new Stele({
-      _position: new Vector3(-5, 2.4, 6),
-      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
-    });
+    
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
     // this.bushs = [
@@ -176,20 +173,46 @@ export default class Intro {
         _scale: 2,
       }),
     ];
+
+    this.symbolsNames = [];
+    const disks = ['Disk_2005', 'Disk_1004', 'Disk_0004'];
+
+    for (let i = 0; i < disks.length; i++) {
+      for (let j = 0; j < 8; j++) {
+        this.symbolsNames.push({
+          name : `s${i + 1}-${j + 1}`,
+          disk : disks[i],
+          diskPosition : j,
+        });
+      }
+    }
+
+    this.symbolPosition = [
+      new Vector3(-10, 5, -30.25),
+      new Vector3(-21, 5, -21.63),
+      new Vector3(-18, 4, 15),
+      new Vector3(-10, 3.152, -22.337),
+    ]
+
     this.symbols = [
       new Symbol({
-        _symbolName : "symbol14",
-        _position: new Vector3(-18, 4, 15),
+        _symbolName : "s1-1",
+        _position: this.symbolPosition[1],
       }),
       new Symbol({
-        _symbolName : "symbol2",
-        _position: new Vector3(-10, 5, -30.25),
+        _symbolName : "s1-2",
+        _position: this.symbolPosition[1],
       }),
       new Symbol({
-        _symbolName : "symbol21",
-        _position: new Vector3(-1, 3.5, -21.5),
+        _symbolName : "s1-3",
+        _position: this.symbolPosition[1],
       }),
     ]
+    console.log(this.symbols);
+    this.controPanel = new Stele({
+      _position: new Vector3(-5, 2.4, 6),
+      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+    });
 
     this.destroyed = [
       this.entrance = new Entrance({
@@ -207,10 +230,10 @@ export default class Intro {
     // Setting letter : 
     this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
     // debug path :
-    // this.debugPath = new Cube({
-    //   _pos: new Vector3(-6.2, 2.304, -29.891),
-    //   _size: new Vector3(0.1, 0.1, 0.1),
-    // });
+    this.debugPath = new Cube({
+      _pos: new Vector3(-6.2, 2.304, -29.891),
+      _size: new Vector3(0.1, 0.1, 0.1),
+    });
 
     // Setting Fairy :
     this.fairy = new Fairy();

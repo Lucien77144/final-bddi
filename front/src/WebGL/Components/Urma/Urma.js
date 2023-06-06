@@ -53,6 +53,7 @@ export default class Urma {
     this.fairy = new Fairy();
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
+    this.ponchoResource = this.resources.items.ponchoModel;
 
     this.position = _position;
 
@@ -76,9 +77,20 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
-    this.scene.add(this.model);
-    this.camera.position.z = this.model.position.z;
     this.model.scale.set(1.5, 1.5, 1.5);
+
+    // PONCHO
+    this.poncho = cloneGltf(this.ponchoResource).scene;
+    this.poncho.name = "poncho";
+    this.poncho.position.set(0, 0, 0); // Position relative to the model
+    this.poncho.castShadow = true;
+    this.poncho.scale.set(2.5, 1.5, 1.5);
+    this.model.add(this.poncho); // Attach poncho to the model
+
+    this.scene.add(this.model); // Add model (with poncho) to the scene
+
+    this.camera.position.z = this.model.position.z;
+
     // console.log(this.model);
     const traverseModel = (object) => {
       object.traverse((child) => {
@@ -94,7 +106,9 @@ export default class Urma {
     traverseModel(this.model);
   }
 
+
   setAnimation() {
+    console.log(this.resource);
     const idleClip = this.resource.animations.find(
       (animation) => animation.name === "Idle"
     );
@@ -102,18 +116,32 @@ export default class Urma {
       (animation) => animation.name === "Run"
     );
 
+    // Poncho
+    const ponchoAnimationClip = this.ponchoResource.animations.find(
+      (animation) => animation.name === "Animation"
+    );
+
     this.animation = {
       mixer: new AnimationMixer(this.model),
+      ponchoMixer: new AnimationMixer(this.poncho), // Poncho mixer
       actions: {
         idle: null,
         run: null,
+      },
+      ponchoActions: { // Poncho actions
+        animation: null,
       },
     };
 
     this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
     this.animation.actions.run = this.animation.mixer.clipAction(runClip);
     this.animation.actions.current = this.animation.actions.idle;
+
+    this.animation.ponchoActions.animation = this.animation.ponchoMixer.clipAction(ponchoAnimationClip); // Poncho animation
+    this.animation.ponchoActions.current = this.animation.ponchoActions.animation; // Set poncho current action
+
     this.animation.actions.current.play();
+    this.animation.ponchoActions.current.play(); // Play poncho animation
 
     this.animation.play = (name) => {
       const nextAction = this.animation.actions[name];
@@ -125,7 +153,20 @@ export default class Urma {
 
       this.animation.actions.current = nextAction;
     };
+
+    this.animation.ponchoPlay = (name) => { // Poncho play
+      const nextAction = this.animation.ponchoActions[name];
+      const oldAction = this.animation.ponchoActions.current;
+
+      console.log("Poncho play");
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.ponchoActions.current = nextAction;
+    };
   }
+
 
   setInputs() {
     ["right", "left"].forEach((dir) => {
@@ -146,6 +187,7 @@ export default class Urma {
 
         if (val && !data.status[dir].start) {
           this.animation.play("run");
+          this.animation.ponchoPlay("animation"); // Poncho play
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir; // Ajoutez cette ligne

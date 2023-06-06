@@ -51,8 +51,8 @@ body {
 
 .dialogBox {
   font-family: 'Amatic SC';
-  font-size : 1.5rem;
-  color : white;
+  font-size: 1.5rem;
+  color: white;
   position: absolute;
   bottom: 0%;
   left: 50%;
@@ -112,6 +112,9 @@ body {
 }
 
 .letter-container {
+  font-size: 13pt;
+  font-weight: bold;
+  font-family: 'Amatic SC', cursive;
   position: absolute;
   top: 50%;
   left: 50%;

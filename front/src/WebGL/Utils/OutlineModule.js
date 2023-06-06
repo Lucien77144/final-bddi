@@ -32,7 +32,7 @@ export default class OutlineModule {
     this.onLetter = false;
     this.debug = this.experience.debug;
     this.activeObject = null;
-    this.base = null;
+    this.base = [];
     this.mouseDown = false;
     this.isInForest = false;
 
@@ -54,7 +54,8 @@ export default class OutlineModule {
     this.backupCamPosition = this.camera.position.clone();
 
     this.activeObject = null;
-    this.base = null;
+    this.base = [];
+    this.baseInteractive = true;
 
     this.mouseDown = false;
 
@@ -73,7 +74,7 @@ export default class OutlineModule {
     window.addEventListener("click", (event) => {
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "controlPanelBase") {
+        if (this.activeObject.name === "controlPanel") {
           this.controlPanelChildren = this.activeObject.parent.children;
           this.controlPanelChildren.forEach((child) => {
             if (child.name.includes("Disk")) {
@@ -81,10 +82,8 @@ export default class OutlineModule {
             }
           });
           if (this.activeObject.base) {
-            this.base = this.activeObject;
+            this.base.push(this.activeObject);
             this.handleBaseClick();
-          } else if (this.activeObject.disk) {
-            this.handleDiskClick();
           }
         } else if (this.activeObject.type === "letter") {
           this.handleLetterClick();
@@ -97,24 +96,21 @@ export default class OutlineModule {
         if (event.code === "Space" || event.code === "Escape") {
           this.returnCamera();
 
-          // Reset outlined object
           this.outlinePass.selectedObjects = [];
 
-          // Reset active object
           this.activeObject = null;
 
-          // If any objects have been modified during the interaction, reset them
-          // For example, you might reset any objects that have been moved or changed color
+          this.baseInteractive = true;
+
           this.interactiveObjects.forEach((object) => {
-            // Add code here to reset each object to its original state
-            object.interactive = false;
+            if(object.name.includes("Disk")) {
+              object.interactive = false;
+            }
           });
-          this.base.interactive = true;
         }
       } else if (this.onLetter) {
-        if (event.code === "Space") {
+        if (event.code === "Space" || event.code === "Escape") {
           this.returnLetter();
-          // ... rest of your event listener ...
         }
       }
     });
@@ -133,7 +129,8 @@ export default class OutlineModule {
     this.onLetter = true;
     // Define how far in front of the camera the object should appear
     const distanceInFrontOfCamera = 5;
-
+    this.activeObject.interactive = false;
+    this.letter  = this.activeObject.parent
     // Get a new position in front of the camera
     const direction = new THREE.Vector3();
     this.camera.getWorldDirection(direction);
@@ -147,7 +144,7 @@ export default class OutlineModule {
 
     const newRotation = new THREE.Vector3(-Math.PI / 2, 0, -Math.PI / 2);
     // Use GSAP to animate the letter's scale and position
-    gsap.to(this.activeObject.parent.scale, {
+    gsap.to(this.letter.scale, {
       duration: 1, // duration of the animation in seconds
       x: newScale.x,
       y: newScale.y,
@@ -155,7 +152,7 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    gsap.to(this.activeObject.parent.position, {
+    gsap.to(this.letter.position, {
       duration: 1, // duration of the animation in seconds
       x: newPosition.x,
       y: newPosition.y,
@@ -163,7 +160,7 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    gsap.to(this.activeObject.parent.rotation, {
+    gsap.to(this.letter.rotation, {
       duration: 1, // durée de l'animation en secondes
       x: newRotation.x,
       y: newRotation.y,
@@ -218,7 +215,7 @@ export default class OutlineModule {
     this.onLetter = false;
 
     // Hide activeObject
-    this.activeObject.parent.visible = false;
+    this.letter.visible = false;
 
     // Get the SVG element
     const letterIcon = document.querySelector(".letter-icon");
@@ -288,18 +285,18 @@ export default class OutlineModule {
   moveCamera() {
     this.grassScene.onGame = true;
 
-        const targetPosition = new THREE.Vector3();
-    
-        // Copy the intersected object's position
-        this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-    
-        // Move the target position a bit to the left (negative x) and up (positive y)
-        targetPosition.x -= -3;
-        targetPosition.y += 0;
-        targetPosition.z += 10;
-        
-        const newPosition = {x: -5, y: 6, z: 3};
-        const newUp = {x: 0, y: 6, z: 0};
+    const targetPosition = new THREE.Vector3();
+
+    // Copy the intersected object's position
+    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+
+    // Move the target position a bit to the left (negative x) and up (positive y)
+    targetPosition.x -= -3;
+    targetPosition.y += 0;
+    targetPosition.z += 10;
+
+    const newPosition = { x: -5, y: 6, z: 3 };
+    const newUp = { x: 0, y: 6, z: 0 };
 
     this.originalPosition = this.camera.position.clone();
     this.originalUp = this.camera.up.clone();
@@ -309,23 +306,23 @@ export default class OutlineModule {
     this.originalTarget = new THREE.Vector3();
     this.originalTarget.copy(this.camera.position).add(direction);
 
-        // Use GSAP to animate the camera's movement
-        gsap.to(this.camera.position, {
-            duration: 1, // duration of the animation in seconds
-            x: newPosition.x,
-            y: newPosition.y,
-            z: newPosition.z,
-            onUpdate: () => {
-                // Ensure the camera's up vector is set to signify the y-axis as up
-                this.camera.up.set(newUp.x, newUp.y, newUp.z);
-                this.camera.lookAt(-5, 2.4, 6);
-            },
-            onComplete: () => {
-              this.onGame = this.grassScene.onGame;
-            },
-            ease: "power1.out", // easing function for the animation
-        });
-    }
+    // Use GSAP to animate the camera's movement
+    gsap.to(this.camera.position, {
+      duration: 1, // duration of the animation in seconds
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      onUpdate: () => {
+        // Ensure the camera's up vector is set to signify the y-axis as up
+        this.camera.up.set(newUp.x, newUp.y, newUp.z);
+        this.camera.lookAt(-5, 2.4, 6);
+      },
+      onComplete: () => {
+        this.onGame = this.grassScene.onGame;
+      },
+      ease: "power1.out", // easing function for the animation
+    });
+  }
 
   returnCamera() {
     if (this.originalPosition && this.originalUp) {
@@ -365,6 +362,7 @@ export default class OutlineModule {
     this.composer.addPass(this.filmPath);
 
     this.shaderPath = this.setShaderPath();
+
     this.composer.addPass(this.shaderPath);
 
     this.composer.renderer.physicallyCorrectLights = false;
@@ -386,7 +384,8 @@ export default class OutlineModule {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
         uTime: { value: 0 },
-        uSteamColor: { value: new THREE.Color("#43795a") },
+        isLetterOpen: { value: false },
+        uSteamColor: { value: new THREE.Color("#c9c9c9") },
         uPosZ: { value: 0 },
       },
       vertexShader,
@@ -419,17 +418,16 @@ export default class OutlineModule {
   handleBaseClick() {
     this.activeObject.traverse((child) => {
       if (child.base) {
-        child.interactive = false;
+        this.baseInteractive = false;
         this.moveCamera();
       } else if (child.disk) {
-        child.interactive = true;
+        this.baseInteractive = true;
       }
     });
 
     this.getInteractiveObjects(); // Refresh interactive objects
     this.activeObject = null;
 
-    // After the letter is clicked, show the dialog box
     // const dialogBox = document.getElementById("dialogBox");
 
     // if (dialogBox) {
@@ -450,11 +448,6 @@ export default class OutlineModule {
     // }
   }
 
-  handleDiskClick() {
-    // You might have additional behavior you want to implement when a disk is clicked.
-    // For example, you could change the color of the disk or move it to a different location.
-  }
-
   handleDiskHover() {
     this.activeObject.traverse((child) => {
       if (child.disk) {
@@ -467,21 +460,12 @@ export default class OutlineModule {
   }
 
   update() {
-    // if (
-    //   this.shaderPath &&
-    //   this.shaderPath.uniforms &&
-    //   this.shaderPath.uniforms.vignette
-    // ) {
-    //   this.shaderPath.uniforms.vignette.value =
-    //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
-    // }
-
     if(this.shaderPath) {
       this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
       this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
+      this.shaderPath.uniforms.isLetterOpen.value = this.onLetter;
     }
 
-    // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {
       const intersects = this.raycaster?.intersectObjects(
         this.interactiveObjects,
@@ -490,16 +474,18 @@ export default class OutlineModule {
       if (intersects?.length > 0) {
         intersects.forEach((i) => {
           if (i.object.type === "Points") {
-            // DELETE object from intersect array
             intersects.splice(intersects.indexOf(i), 1);
           }
         });
         const obj = intersects[0]?.object;
         if (obj.interactive === true) {
           const object = obj;
-          this.outlinePass.selectedObjects = [object];
+          if (object?.name === "controlPanel") {
+            this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
+          } else {
+            this.outlinePass.selectedObjects = [object];
+          }
 
-          // Translate interact text on top of object position
           const screenPosition = object.position.clone();
           screenPosition.project(this.camera);
           screenPosition.x = ((screenPosition.x + 1) * window.innerWidth) / 2;

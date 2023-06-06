@@ -188,26 +188,26 @@ export default class Intro {
     }
 
     this.symbolPosition = [
-      new Vector3(-10, 5, -30.25),
+      new Vector3(-10, 5, -21.630),
       new Vector3(-21, 5, -21.63),
-      new Vector3(-18, 4, 15),
-      new Vector3(-10, 3.152, -22.337),
+      new Vector3(-9.02, 4.565, -30.109),
+      new Vector3(-0, 3.152, -22.337),
+      new Vector3(-4.20, 3.804, -11.043),
+      new Vector3(-13.97, 3.696, -1.848),
+      new Vector3(-13.26, 3.696, 17.228),
     ]
 
-    this.symbols = [
-      new Symbol({
-        _symbolName : "s1-1",
-        _position: this.symbolPosition[1],
-      }),
-      new Symbol({
-        _symbolName : "s1-2",
-        _position: this.symbolPosition[1],
-      }),
-      new Symbol({
-        _symbolName : "s1-3",
-        _position: this.symbolPosition[1],
-      }),
-    ]
+    this.symbols = [];
+
+    for (let i = 0; i < 3; i++) {
+      const randomSymbolName = this.symbolsNames[Math.floor(Math.random() * this.symbolsNames.length)].name;
+      const randomPosition = this.symbolPosition[Math.floor(Math.random() * this.symbolPosition.length)];
+      
+      this.symbols.push(new Symbol({
+        _symbolName: randomSymbolName,
+        _position: randomPosition,
+      }));
+    }
     console.log(this.symbols);
     this.controPanel = new Stele({
       _position: new Vector3(-5, 2.4, 6),

@@ -52,29 +52,14 @@ float cnoise(vec2 P) {
 // ------
 
 float getNoise() {
-  vec2 vUvCopy = vUv;
-  return clamp(0., 1., cnoise(vec2(((vUvCopy.x - uPosZ * .1) * 3.) + uTime * 0.0005, vUvCopy.y * 10.)));
+  return clamp(0., 1., cnoise(vec2(((vUv.x - uPosZ * .1) * 3.) + uTime * 0.0003, vUv.y * 10.)));
 }
 
 void main() {
   vec4 texel = texture2D(tDiffuse, vUv);
   vec2 p = vUv * 2.0 - 1.0;
 
-  gl_FragColor = texel;
-  gl_FragColor.xyz *= clamp(1.0 - length(p) * vignette, 0.0, 1.0);
-  gl_FragColor.xyz = mix(gl_FragColor.xyz, uSteamColor, getNoise() / 3.);
-
-  // if (isLetterOpen) {
-  //   // Transition in
-  //   float transition = uTime * 0.0001; // Adjust the transition speed
-  //   gl_FragColor.xyz = mix(gl_FragColor.xyz, uSteamColor, smoothstep(0.0, 1.0, transition) * getNoise() / 50.);
-  // } else {
-  //   // Transition out
-  //   float transition = uTime * 0.0001; // Adjust the transition speed
-  //   gl_FragColor.xyz = mix(gl_FragColor.xyz, uSteamColor, (1.0 - smoothstep(0.0, 1.0, transition)) * getNoise() / 3.);
-  // }
+	gl_FragColor = texel;
+	gl_FragColor.xyz = mix(gl_FragColor.xyz, uSteamColor, getNoise() / 5.);
+	gl_FragColor.xyz *= clamp(1.0 - length(p) * vignette, 0.0, 1.0 );
 }
-
-
-
-

@@ -152,10 +152,10 @@ export default class Stele {
             if(child.name.includes('Disk')) {
                 child.disk = true;
                 // child.interactive = true;
-            } else if(child.name.includes('Cube')){
+            } else if(child.name.includes('Cylinder') || child.name.includes('Cube')) {
                 child.interactive = true;
                 child.base = true;
-                child.name = "steleBase"
+                child.name = "controlPanel";
             }
         });
         this.scene.add(this.model);

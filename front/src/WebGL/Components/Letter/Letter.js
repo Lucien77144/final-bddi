@@ -16,6 +16,12 @@ export default class Letter {
     this.setModel();
     this.setAnimation();
     this.animationStarted = false;
+
+    this.letterIcon = document.querySelector(".letter-icon");
+    console.log(this.letterIcon);
+    this.letterIcon.addEventListener("click", () => {
+      this.showLetter();
+    });
   }
 
   setModel() {
@@ -81,6 +87,14 @@ export default class Letter {
     this.animation.actions.current.stop();
     this.animation.actions.current.play();
     this.animationStarted = true;
+  }
+
+  showLetter() {
+    const letter = this.scene.getObjectByName("letter");
+    console.log(letter);
+    letter.visible = true;
+    this.showContentDiv();
+    this.experience.outlineModule.onLetter = true;
   }
 
   update() {

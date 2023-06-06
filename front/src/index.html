@@ -12,7 +12,7 @@
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
 
-    <section class="" id="landingPage">
+    <section class="hidden" id="landingPage">
       <div class="title">
         <svg width="398" height="136" viewBox="0 0 398 136" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M3.02629 1V72.9015M73.4592 1V85.1506C73.4592 90.076 73.4592 96.7442 72.2869 103.524M3.02629 72.9015V85.1506C3.02629 100.462 3.02629 132.616 38.2427 132.616C62.1307 132.616 69.815 117.821 72.2869 103.524M3.02629 72.9015C1.49285 124.96 67.5219 131.085 72.2869 103.524" stroke="white" stroke-width="5.16491"/>
@@ -23,18 +23,20 @@
         <p class="subtitle">
           Plonge dans les couleurs oubliées
         </p>    
-        <div>
-          
+        <div class="scrollParagraph">
+          <p class="scrollText">
+            Scroll
+          </p>
+          <svg width="62" height="19" viewBox="0 0 62 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M13.6864 5.63657C4.41128 5.63657 5.3388 1.00028 18.9423 1.00028M18.9423 1.00028C32.5459 1.00028 17.0873 11.8183 7.19382 11.8183C-2.69965 11.8183 -2.08131 1.00028 18.9423 1.00028ZM18.9423 1.00028C32.5459 1.00028 32.5457 13.3634 31 18C29.454 13.3634 29.4572 1.0211 43.0179 1.00003M48.3136 5.63629C57.5887 5.63629 56.6612 1 43.0577 1M43.0577 1C43.0444 1 43.0311 1.00001 43.0179 1.00003M43.0577 1C64.0813 1 64.6997 11.818 54.8062 11.818C44.9224 11.818 29.4843 1.02112 43.0179 1.00003" stroke="#19608D" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>  
         </div> 
       </div>
       <div class="subpage">
         <div class="paragraph">
           <p>
-            Dans un monde où l’art n’existe plus, aidez un petit garçon et sa fée imaginaire à accomplir des missions ordonnées par sa mère. 
-          </p>
-          <p>
-            Laissez parler votre imagination, et soyez attentifs à ce qui vous entoure !
-          </p>
+            Dans un monde dépourvu d'art, propulsez-vous dans une aventure en incarnant un jeune héros et de sa fée magique. Ensemble, répondez à l'appel des missions dictées par sa mère, gardienne des savoirs anciens. Laissez votre créativité se déchaîner, et restez en éveil face aux merveilles qui peuplent votre chemin.
+            Explorez, créez et transformez ce monde sans art en une toile vivante d'émotions et d'expression. Le destin de l'art repose entre vos mains...          </p>
         </div>
         <div class="button-group">
           <div class="create-room">
@@ -116,15 +118,18 @@
         </div>
       </div>
       <div id="waitSelection" class="hidden">
-        attendez que l'autre joueur choisisse son personnage
+        <div class="card">
+
+          Ton allié doit choisir un personnage. Tu contrôleras l'autre personnage
+        </div>
       </div>
     </section>
-    <section class="hidden center" id="roleSelection">
+    <section class=" center" id="roleSelection">
       <div class="d-flex flex-center">
         <div class="card mr-1">
-          <h1>Choisissez votre personnage</h1>
+          <h1>Embarquez dans l'histoire en vous appropriant un héros</h1>
           <p class="legend">
-            En tant que “Joueur1”, vous pouvez choisir votre personnage. L’autre joueur aura l’autre personnage par défaut
+            En tant que créateur de cette partie, tu dois choisir un personnage. Ton allié contrôlera l'autre personnage.
           </p>
           <p class="roleDescription">
 

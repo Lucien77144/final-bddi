@@ -219,10 +219,30 @@ section:not(#scene) {
 }
 
 .paragraph {
-  font-size : 1.25rem;
   font-family: 'Urbanist';
-  width : 50%;
-  text-align : center;
+  width : 680px;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: center;
+  margin-top : 15%;
+  margin-bottom : 10%;
+}
+
+.scrollParagraph {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position : relative;
+  top : 30%;
+}
+
+.scrollText {
+  font-family : 'Amatic SC';
+  color : #19608D;
+  font-size : 2rem;
 }
 
 .card {

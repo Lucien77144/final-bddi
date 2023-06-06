@@ -13,7 +13,7 @@ import AudioManager from "./Utils/AudioManager";
 let instance = null;
 
 export default class Experience {
-  constructor(_canvas) {
+  constructor(_canvas,) {
     // Singleton
     if (instance) {
       return instance;

@@ -51,7 +51,7 @@ export default class Urma {
     this.time = this.experience.time;
     this.camera = this.experience.camera.instance;
     this.path = new PathUrma();
-    this.grassScene = this.experience.activeScene;
+    this.outlineModule = this.experience.outlineModule;
     this.fairy = new Fairy();
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
@@ -208,7 +208,7 @@ export default class Urma {
 
     const isOneWay = data.status.left.start !== data.status.right.start;
 
-    if (!this.grassScene.onGame) {
+    if (!this.outlineModule.onGame && !this.outlineModule.onLetter) {
       data.move.delta = isOneWay
         ? data.move.velocity *
           (OPTIONS.SPEED / 1000) *
@@ -236,6 +236,7 @@ export default class Urma {
       // send without capital letter
     }
     } else {
+      if ( !this.outlineModule.onGame && !this.outlineModule.onLetter) {
         const { model, camera, time } = this;
         const { position: modelPos } = model;
         const { position: cameraPos, rotation: cameraRot } = camera;
@@ -267,6 +268,7 @@ export default class Urma {
         this.animation.mixer.update(this.time.delta * 0.001);
 
     }
+  }
   }
 
   updateCameraX(cameraPos, modelPos) {

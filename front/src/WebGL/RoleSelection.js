@@ -1,130 +1,145 @@
 import * as THREE from 'three';
-import Resources from './Utils/Resources';
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import sources from './sources';
-import Sizes from './Utils/Sizes';
-import Time from './Utils/Time';
-import Camera from './Camera';
-import Renderer from './Renderer';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { roleSelectionEvent } from '../scripts/room';
-import gsap from 'gsap';
-
-let instance = null
+import { gsap } from "gsap";
 
 export default class RoleSelection {
   constructor(_canvas) {
 
-    this.swipeButton = document.querySelector('#swipeButton');
-    this.roleDescription = document.querySelector('.roleDescription');
-    this.selectionRoleContinue = document.querySelector('#selectionRoleContinue');
-    this.roleDescription.innerHTML = "urma"
-    this.selectedRole = 'urma';
-
-    this.swipeButton.addEventListener('click', () => {
-      this.switchRole();
-    });
-
-    this.selectionRoleContinue.addEventListener('click', () => {
-      roleSelectionEvent(this.selectedRole);
-    });
-
     this.canvas = _canvas;
-    this.scene = new THREE.Scene()
 
-    // Cube
-    const cubeGeometry = new THREE.BoxGeometry(1, 1, 1)
-    const cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-    const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterial)
-    this.scene.add(cubeMesh)
+    this.swipeButton = document.querySelector('#swipeButton');
+  
+    // Create scene
+    this.scene = new THREE.Scene();
+  
+    // Create camera
+    const fov = 75;
+    const aspect = this.canvas.clientWidth / this.canvas.clientHeight;
+    const near = 0.1;
+    const far = 1000;
+    this.camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+    this.camera.position.z = 5; // Move camera away
+  
+    // Create renderer with alpha
+    this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+    this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.renderer.setPixelRatio(window.devicePixelRatio);
+  
+    // Adjust canvas and camera aspect ratio on resize
+    window.addEventListener('resize', () => {
+      this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+      this.camera.aspect = this.canvas.clientWidth / this.canvas.clientHeight;
+      this.camera.updateProjectionMatrix();
 
-    // Cube 2
-
-    const cubeGeometry2 = new THREE.BoxGeometry(1, 1, 1)
-    const cubeMaterial2 = new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    const cubeMesh2 = new THREE.Mesh(cubeGeometry2, cubeMaterial2)
-    cubeMesh2.position.x = 8
-    this.scene.add(cubeMesh2)
-
-    this.sizes = {
-      width: window.innerWidth / 2,
-      height: window.innerHeight / 2
-    }
-
-    this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 100)
-    this.camera.position.z = 3
-    this.scene.add(this.camera)
-
-    this.controls = new OrbitControls(this.camera, this.canvas)
-    this.controls.enableDamping = true
-
-    // Controls
-    this.controls = new OrbitControls(this.camera, this.canvas)
-    this.controls.enableDamping = true
-
-    this.cubePositions = [
-      { x: 0, y: 0, z: 3 },   // Position for cube1
-      { x: 8, y: 0, z: 3 }    // Position for cube2
-    ];
-
-    this.cubes = [cubeMesh, cubeMesh2];
+    });
     
-    // Renderer
-    this.renderer = new THREE.WebGLRenderer({
-        canvas: this.canvas,
-        // Anti-aliasing
-        antialias: true
-    })
+    this.clock = new THREE.Clock();
+    // Add lighting
+    const light = new THREE.DirectionalLight(0xffffff, 1);
+    light.position.set(1, 1, 1).normalize();
+    this.scene.add(light);
+  
+    // Load models
+    this.loaders = {};
+    this.loaders.gltfLoader = new GLTFLoader();
+    this.sources = sources;
+    this.loadModels();
+    // Start rendering
+    this.animate();
 
-    
+    // Define a property to keep track of which model is active
+    this.activeModel = 'urmaModel';
 
-    this.renderer.setSize(this.sizes.width, this.sizes.height)
-    this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-    
-    // Animate
-    this.clock = new THREE.Clock()
+    // Add event listener to the button
+    this.swipeButton.addEventListener('click', () => this.handleSwipeButton());
+  }
+  
 
-    // Make background transparent
-    this.renderer.setClearColor(0x000000, 0);
+  loadModels() {
+    // Find URMA and Fairy models
+    const urmaModel = this.sources.find((source) => source.name === 'urmaModel');
+    const fairyModel = this.sources.find((source) => source.name === 'fairyModel');
+  
+    // URMA Model
+    this.loaders.gltfLoader.load(
+      urmaModel.path,
+      (gltf) => {
+        this.urmaModel = gltf.scene;
+        this.scene.add(this.urmaModel); // Add model to scene
+  
+        // Set model position
+        this.urmaModel.position.set(0, -1, 3); // In front
+        this.urmaModel.scale.set(1.5, 1.5, 1.5); // Scale down
+  
+        // Store animation mixer and idle animation
+        this.urmaMixer = new THREE.AnimationMixer(this.urmaModel);
+        const idleAnimation = gltf.animations.find((animation) => animation.name === 'Idle');
+        this.urmaAction = this.urmaMixer.clipAction(idleAnimation);
+        this.urmaAction.play();
+      },
+      undefined,
+      (error) => {
+        console.error(error);
+      }
+    );
+  
+    // Fairy Model
+    this.loaders.gltfLoader.load(
+      fairyModel.path,
+      (gltf) => {
+        this.fairyModel = gltf.scene;
+        this.fairyModel.rotation.y = Math.PI / 2;
+        this.scene.add(this.fairyModel); // Add model to scene
+        
+        // Set model position
+        this.fairyModel.position.set(3, 1, 1); // To the right of urmaModel
+        this.fairyModel.scale.set(0.2, 0.2, 0.2); // Scale down
+        // Store animation mixer and fly animation
+        this.fairyMixer = new THREE.AnimationMixer(this.fairyModel);
+        const flyAnimation = gltf.animations.find((animation) => animation.name === 'fly');
+        this.fairyAction = this.fairyMixer.clipAction(flyAnimation);
+        this.fairyAction.play();
+      },
+      undefined,
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
+  
 
-    this.tick = () =>
-    {
-        this.elapsedTime = this.clock.getElapsedTime()
+  handleSwipeButton() {
+    // Toggle active model
+    this.activeModel = this.activeModel === 'urmaModel' ? 'fairyModel' : 'urmaModel';
     
-        // Update controls
-        this.controls.update()
+    // Determine the target position
+    const targetPosition = this.activeModel === 'urmaModel'
+      ? { x: 0, y: 0, z: 5 }  // Adjust position as needed
+      : { x: 3, y: 0, z: 5 }; // Adjust position as needed
     
-        // Render
-        this.renderer.render(this.scene, this.camera)
-    
-        // Call tick again on the next frame
-        window.requestAnimationFrame(this.tick)
-    }
-    
-    this.tick()
+    // Use GSAP to animate the camera movement
+    gsap.to(this.camera.position, { 
+      duration: 1, // duration of the transition in seconds
+      x: targetPosition.x, 
+      y: targetPosition.y, 
+      z: targetPosition.z, 
+      ease: 'power2.inOut', // easing function for the transition
+      onUpdate: () => this.camera.updateProjectionMatrix() // update the camera's matrix each frame
+    });
   }
 
-  switchRole() {
-    if (this.selectedRole === 'urma') {
-      this.selectedRole = 'heda';
-      this.roleDescription.innerHTML = "heda";
-      this.currentCube = 1;
-    } else {
-      this.selectedRole = 'urma';
-      this.roleDescription.innerHTML = "urma";
-      this.currentCube = 0;
-    }
-    console.log(this.cubes[this.currentCube].position);
-    gsap.to(this.camera.position, {
-      x: this.cubePositions[this.currentCube].x,
-      y: this.cubePositions[this.currentCube].y,
-      z: this.cubePositions[this.currentCube].z,
-      duration: 1,  // adjust as needed
-      onUpdate: () => {
-        this.camera.updateProjectionMatrix();  // important to keep the scene visually correct
-        this.camera.lookAt(this.cubes[this.currentCube].position);  // Look at the currently active cube
-      }
-    });
+  animate() {
+    requestAnimationFrame(() => this.animate());
+  
+    // Calculate delta time for mixer updates
+    const delta = this.clock.getDelta();
+  
+    // Update mixers
+    if (this.urmaMixer) this.urmaMixer.update(delta);
+    if (this.fairyMixer) this.fairyMixer.update(delta);
+  
+    this.renderer.render(this.scene, this.camera);
   }
   
 }
-

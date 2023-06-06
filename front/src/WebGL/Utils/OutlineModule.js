@@ -233,6 +233,9 @@ export default class OutlineModule {
     // Hide activeObject
     this.letter.visible = false;
 
+    // remove letter container
+    document.querySelector(".letter-container").remove();
+
     // Get the SVG element
     const letterIcon = document.querySelector(".letter-icon");
 

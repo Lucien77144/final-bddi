@@ -77,12 +77,16 @@ export default class Fairy extends EventEmitter {
   moveFairy() {
     if (!this.model) return;
 
-    this.movePosition = (this.isFairyMoving() && (this.mouseMove.cursor.z != 0) && (this.mouseMove.cursor.y != 0) && (this.mouseMove.cursor.x != 0))
+    const isCursorInitied = this.mouseMove.cursor.x != 0 && this.mouseMove.cursor.y != 0 && this.mouseMove.cursor.z != 0;
+
+    this.movePosition = (this.isFairyMoving() && isCursorInitied)
       ? this.mouseMove.cursor
       : this.movePosition;
 
-    if (this.urma.isUrmaMoving && Math.abs(this.urma.model.position.distanceTo(this.movePosition)) > 5) {
-      this.movePosition.z -= this.urma.model.position.distanceTo(this.movePosition) / 5;
+    this.direction = (this.urma.model.position.z - this.camera.position.z) > 0 ? 1 : -1;
+
+    if (Math.abs(this.urma.model.position.distanceTo(this.movePosition)) > 10) {
+      this.movePosition.z += ((this.urma.model.position.distanceTo(this.movePosition) / 5) * this.direction);
     }
 
     const fairyDir = new Vector3()

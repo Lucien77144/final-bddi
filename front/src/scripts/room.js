@@ -2,6 +2,7 @@ import Experience from '@/WebGL/Experience.js';
 import { socket } from './socket.js';
 import Stele from '@/WebGL/Components/Stele/Stele.js';
 import { Vector3 } from 'three';
+import OutlineModule from '@/WebGL/Utils/OutlineModule.js';
 
 /**
  * @todo 
@@ -131,6 +132,8 @@ export function roleSelectionEvent(role) {
     socket.emit('roleSelect', {roomId : room.id, role: role});
 }
 
+let experience;
+
 socket.on('role', (playerRole) => {
     currentPlayer.role = playerRole;
     console.log('player', currentPlayer);
@@ -141,7 +144,7 @@ socket.on('role', (playerRole) => {
         <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
-    const experience = new Experience(document.querySelector("canvas#webgl"));
+    experience = new Experience(document.querySelector("canvas#webgl"));
     experience.setUp();
     scene.classList.remove('hidden');
 });
@@ -168,4 +171,17 @@ socket.on('symbolSelect', (data) => {
             _symbols: symbolsForUrma,
           });
     }
+});
+
+// Letters
+
+
+export function letterClicked() {
+    socket.emit('letterClicked', {roomId: room.id});
+}
+
+
+socket.on('letterClicked', () => {
+        console.log('Letter clicked received');
+        experience.outlineModule.handleLetterClick();
 });

@@ -9,7 +9,7 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import vertexShader from "../Components/WorldShaders/vertexShader.glsl";
 import fragmentShader from "../Components/WorldShaders/fragmentShader.glsl";
 import { currentPlayer } from "@/scripts/room";
-
+import * as ROOM from "@/scripts/room";
 
 let instance = null;
 export default class OutlineModule {
@@ -97,7 +97,6 @@ export default class OutlineModule {
     });
 
         window.addEventListener('keydown', (event) => {
-            if ( currentPlayer.role === "heda" ) return;
             if(this.onGame) {
                 if ((event.code === 'Space') || (event.code === 'Escape')) {
                     this.returnCamera();
@@ -135,11 +134,19 @@ export default class OutlineModule {
   }
 
   handleLetterClick() {
+    if ( currentPlayer.role === "urma" ) {
+      this.letter  = this.activeObject.parent
+      ROOM.letterClicked();
+      this.activeObject.interactive = false;
+      console.log(this.activeObject);
+    } else {
+      this.letter = this.scene.children.filter((child) => child.name === "letter")[0];
+      console.log(this.letter);
+      this.letter.children[0].interactive = false
+    }
     this.onLetter = true;
     // Define how far in front of the camera the object should appear
     const distanceInFrontOfCamera = 5;
-    this.activeObject.interactive = false;
-    this.letter  = this.activeObject.parent
     // Get a new position in front of the camera
     const direction = new THREE.Vector3();
     this.camera.getWorldDirection(direction);

@@ -91,6 +91,13 @@ io.on('connection', (socket) => {
     io.to(urma.id).emit('symbolSelect', data.symbols);
   })
 
+  socket.on('letterClicked', (data) => {
+    // send letter to heda
+    let room = rooms.find(room => room.id === data.roomId);
+    let heda = room.players.find(player => player.role === 'heda');
+    io.to(heda.id).emit('letterClicked');
+  })
+
 });
 
 function generateRandomId() {

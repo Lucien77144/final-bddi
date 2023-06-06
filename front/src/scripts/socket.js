@@ -5,7 +5,7 @@ import { io } from 'socket.io-client'
 // import * as dotenv from 'dotenv'
 // dotenv.config()
 
-export const socket = io('http://localhost:3000')
+export const socket = io('http://172.20.10.10:3000')
 // socket.on('connect', init)
 
 /* Imports go here */

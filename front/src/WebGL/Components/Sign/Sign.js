@@ -1,6 +1,7 @@
 import Experience from "webgl/Experience.js";
 import { Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import Stele from "../Stele/Stele";
 
 let instance = null;
 export default class Sign {
@@ -15,6 +16,8 @@ export default class Sign {
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
     this.time = this.experience.time;
+
+    this.stele = new Stele();
 
     this.position = _position;
 
@@ -31,6 +34,7 @@ export default class Sign {
     this.model = SkeletonUtils.clone(this.resource.scene);
     this.model.position.copy(this.position);
     this.model.scale.set(0.3, 0.3, 0.3);
+    this.model.rotation.y = -Math.PI;
     this.model.name = this.name;
     this.world.add(this.model);
   }
@@ -66,5 +70,11 @@ export default class Sign {
       max: Math.PI,
       step: 0.1,
     });
+  }
+
+  update() {
+    if (this.stele.isFirstGameComplete) {
+      this.model.rotation.y = Math.PI * 2;
+    }
   }
 }

@@ -256,5 +256,7 @@ export default class Urma {
     this.updatePosition();
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.00025);
+
+    console.log(this.model.position)
   }
 }

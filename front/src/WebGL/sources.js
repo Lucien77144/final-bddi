@@ -56,6 +56,11 @@ export default [
     type: "glb",
     path: "models/Tree/Tree.glb",
   },
+  {
+    name: "signModel",
+    type: "glb",
+    path: "models/Sign/Sign.glb",
+  },
 
   // --------------------
   // Audios :

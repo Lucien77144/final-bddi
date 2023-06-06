@@ -17,6 +17,7 @@ import Bush from "../Components/Bush/Bush";
 import Symbol from "../Components/Symbol/Symbol.js";
 import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
+import Sign from "../Components/Sign/Sign.js";
 
 export default class Intro {
   constructor() {
@@ -45,6 +46,11 @@ export default class Intro {
         _count: 500000,
       }),
     ];
+
+    this.sign = new Sign({
+      _position: new Vector3(-6, 2, -32),
+    });
+
     this.river = new River({
       _position: new Vector3(-17, 1.35, -10.2),
       _size: new Vector2(13, 60),
@@ -61,10 +67,10 @@ export default class Intro {
     });
     this.bigTrees = [
       new Tree({
-        _position: new Vector3(-29.6, .9, -18)
+        _position: new Vector3(-29.6, 0.9, -18),
       }),
       new Tree({
-        _position: new Vector3(-20, -.5, -25),
+        _position: new Vector3(-20, -0.5, -25),
       }),
       new Tree({
         _position: new Vector3(-2, -2, -20),
@@ -79,13 +85,13 @@ export default class Intro {
         _position: new Vector3(-15, -1, -40),
       }),
       new Tree({
-        _position: new Vector3(-25, -.25, -50),
+        _position: new Vector3(-25, -0.25, -50),
       }),
       new Tree({
         _position: new Vector3(1, -2, -33),
       }),
       new Tree({
-        _position: new Vector3(-25, .25, 2.5),
+        _position: new Vector3(-25, 0.25, 2.5),
       }),
       new Tree({
         _position: new Vector3(-15, 0, 30),
@@ -101,7 +107,7 @@ export default class Intro {
     this.dialogueBox = new DialogueBox();
     this.stele = new Stele({
       _position: new Vector3(-5, 2.4, 6),
-      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+      _rotation: new Vector3(-0.1, -Math.PI / 6, -0.125),
     });
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
@@ -109,59 +115,59 @@ export default class Intro {
       new Bush({
         _position: new Vector3(-2, -1.25, 2),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .45,
+        _scale: 0.45,
       }),
       new Bush({
         _position: new Vector3(-20, 0, 15),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
+        _scale: 0.6,
       }),
       new Bush({
         _position: new Vector3(-2, -1.7, 21.5),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
+        _scale: 0.5,
       }),
       new Bush({
-        _position: new Vector3(-30, .7, 3.9),
+        _position: new Vector3(-30, 0.7, 3.9),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
+        _scale: 0.6,
       }),
       new Bush({
-        _position: new Vector3(-30, .7, -22.8),
+        _position: new Vector3(-30, 0.7, -22.8),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .6,
+        _scale: 0.6,
       }),
       new Bush({
-        _position: new Vector3(-3.3, -.7, -18.3),
+        _position: new Vector3(-3.3, -0.7, -18.3),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .45,
+        _scale: 0.45,
       }),
       new Bush({
-        _position: new Vector3(-14.1, .7, -32.6),
+        _position: new Vector3(-14.1, 0.7, -32.6),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
+        _scale: 0.5,
       }),
       new Bush({
-        _position: new Vector3(-14.1, .7, -32.6),
+        _position: new Vector3(-14.1, 0.7, -32.6),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
+        _scale: 0.5,
       }),
       new Bush({
         _position: new Vector3(-19.6, 1.8, -39.1),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .35,
+        _scale: 0.35,
       }),
       new Bush({
         _position: new Vector3(2.2, -1.8, -32.6),
         _rotation: new Vector3(0, Math.random() * 2 * Math.PI, 0),
-        _scale: .5,
+        _scale: 0.5,
       }),
     ];
 
     this.stairs = new Stairs({
       _position: new Vector3(-17.4, 1.1, 18.5),
-      _rotation: new Vector3(0, .8, 0),
-      _scale: .0075,
+      _rotation: new Vector3(0, 0.8, 0),
+      _scale: 0.0075,
     });
 
     this.entrances = [
@@ -178,33 +184,33 @@ export default class Intro {
     ];
     this.symbols = [
       new Symbol({
-        _symbolName : "symbol14",
+        _symbolName: "symbol14",
         _position: new Vector3(-18, 4, 15),
       }),
       new Symbol({
-        _symbolName : "symbol2",
+        _symbolName: "symbol2",
         _position: new Vector3(-10, 5, -30.25),
       }),
       new Symbol({
-        _symbolName : "symbol21",
+        _symbolName: "symbol21",
         _position: new Vector3(-1, 3.5, -21.5),
       }),
-    ]
+    ];
 
     this.destroyed = [
-      this.entrance = new Entrance({
+      (this.entrance = new Entrance({
         _position: new Vector3(-17.4, 1.1, -2.2),
         _rotation: new Vector3(Math.PI, 2.2, 0),
         _scale: 2,
-      }),
-      this.entrance = new Entrance({
+      })),
+      (this.entrance = new Entrance({
         _position: new Vector3(-15.2, 1.1, 2.2),
         _rotation: new Vector3(Math.PI, 2.2, 0.1),
         _scale: 2,
-      }),
-    ]
+      })),
+    ];
 
-    // Setting letter : 
+    // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
     // this.debugPath = new Cube({
@@ -223,6 +229,8 @@ export default class Intro {
   }
 
   update() {
+    this.sign?.update();
+
     this.mainTree?.update();
     this.bigTrees?.forEach((tree) => {
       tree.update();
@@ -243,7 +251,7 @@ export default class Intro {
     this.symbols?.forEach((symbol) => {
       symbol.update();
     });
-    
+
     this.river?.update();
 
     this.fireflies?.update();

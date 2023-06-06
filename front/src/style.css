@@ -206,6 +206,7 @@ section:not(#scene) {
 .subtitle {
   font-size : 1.25rem;
   margin-top : 1rem;
+  font-family: 'Urbanist';
 }
 
 .subpage {
@@ -219,7 +220,7 @@ section:not(#scene) {
 
 .paragraph {
   font-size : 1.25rem;
-
+  font-family: 'Urbanist';
   width : 50%;
   text-align : center;
 }

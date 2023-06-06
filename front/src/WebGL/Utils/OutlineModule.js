@@ -133,7 +133,8 @@ export default class OutlineModule {
     this.onLetter = true;
     // Define how far in front of the camera the object should appear
     const distanceInFrontOfCamera = 5;
-
+    this.activeObject.interactive = false;
+    this.letter  = this.activeObject.parent
     // Get a new position in front of the camera
     const direction = new THREE.Vector3();
     this.camera.getWorldDirection(direction);
@@ -147,7 +148,7 @@ export default class OutlineModule {
 
     const newRotation = new THREE.Vector3(-Math.PI / 2, 0, -Math.PI / 2);
     // Use GSAP to animate the letter's scale and position
-    gsap.to(this.activeObject.parent.scale, {
+    gsap.to(this.letter.scale, {
       duration: 1, // duration of the animation in seconds
       x: newScale.x,
       y: newScale.y,
@@ -155,7 +156,7 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    gsap.to(this.activeObject.parent.position, {
+    gsap.to(this.letter.position, {
       duration: 1, // duration of the animation in seconds
       x: newPosition.x,
       y: newPosition.y,
@@ -163,7 +164,7 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    gsap.to(this.activeObject.parent.rotation, {
+    gsap.to(this.letter.rotation, {
       duration: 1, // durée de l'animation en secondes
       x: newRotation.x,
       y: newRotation.y,
@@ -218,7 +219,7 @@ export default class OutlineModule {
     this.onLetter = false;
 
     // Hide activeObject
-    this.activeObject.parent.visible = false;
+    this.letter.visible = false;
 
     // Get the SVG element
     const letterIcon = document.querySelector(".letter-icon");

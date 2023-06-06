@@ -205,7 +205,7 @@ export default class Intro {
     ]
 
     // Setting letter : 
-    this.letter = new Letter(new Vector3(-8.5, 3, -28.5));
+    this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
     // this.debugPath = new Cube({
     //   _pos: new Vector3(-6.2, 2.304, -29.891),

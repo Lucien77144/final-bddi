@@ -21,8 +21,7 @@ export default class Letter {
   setModel() {
     this.model = this.resource.scene;
     this.model.position.copy(this.position);
-    this.model.rotation.y = Math.PI / 2;
-    this.model.rotation.x = Math.PI / 2;
+    this.model.rotation.y = Math.PI / 4;
     this.model.scale.set(0.5, 0.5, 0.5);
     this.model.name = "letter";
     this.model.interactive = true;
@@ -31,7 +30,6 @@ export default class Letter {
       child.interactive = true;
       child.type = "letter";
     });
-
   }
 
   showContentDiv() {

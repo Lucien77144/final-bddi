@@ -32,7 +32,7 @@ export default class OutlineModule {
     this.onLetter = false;
     this.debug = this.experience.debug;
     this.activeObject = null;
-    this.base = null;
+    this.base = [];
     this.mouseDown = false;
     this.isInForest = false;
 
@@ -54,7 +54,8 @@ export default class OutlineModule {
     this.backupCamPosition = this.camera.position.clone();
 
     this.activeObject = null;
-    this.base = null;
+    this.base = [];
+    this.baseInteractive = true;
 
     this.mouseDown = false;
 
@@ -73,7 +74,7 @@ export default class OutlineModule {
     window.addEventListener("click", (event) => {
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "controlPanelBase") {
+        if (this.activeObject.name === "controlPanel") {
           this.controlPanelChildren = this.activeObject.parent.children;
           this.controlPanelChildren.forEach((child) => {
             if (child.name.includes("Disk")) {
@@ -81,10 +82,8 @@ export default class OutlineModule {
             }
           });
           if (this.activeObject.base) {
-            this.base = this.activeObject;
+            this.base.push(this.activeObject);
             this.handleBaseClick();
-          } else if (this.activeObject.disk) {
-            this.handleDiskClick();
           }
         } else if (this.activeObject.type === "letter") {
           this.handleLetterClick();
@@ -97,24 +96,23 @@ export default class OutlineModule {
         if (event.code === "Space" || event.code === "Escape") {
           this.returnCamera();
 
-          // Reset outlined object
           this.outlinePass.selectedObjects = [];
 
-          // Reset active object
           this.activeObject = null;
 
-          // If any objects have been modified during the interaction, reset them
-          // For example, you might reset any objects that have been moved or changed color
+          this.baseInteractive = true;
+          console.log(this.baseInteractive);
+          console.log(this.interactiveObjects);
+
           this.interactiveObjects.forEach((object) => {
-            // Add code here to reset each object to its original state
-            object.interactive = false;
+            if(object.name.includes("Disk")) {
+              object.interactive = false;
+            }
           });
-          this.base.interactive = true;
         }
       } else if (this.onLetter) {
-        if (event.code === "Space") {
+        if (event.code === "Space" || event.code === "Escape") {
           this.returnLetter();
-          // ... rest of your event listener ...
         }
       }
     });
@@ -386,7 +384,7 @@ export default class OutlineModule {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
         uTime: { value: 0 },
-        uSteamColor: { value: new THREE.Color("#43795a") },
+        uSteamColor: { value: new THREE.Color("#c9c9c9") },
         uPosZ: { value: 0 },
       },
       vertexShader,
@@ -419,17 +417,16 @@ export default class OutlineModule {
   handleBaseClick() {
     this.activeObject.traverse((child) => {
       if (child.base) {
-        child.interactive = false;
+        this.baseInteractive = false;
         this.moveCamera();
       } else if (child.disk) {
-        child.interactive = true;
+        this.baseInteractive = true;
       }
     });
 
     this.getInteractiveObjects(); // Refresh interactive objects
     this.activeObject = null;
 
-    // After the letter is clicked, show the dialog box
     // const dialogBox = document.getElementById("dialogBox");
 
     // if (dialogBox) {
@@ -450,11 +447,6 @@ export default class OutlineModule {
     // }
   }
 
-  handleDiskClick() {
-    // You might have additional behavior you want to implement when a disk is clicked.
-    // For example, you could change the color of the disk or move it to a different location.
-  }
-
   handleDiskHover() {
     this.activeObject.traverse((child) => {
       if (child.disk) {
@@ -467,21 +459,11 @@ export default class OutlineModule {
   }
 
   update() {
-    // if (
-    //   this.shaderPath &&
-    //   this.shaderPath.uniforms &&
-    //   this.shaderPath.uniforms.vignette
-    // ) {
-    //   this.shaderPath.uniforms.vignette.value =
-    //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
-    // }
-
     if(this.shaderPath) {
       this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
       this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
     }
 
-    // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {
       const intersects = this.raycaster?.intersectObjects(
         this.interactiveObjects,
@@ -490,16 +472,18 @@ export default class OutlineModule {
       if (intersects?.length > 0) {
         intersects.forEach((i) => {
           if (i.object.type === "Points") {
-            // DELETE object from intersect array
             intersects.splice(intersects.indexOf(i), 1);
           }
         });
         const obj = intersects[0]?.object;
         if (obj.interactive === true) {
           const object = obj;
-          this.outlinePass.selectedObjects = [object];
+          if (object?.name === "controlPanel") {
+            this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
+          } else {
+            this.outlinePass.selectedObjects = [object];
+          }
 
-          // Translate interact text on top of object position
           const screenPosition = object.position.clone();
           screenPosition.project(this.camera);
           screenPosition.x = ((screenPosition.x + 1) * window.innerWidth) / 2;

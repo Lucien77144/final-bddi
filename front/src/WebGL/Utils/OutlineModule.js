@@ -101,8 +101,6 @@ export default class OutlineModule {
           this.activeObject = null;
 
           this.baseInteractive = true;
-          console.log(this.baseInteractive);
-          console.log(this.interactiveObjects);
 
           this.interactiveObjects.forEach((object) => {
             if(object.name.includes("Disk")) {

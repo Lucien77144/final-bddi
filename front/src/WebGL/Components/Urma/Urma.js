@@ -54,6 +54,8 @@ export default class Urma {
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
 
+    this.isUrmaMoving = false;
+
     this.position = _position;
 
     this.sound = new AudioManager({
@@ -145,12 +147,14 @@ export default class Urma {
         }
 
         if (val && !data.status[dir].start) {
+          this.isUrmaMoving = true;
           this.animation.play("run");
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir; // Ajoutez cette ligne
           this.orientateBody(); // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
+          this.isUrmaMoving = false;
           this.animation.play("idle");
           data.move.flag = false;
           data.status[dir].end = true;

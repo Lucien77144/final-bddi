@@ -13,6 +13,7 @@ import MouseMove from "utils/MouseMove.js";
 import PathUrma from "../Urma/PathUrma";
 import AudioManager from "@/WebGL/Utils/AudioManager";
 import FairyDust from "./FairyDust";
+import Urma from "../Urma/Urma";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
@@ -23,15 +24,19 @@ export default class Fairy extends EventEmitter {
     }
     instance = this;
 
-    const { scene, resources, debug, time, activeScene } = new Experience();
+    const { scene, resources, debug, time, activeScene, camera } =
+      new Experience();
     this.scene = scene;
     this.resources = resources;
     this.debug = debug;
     this.time = time;
+    this.camera = camera.instance;
     this.position = _position || new PathUrma().getPositionAt();
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
     this.fairyDust = new FairyDust();
+
+    this.urma = new Urma();
 
     this.sound = new AudioManager({
       _path: "runWingsAudio",
@@ -63,16 +68,23 @@ export default class Fairy extends EventEmitter {
   moveFairy() {
     if (!this.model) return;
 
+    console.log(this.urma.model.position)
+    
+
+    const position = this.urma.isUrmaMoving
+      ? this.urma.model.position
+      : this.mouseMove.cursor;
+
+      
+
     const fairyDir = new Vector3()
-      .copy(this.mouseMove.cursor)
+      .copy(position)
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(
-      this.mouseMove.cursor
-    );
+    this.distFairyToMouse = this.model.position.distanceTo(position);
 
-    this.model.lookAt(this.mouseMove.cursor);
+    this.model.lookAt(position);
 
     this.model.rotateY(-Math.atan2(fairyDir.z, fairyDir.x));
     this.model.rotateZ(Math.asin(fairyDir.y));
@@ -110,11 +122,11 @@ export default class Fairy extends EventEmitter {
     // Check if the fairy is moving
     if (this.isFairyMoving()) {
       if (!this.sound.isPlaying) {
-        this.sound.play();  // If the fairy is moving, play the sound
+        this.sound.play(); // If the fairy is moving, play the sound
       }
     } else {
       if (this.sound.isPlaying) {
-        this.sound.stop();  // If the fairy is not moving, stop the sound
+        this.sound.stop(); // If the fairy is not moving, stop the sound
       }
     }
   }
@@ -151,15 +163,16 @@ export default class Fairy extends EventEmitter {
       );
     });
 
-    this.minY = Math.max(
-      ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
-    ) * 1.5;
+    this.minY =
+      Math.max(
+        ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
+      ) * 1.5;
   }
 
   update() {
-    this.moveFairy();
     this.fairyDust?.update();
     this.getYLimit();
+    this.moveFairy();
     if (this.distFairyToMouse) {
       this.animation.mixer.update(
         this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)

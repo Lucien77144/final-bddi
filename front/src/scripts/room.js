@@ -1,5 +1,7 @@
 import Experience from '@/WebGL/Experience.js';
 import { socket } from './socket.js';
+import Stele from '@/WebGL/Components/Stele/Stele.js';
+import { Vector3 } from 'three';
 
 /**
  * @todo 
@@ -144,3 +146,26 @@ socket.on('role', (playerRole) => {
     scene.classList.remove('hidden');
 });
 
+// Symbols
+
+export function symbolSelectionEvent(symbol) {
+    console.log('Select symbol', symbol);
+    socket.emit('symbolSelect', {roomId : room.id, symbols: symbol});
+}
+
+export let symbolsForUrma = [];
+
+socket.on('symbolSelect', (data) => {
+    console.log('Symbol select', data);
+    if (data.error) {
+        console.log(data.error);
+    } else {        // landingPage.classList.add('hidden');
+        console.log('Symbol select received', data);
+        symbolsForUrma = data;
+        let controPanel = new Stele({
+            _position: new Vector3(-5, 2.4, 6),
+            _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+            _symbols: symbolsForUrma,
+          });
+    }
+});

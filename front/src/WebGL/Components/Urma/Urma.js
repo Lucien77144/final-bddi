@@ -133,8 +133,6 @@ export default class Urma {
     if(currentPlayer.role === "urma") {
     ["right", "left"].forEach((dir) => {
       InputManager.on(dir, (val) => {
-        console.log("val", val);
-        console.log("dir", dir);
         MOVE.updateUrmaAnimation({ dir : dir, val : val })
         if (val) {
           this.animation?.action && (this.animation.action.paused = false);

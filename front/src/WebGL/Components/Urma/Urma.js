@@ -79,7 +79,6 @@ export default class Urma {
     this.scene.add(this.model);
     this.camera.position.z = this.model.position.z;
     this.model.scale.set(1.5, 1.5, 1.5);
-    // console.log(this.model);
     const traverseModel = (object) => {
       object.traverse((child) => {
         if (child.isMesh) {
@@ -87,7 +86,6 @@ export default class Urma {
           const boundingBox = new Box3();
           boundingBox.setFromObject(child);
           this.height = boundingBox.max.y - boundingBox.min.y;
-          // console.log("Model height:", this.height);
         }
       });
     };
@@ -256,7 +254,5 @@ export default class Urma {
     this.updatePosition();
     this.orientateBody();
     this.animation.mixer.update(this.time.delta * 0.00025);
-
-    console.log(this.model.position)
   }
 }

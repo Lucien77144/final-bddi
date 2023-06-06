@@ -79,7 +79,7 @@ export default [
   {
     name: "runWingsAudio",
     type: "audio",
-    path: "/sounds/wings.wav",
+    path: "/sounds/wings.mp3",
   },
 
   // --------------------

@@ -38,11 +38,15 @@ export default class Letter {
 
     contentDiv.innerHTML = `
       <p style="opacity: 0;">
-          Cher ami,<br><br>
-          Je vous écris cette lettre pour partager avec vous quelques mots de Lorem Ipsum. Voici un paragraphe de texte aléatoire généré pour illustrer l'apparence d'une lettre. J'espère que vous apprécierez la simplicité et la beauté du Lorem Ipsum.<br><br>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed accumsan varius aliquet. Nunc commodo eleifend eros, ac sagittis ipsum laoreet ac. Integer rhoncus tellus vel tincidunt pretium. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nunc feugiat nisl id scelerisque commodo. Nulla pharetra felis ut urna rutrum fringilla.<br><br>
-          Sincèrement,<br>
-          Votre ami
+        Urma,
+        <br><br>
+        Tu te demandes certainement où je suis en ce moment, n’est-ce pas ?
+        <br><br>
+        Ne t’inquiètes pas, tu vas bientôt pouvoir me revoir.
+        <br><br>
+        Pour cela, il faut que tu réussisses à traverser cette forêt. Je t’attends au bout de celle-ci, mais pour la traverser tu vas avoir besoin de Hada pour résoudre des énigmes. Soyez bien attentifs à ce qui vous entoure, et surtout éveillez tous vos sens pour comprendre et apprécier l’art. Je t’en ai déjà parlé quand tu étais petit, mais tu auras sûrement plus de réponses au cours de ta quête.
+        <br><br>
+        Ta maman
       </p>
     `;
 

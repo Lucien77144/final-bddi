@@ -17,24 +17,32 @@ import Urma from "../Urma/Urma";
 
 let instance = null;
 export default class Fairy extends EventEmitter {
-  constructor(_position) {
+  constructor({
+    _position,
+  } = {}) {
     super();
     if (instance) {
       return instance;
     }
     instance = this;
 
-    const { scene, resources, debug, time, activeScene, camera } =
-      new Experience();
+    const { scene, resources, debug, time, activeScene, camera } = new Experience();
     this.scene = scene;
     this.resources = resources;
     this.debug = debug;
     this.time = time;
     this.camera = camera.instance;
-    this.position = _position || new PathUrma().getPositionAt();
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
     this.fairyDust = new FairyDust();
+
+    if (_position) {
+      this.position = _position;
+    } else {
+      this.position = new PathUrma().getPositionAt();
+      this.position.y += 2;
+      this.position.z += 1;
+    }
 
     this.urma = new Urma();
 
@@ -45,6 +53,7 @@ export default class Fairy extends EventEmitter {
     });
 
     this.mouseMove = new MouseMove();
+    this.movePosition = this.position;
 
     this.getYLimit();
     this.setModel();
@@ -68,23 +77,22 @@ export default class Fairy extends EventEmitter {
   moveFairy() {
     if (!this.model) return;
 
-    console.log(this.urma.model.position)
-    
+    this.movePosition = (this.isFairyMoving() && (this.mouseMove.cursor.z != 0) && (this.mouseMove.cursor.y != 0) && (this.mouseMove.cursor.x != 0))
+      ? this.mouseMove.cursor
+      : this.movePosition;
 
-    const position = this.urma.isUrmaMoving
-      ? this.urma.model.position
-      : this.mouseMove.cursor;
-
-      
+    if (this.urma.isUrmaMoving && Math.abs(this.urma.model.position.distanceTo(this.movePosition)) > 5) {
+      this.movePosition.z -= this.urma.model.position.distanceTo(this.movePosition) / 5;
+    }
 
     const fairyDir = new Vector3()
-      .copy(position)
+      .copy(this.movePosition)
       .sub(this.model.position)
       .normalize();
 
-    this.distFairyToMouse = this.model.position.distanceTo(position);
+    this.distFairyToMouse = this.model.position.distanceTo(this.movePosition) + .0001;
 
-    this.model.lookAt(position);
+    this.model.lookAt(this.movePosition);
 
     this.model.rotateY(-Math.atan2(fairyDir.z, fairyDir.x));
     this.model.rotateZ(Math.asin(fairyDir.y));

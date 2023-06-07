@@ -83,7 +83,7 @@ export default class Sign {
     if (
       this.stele.isFirstGameComplete ||
       !this.OutlineModule.isSignAnimationFinished
-    ) {.
+    ) {
       this.model.interactive = true;
     }
   }

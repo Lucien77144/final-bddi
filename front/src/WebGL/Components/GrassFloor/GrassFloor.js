@@ -22,10 +22,10 @@ export default class GrassFloor {
       base: new Color('#11382a'),
       set: [ // 4 colors to set, only the first not commented set is used
         {
-          uColor1: { value: new Color('#15945d') },
-          uColor2: { value: new Color('#0a9044') },
-          uColor3: { value: new Color('#14857c') },
-          uColor4: { value: new Color('#0ca87e') },
+          uColor1: { value: new Color('#57b58b') },
+          uColor2: { value: new Color('#3ebd75') },
+          uColor3: { value: new Color('#32b1a6') },
+          uColor4: { value: new Color('#1e775f') },
         },
       ]
     },

@@ -180,9 +180,6 @@ export default class Stele {
     }
 
     startAnimation() {
-        console.log("played");
-        console.log(this.sphere);
-        this.animation.action.stop();
         this.animation.action.play();
     }
 

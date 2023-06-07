@@ -302,17 +302,8 @@ export default class OutlineModule {
   }
 
   moveCamera() {
-    this.grassScene.onGame = true;
+    this.onGame = true;
 
-    const targetPosition = new THREE.Vector3();
-
-    // Copy the intersected object's position
-    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-
-    // Move the target position a bit to the left (negative x) and up (positive y)
-    targetPosition.x -= -3;
-    targetPosition.y += 0;
-    targetPosition.z += 10;
 
     const newPosition = { x: -5, y: 6, z: 3 };
     const newUp = { x: 0, y: 6, z: 0 };
@@ -337,7 +328,7 @@ export default class OutlineModule {
         this.camera.lookAt(-5, 2.4, 6);
       },
       onComplete: () => {
-        this.onGame = this.grassScene.onGame;
+        this.onGame = true;
       },
       ease: "power1.out", // easing function for the animation
     });
@@ -349,8 +340,7 @@ export default class OutlineModule {
       this.camera.up.copy(this.originalUp);
       this.camera.lookAt(this.originalTarget);
 
-      this.grassScene.onGame = false;
-      this.onGame = this.grassScene.onGame;
+      this.onGame = false;
     }
   }
 

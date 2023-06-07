@@ -33,7 +33,7 @@ export default class Stele {
                 'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
                 'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
             }
-            // console.log(this.correctSections);
+            console.log(this.correctSections);
         } else {
             this.correctSections = {
                 'Disk_2005': 0,  // Replace these values with the correct angles for your disks

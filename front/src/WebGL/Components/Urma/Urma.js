@@ -83,7 +83,6 @@ export default class Urma {
     this.poncho = cloneGltf(this.ponchoResource).scene;
     this.poncho.name = "poncho";
     this.poncho.position.set(0, -0.2, 0); // Position relative to the model
-    this.poncho.
     this.poncho.castShadow = true;
     this.poncho.scale.set(1.2, 1.2, 1.2);
     this.model.add(this.poncho); // Attach poncho to the model

@@ -11,6 +11,12 @@ export default class Stele {
         _symbols = {}
     } = {}) {
 
+    // Singleton
+    if (instance) {
+        return instance;
+    }
+    instance = this;
+
     this.experience = new Experience();
     this.scene = this.experience.scene;
     this.resources = this.experience.resources;
@@ -178,7 +184,7 @@ export default class Stele {
                 // console.log(normalizedAngle);
                 const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
                 // Check if the disk's current section is the correct one
-                // console.log(child.name, currentSection, this.correctSections[child.name]);
+                console.log(child.name, currentSection, this.correctSections[child.name]);
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
                 }
@@ -205,6 +211,7 @@ export default class Stele {
                 child.name = "controlPanel";
             }
         });
+        console.log(this.model.children);
         this.scene.add(this.model);
 
         this.sphere = this.model.children[3];

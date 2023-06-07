@@ -446,7 +446,6 @@ export default class Urma {
       // Create animation
       gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
 
-      console.log('Event triggered once when modelPos.z < -28');
   }
 
   winDialog() {

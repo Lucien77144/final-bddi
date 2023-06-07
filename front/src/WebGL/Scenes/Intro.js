@@ -196,7 +196,6 @@ export default class Intro {
         _symbols: this.symbols.map(symbol => symbol.symbolObject),
           })
     } else {
-      console.log('ROOM.stele', ROOM.stele);
       this.stele = ROOM.stele;
     }
 

@@ -52,7 +52,7 @@ const continueButton = document.querySelector('.continue-button');
 const waitingPlayerText = document.querySelector('.waiting-player-text');
 
 createRoomButton.addEventListener('click', () => {
-    console.log('Create room');
+    // console.log('Create room');
     socket.emit('createRoom');
 });
 
@@ -71,7 +71,7 @@ socket.on('createRoom', (roomId) => {
     roomIdText = roomId;
     // console.log('Create room', roomId);
     showRoomId.innerHTML = `${roomId}`;
-    console.log(showRoomId);
+    // console.log(showRoomId);
     waitingRoom.classList.remove('hidden');
     landingPage.classList.add('hidden');
 });

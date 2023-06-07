@@ -78,7 +78,6 @@ export default class OutlineModule {
 
     window.addEventListener("click", (event) => {
     if ( currentPlayer.role === "heda" ) return;
-      console.log(1);
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
         switch (this.activeObject.type) {
@@ -102,7 +101,6 @@ export default class OutlineModule {
             break;
 
           case "sign":
-            console.log("sign");
             ROOM.signClicked();
             this.handleSignClick();
             break;
@@ -157,7 +155,6 @@ export default class OutlineModule {
   }
 
   handleSignClick() {
-    console.log(this.experience.activeScene.sign);
     this.sign = this.experience.activeScene.sign.model;
     gsap.to(this.sign.rotation, {
       duration: 2, // durée de l'animation en secondes
@@ -172,7 +169,6 @@ export default class OutlineModule {
         });
         this.sign.type = "sign-used"
         this.isSignAnimationFinished = true;
-        console.log(this.experience.activeScene.urma.gameIsCompleted);
         this.experience.activeScene.urma.gameIsCompleted = true;
         this.experience.activeScene.urma.winDialog();
       }, // easing function for the animation
@@ -247,7 +243,6 @@ export default class OutlineModule {
 
   handleFragmentClick() {
     this.onFragment = true;
-    console.log(this.experience.activeScene);
     this.fragment = this.experience.activeScene.fragment.model;
     this.fragment.interactive = false;
     // Define how far in front of the camera the object should appear

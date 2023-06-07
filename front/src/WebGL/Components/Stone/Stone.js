@@ -1,6 +1,8 @@
 import Experience from "webgl/Experience.js";
 import { Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
+import OutlineModule from "@/WebGL/Utils/OutlineModule";
+import gsap from "gsap";
 
 let instance = null;
 export default class Stone {
@@ -16,6 +18,8 @@ export default class Stone {
     this.debug = this.experience.debug;
     this.time = this.experience.time;
 
+    this.OutlineModule = new OutlineModule();
+
     this.position = _position;
 
     this.name = `stone`;
@@ -24,6 +28,7 @@ export default class Stone {
     this.resource = this.resources.items.stoneModel;
 
     this.setModel();
+    this.isAnimationPlayed = false; // Variable pour suivre l'état de l'animation
   }
 
   setModel() {
@@ -35,5 +40,20 @@ export default class Stone {
     this.world.add(this.model);
   }
 
-  update() {}
+  update() {
+    console.log(this.OutlineModule.isSignAnimationFinished);
+    if (
+      this.OutlineModule.isSignAnimationFinished &&
+      !this.isAnimationPlayed // Vérifier si l'animation n'a pas encore été jouée
+    ) {
+      gsap.to(this.model.position, {
+        z: "-=1",
+        duration: 1,
+        ease: "power2.in",
+        onComplete: () => {
+          this.isAnimationPlayed = true; // Mettre à jour l'état de l'animation
+        },
+      });
+    }
+  }
 }

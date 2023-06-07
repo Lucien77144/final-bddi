@@ -9,6 +9,9 @@ const clueButton = document.querySelector("#clue-button");
 
 const optionsPopup = document.querySelector(".options-popup");
 const helpPopup = document.querySelector(".help-popup");
+const cluePopup = document.querySelector(".clue-popup");
+
+console.log(closeButton);
 
 function showPopup(popup) {
   popup.classList.add("show");
@@ -39,7 +42,8 @@ leaveButton.addEventListener("click", () => {
 });
 
 clueButton.addEventListener("click", () => {
-  window.location.href = "about.html";
+  helpPopup.classList.remove("show");
+  showPopup(cluePopup);
 });
 
 for (let i = 0; i < closeButton.length; i++) {

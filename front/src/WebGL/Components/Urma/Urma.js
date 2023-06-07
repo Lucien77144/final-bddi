@@ -91,7 +91,6 @@ export default class Urma {
 
     this.camera.position.z = this.model.position.z;
 
-    // console.log(this.model);
     const traverseModel = (object) => {
       object.traverse((child) => {
         if (child.isMesh) {
@@ -99,7 +98,6 @@ export default class Urma {
           const boundingBox = new Box3();
           boundingBox.setFromObject(child);
           this.height = boundingBox.max.y - boundingBox.min.y;
-          // console.log("Model height:", this.height);
         }
       });
     };
@@ -108,7 +106,6 @@ export default class Urma {
 
 
   setAnimation() {
-    console.log(this.resource);
     const idleClip = this.resource.animations.find(
       (animation) => animation.name === "Idle"
     );
@@ -169,7 +166,6 @@ export default class Urma {
       nextAction.crossFadeFrom(oldAction, 0.5);
 
       this.animation.ponchoActions.current = nextAction;
-      console.log(this.animation.ponchoActions.current);
     };
   }
 

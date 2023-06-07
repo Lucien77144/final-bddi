@@ -14,8 +14,8 @@ function copyToClipboard() {
     const copyText = roomIdText;
     navigator.clipboard.writeText(copyText)
       .then(() => {
-        console.log('Texte copié dans le presse-papier');
-        console.log(roomIdText);
+        // console.log('Texte copié dans le presse-papier');
+        // console.log(roomIdText);
       })
       .catch((error) => {
         console.error('Erreur lors de la copie dans le presse-papier', error);

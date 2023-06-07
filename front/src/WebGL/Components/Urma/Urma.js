@@ -110,7 +110,7 @@ export default class Urma {
 
 
   setAnimation() {
-    console.log(this.resource);
+    // console.log(this.resource);
     const idleClip = this.resource.animations.find(
       (animation) => animation.name === "Idle"
     );
@@ -171,7 +171,7 @@ export default class Urma {
       nextAction.crossFadeFrom(oldAction, 0.5);
 
       this.animation.ponchoActions.current = nextAction;
-      console.log(this.animation.ponchoActions.current);
+      // console.log(this.animation.ponchoActions.current);
     };
   }
 

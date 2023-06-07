@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', (socket) => {
-  console.log('Nouvelle connexion établie');
+  // console.log('Nouvelle connexion établie');
   // Envoyer un message à la nouvelle connexion
   socket.emit('message', 'Connexion établie !');
 
@@ -30,7 +30,7 @@ io.on('connection', (socket) => {
 
   // On Join Room
   socket.on('joinRoom', (roomId) => {
-    console.log('Join room', roomId);
+    // console.log('Join room', roomId);
     joinRoom(socket.id, roomId);
   })
 
@@ -41,7 +41,7 @@ io.on('connection', (socket) => {
    */
 
   socket.on('roleSelect', (data) => {
-    console.log('Role select', data);
+    // console.log('Role select', data);
     _player1Role = data.role;
     _player2Role = data.role === 'urma' ? 'heda' : 'urma';
     attributeRoles(rooms.find(room => room.id === data.roomId), _player1Role, _player2Role);
@@ -54,9 +54,9 @@ io.on('connection', (socket) => {
    */
 
   socket.on('move', (data) => {
-    console.log('Move', data);
+    // console.log('Move', data);
     let room = rooms.find(room => room.id === data.roomId);
-    console.log(room);
+    // console.log(room);
     if (room.players[0].id === socket.id) {
       room.players[0].position = data.position;
     } else if (room.players[1].id === socket.id) {
@@ -150,7 +150,7 @@ function joinRoom(clientSocket, roomId) {
     if (room.players.length < 2) {
       // Check if player1 != player2
       if (room.players[0] === clientSocket) {
-        console.log('Player 1 cannot join his own room');
+        // console.log('Player 1 cannot join his own room');
         io.emit('joinRoom', { error: 'Player 1 cannot join his own room' })
         return;
       }

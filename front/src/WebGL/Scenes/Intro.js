@@ -227,7 +227,7 @@ export default class Intro {
       }));
     }
     ROOM.symbolSelectionEvent(this.symbols.map(symbol => symbol.symbolObject));
-    console.log(this.symbols);
+    // console.log(this.symbols);
     
     this.controPanel = new Stele({
       _position: new Vector3(-5, 2.4, 6),

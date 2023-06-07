@@ -76,7 +76,7 @@ export default class Entrance {
       label: "emissive",
       value: this.model.material.emissive,
     }).on("change", (e) => {
-      console.log(e.value);
+      // console.log(e.value);
       let color = new Color(e.value);
       color.r /= 255;
       color.g /= 255;

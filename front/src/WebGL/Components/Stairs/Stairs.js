@@ -90,7 +90,7 @@ export default class Stairs {
       label: "emissive",
       value: this.model.children[0].children[0].children[0].material.emissive,
     }).on("change", (e) => {
-      console.log(e.value);
+      // console.log(e.value);
       let color = new Color(e.value);
       color.r /= 255;
       color.g /= 255;
@@ -104,7 +104,7 @@ export default class Stairs {
       label: "color",
       value: this.model.children[0].children[0].children[0].material.color,
     }).on("change", (e) => {
-      console.log(e.value);
+      // console.log(e.value);
       let color = new Color(e.value);
       color.r /= 255;
       color.g /= 255;

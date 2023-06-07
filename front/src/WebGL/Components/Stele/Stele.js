@@ -17,7 +17,7 @@ export default class Stele {
         this.position = _position;
         this.rotation = _rotation;
         this.name = "Stele Panel";
-        console.log(_symbols);
+        // console.log(_symbols);
         this.resource = this.resources.items.steleModel;
         this.selectedObject = null;
 
@@ -32,7 +32,7 @@ export default class Stele {
                 'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
                 'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
             }
-            console.log(this.correctSections);
+            // console.log(this.correctSections);
         } else {
             this.correctSections = {
                 'Disk_2005': 0,  // Replace these values with the correct angles for your disks

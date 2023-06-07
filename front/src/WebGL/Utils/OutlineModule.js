@@ -138,10 +138,10 @@ export default class OutlineModule {
       this.letter  = this.activeObject.parent
       ROOM.letterClicked();
       this.activeObject.interactive = false;
-      console.log(this.activeObject);
+      // console.log(this.activeObject);
     } else {
       this.letter = this.scene.children.filter((child) => child.name === "letter")[0];
-      console.log(this.letter);
+      // console.log(this.letter);
       this.letter.children[0].interactive = false
     }
     this.onLetter = true;

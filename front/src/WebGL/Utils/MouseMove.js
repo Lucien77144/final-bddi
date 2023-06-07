@@ -53,7 +53,7 @@ export default class MouseMove {
             this.cursor.x = (heda.position.x / this.sizes.width) * 2 - 1;
             this.cursor.y = -(heda.position.y / this.sizes.height) * 2 + 1;
           } else {
-            console.log("Heda not found");
+            // console.log("Heda not found");
         }
     
       }

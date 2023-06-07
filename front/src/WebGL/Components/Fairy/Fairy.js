@@ -24,7 +24,7 @@ export default class Fairy extends EventEmitter {
       return instance;
     }
     instance = this;
-    console.log(currentPlayer);
+    // console.log(currentPlayer);
     const { scene, resources, debug, time, activeScene } = new Experience();
     this.scene = scene;
     this.resources = resources;

@@ -18,7 +18,7 @@ export default class Letter {
     this.animationStarted = false;
 
     this.letterIcon = document.querySelector(".letter-icon");
-    console.log(this.letterIcon);
+    // console.log(this.letterIcon);
     this.letterIcon.addEventListener("click", () => {
       this.showLetter();
     });
@@ -91,7 +91,7 @@ export default class Letter {
 
   showLetter() {
     const letter = this.scene.getObjectByName("letter");
-    console.log(letter);
+    // console.log(letter);
     letter.visible = true;
     this.showContentDiv();
     this.experience.outlineModule.onLetter = true;

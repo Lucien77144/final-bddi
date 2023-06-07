@@ -51,7 +51,7 @@ const continueButton = document.querySelector('.continue-button');
 const waitingPlayerText = document.querySelector('.waiting-player-text');
 
 createRoomButton.addEventListener('click', () => {
-    console.log('Create room');
+    // console.log('Create room');
     socket.emit('createRoom');
 });
 
@@ -61,14 +61,14 @@ joinRoomButton.addEventListener('click', () => {
 });
 
 confirmJoinRoomButton.addEventListener('click', () => {
-    console.log('Join room');
+    // console.log('Join room');
     socket.emit('joinRoom', roomInput.value);
 });
 
 // On createRoom
 socket.on('createRoom', (roomId) => {
     roomIdText = roomId;
-    console.log('Create room', roomId);
+    // console.log('Create room', roomId);
     showRoomId.innerHTML = `${roomId}`;
     console.log(showRoomId);
     waitingRoom.classList.remove('hidden');
@@ -77,7 +77,7 @@ socket.on('createRoom', (roomId) => {
 
 // On joinRoom
 socket.on('joinRoom', (data) => {
-    console.log('Join room', data);
+    // console.log('Join room', data);
     if (data.error) {
         console.log(data.error);
     } else {
@@ -89,13 +89,13 @@ socket.on('joinRoom', (data) => {
 })
 
 socket.on('displayWaitingRoom', () => {
-    console.log('Display waiting room');
+    // console.log('Display waiting room');
     waitSelection.classList.remove('hidden');
     enterCode.classList.add('hidden');
 });
 
 socket.on('player2Joined', () => {
-    console.log('Player 2 joined');
+    // console.log('Player 2 joined');
     // Remove disable state of the button
     continueButton.disabled = false;
     waitingPlayerText.innerHTML = 'Le joueur 2 a rejoint la partie!';
@@ -120,7 +120,7 @@ continueButton.addEventListener('click', () => {
 // });
 
 function showRoleSelection() {
-    console.log('Select role');
+    // console.log('Select role');
     waitingRoom.classList.add('hidden');
     roleSelection.classList.remove('hidden');
 }
@@ -128,7 +128,7 @@ function showRoleSelection() {
 
 
 export function roleSelectionEvent(role) {
-    console.log('Select role');
+    // console.log('Select role');
     socket.emit('roleSelect', {roomId : room.id, role: role});
 }
 
@@ -136,7 +136,7 @@ let experience;
 
 socket.on('role', (playerRole) => {
     currentPlayer.role = playerRole;
-    console.log('player', currentPlayer);
+    // console.log('player', currentPlayer);
     roleSelection.classList.add('hidden');
     roomInfo.innerHTML = `
         <p>Room ID : ${room.id}</p>
@@ -152,18 +152,18 @@ socket.on('role', (playerRole) => {
 // Symbols
 
 export function symbolSelectionEvent(symbol) {
-    console.log('Select symbol', symbol);
+    // console.log('Select symbol', symbol);
     socket.emit('symbolSelect', {roomId : room.id, symbols: symbol});
 }
 
 export let symbolsForUrma = [];
 
 socket.on('symbolSelect', (data) => {
-    console.log('Symbol select', data);
+    // console.log('Symbol select', data);
     if (data.error) {
         console.log(data.error);
     } else {        // landingPage.classList.add('hidden');
-        console.log('Symbol select received', data);
+        // console.log('Symbol select received', data);
         symbolsForUrma = data;
         let controPanel = new Stele({
             _position: new Vector3(-5, 2.4, 6),
@@ -182,6 +182,6 @@ export function letterClicked() {
 
 
 socket.on('letterClicked', () => {
-        console.log('Letter clicked received');
+        // console.log('Letter clicked received');
         experience.outlineModule.handleLetterClick();
 });

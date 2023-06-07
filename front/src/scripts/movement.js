@@ -35,7 +35,7 @@ socket.on('updateUrmaAnimation', (data) => {
 });
 
 socket.on('startMovement', () => {
-    console.log('Start movement');
+    // console.log('Start movement');
     // let player1Position = room.player1.position;
     // let player2Position = room.player2.position;
     // let isPlayerOne = room.player1.id === socket.id;

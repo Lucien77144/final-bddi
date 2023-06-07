@@ -26,11 +26,22 @@ export default class Stele {
         this.setAnimation();
         this.debug.active && this.setDebug();
 
-        this.correctSections = {
-            'Disk_2005': 0,  // Replace these values with the correct angles for your disks
-            'Disk_1004': 0,
-            'Disk_0004': 0
-        };        
+        console.log(_symbols);
+        // Check if _symbols is empty
+        if (_symbols.length > 0) {
+            this.correctSections = {
+                'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
+                'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
+                'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
+            }
+            console.log(this.correctSections);
+        } else {
+            this.correctSections = {
+                'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+                'Disk_1004': 0,
+                'Disk_0004': 0
+            };        
+        }
 
         this.raycaster = new Raycaster();
         this.mouse = new Vector2();

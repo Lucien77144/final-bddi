@@ -187,7 +187,7 @@ export default class Intro {
 
     this.makeSymbols();
 
-    this.controPanel = new Stele({
+    this.stele = new Stele({
       _position: new Vector3(-5, 2.4, 6),
       _rotation: new Vector3(-.1, -Math.PI/6, -.125),
       _symbols: this.symbols.map(symbol => symbol.symbolName),

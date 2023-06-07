@@ -26,31 +26,31 @@ export default class Stele {
     this.rotation = _rotation;
     this.name = "Stele Panel";
 
-        this.resource = this.resources.items.steleModel;
-        this.animations = this.resource.animations;
-        this.selectedObject = null;
+    this.resource = this.resources.items.steleModel;
+    this.animations = this.resource.animations;
+    this.selectedObject = null;
 
     this.isFirstGameComplete = true;
 
     this.setModel();
     this.setAnimation();
     this.debug.active && this.setDebug();
-        // console.log(_symbols);
-        // Check if _symbols is empty
-        if (_symbols.length > 0) {
-            this.correctSections = {
-                'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
-                'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
-                'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
-            }
-            console.log(this.correctSections);
-        } else {
-            this.correctSections = {
-                'Disk_2005': 0,  // Replace these values with the correct angles for your disks
-                'Disk_1004': 0,
-                'Disk_0004': 0
-            };        
+      // console.log(_symbols);
+      // Check if _symbols is empty
+      if (_symbols.length > 0) {
+        this.correctSections = {
+          'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
+          'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
+          'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
         }
+        console.log(this.correctSections);
+      } else {
+        this.correctSections = {
+          'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+          'Disk_1004': 0,
+          'Disk_0004': 0
+        };        
+      }
 
     this.raycaster = new Raycaster();
     this.mouse = new Vector2();
@@ -157,84 +157,111 @@ export default class Stele {
 
         if (this.checkGameWon()) {
           this.isFirstGameComplete = true;
-          this.startAnimation();
+          this.resetDisks().then(() => {
+            // The animation starts only when all disks have finished resetting
+            this.startAnimation();
+          });
         }
       }
     );
   }
 
     checkGameWon() {
-        // Iterate backwards through children
-        const tolerance = 5; // Set your desired tolerance in degrees here
+      // Iterate backwards through children
+      const tolerance = 5; // Set your desired tolerance in degrees here
 
-        for (let i = this.model.children.length - 1; i >= 0; i--) {
-            const child = this.model.children[i];
-            
-            if(child.name.includes('Disk')) {
-                const euler = new THREE.Euler();
+      for (let i = this.model.children.length - 1; i >= 0; i--) {
+          const child = this.model.children[i];
+          
+          if(child.name.includes('Disk')) {
+              const euler = new THREE.Euler();
 
-                // Set the rotation order to 'YXZ' or 'YZX'
-                euler.setFromQuaternion(child.quaternion, 'YXZ');
+              // Set the rotation order to 'YXZ' or 'YZX'
+              euler.setFromQuaternion(child.quaternion, 'YXZ');
 
-                const angleInDegrees = euler.y * (180 / Math.PI);
+              const angleInDegrees = euler.y * (180 / Math.PI);
 
-                // Normalize the angle to be in range [0, 360)
-                const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
-                // Determine the current section of the disk
-                // console.log(normalizedAngle);
-                const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
-                // Check if the disk's current section is the correct one
-                console.log(child.name, currentSection, this.correctSections[child.name]);
-                if (currentSection !== this.correctSections[child.name]) {
-                    return false; // If not, the game is not won yet
-                }
-            }
-        }
-        // If all disks are showing the correct section, the game is won
-        return true;
+              // Normalize the angle to be in range [0, 360)
+              const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
+              // Determine the current section of the disk
+              // console.log(normalizedAngle);
+              const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
+              // Check if the disk's current section is the correct one
+              console.log(child.name, currentSection, this.correctSections[child.name]);
+              if (currentSection !== this.correctSections[child.name]) {
+                  return false; // If not, the game is not won yet
+              }
+          }
+      }
+      // If all disks are showing the correct section, the game is won
+      return true;
     }
     
     setModel() {
-        this.model = cloneGltf(this.resource).scene;
-        this.model.position.copy(this.position);
-        this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
-        this.model.scale.set(1.5, 1.5, 1.5);
-        this.model.name = this.name;
-        this.model.interactive = true;
-        this.model.children.forEach((child) => {
-            if(child.name.includes('Disk')) {
-                child.disk = true;
-                // child.interactive = true;
-            } else if(child.name.includes('Cylinder') || child.name.includes('Cube')) {
-                child.interactive = true;
-                child.base = true;
-                child.name = "controlPanel";
-            }
-        });
-        console.log(this.model.children);
-        this.scene.add(this.model);
+      this.model = cloneGltf(this.resource).scene;
+      this.model.position.copy(this.position);
+      this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+      this.model.scale.set(1.5, 1.5, 1.5);
+      this.model.name = this.name;
+      this.model.interactive = true;
+      this.model.children.forEach((child) => {
+        if(child.name.includes('Disk')) {
+          child.disk = true;
+          child.initialRotation = child.rotation.y;  // Store initial rotation
+        } else if(child.name.includes('Cylinder') || child.name.includes('Cube')) {
+          child.interactive = true;
+          child.base = true;
+          child.name = "controlPanel";
+        }
+      });      
+      this.scene.add(this.model);
 
-        this.sphere = this.model.children[3];
+      this.sphere = this.model.children[3];
     }
 
     setAnimation() {
-        const clip = this.animations[0];
-              clip.tracks = clip.tracks.filter((e) => e.name.includes('Sphere'));
+      const clip = this.animations[0];
+            clip.tracks = clip.tracks.filter((e) => e.name.includes('Sphere'));
 
-        this.animation = {
-          mixer: new THREE.AnimationMixer(this.sphere),
-          action: null,
-        };
+      this.animation = {
+        mixer: new THREE.AnimationMixer(this.sphere),
+        action: null,
+      };
 
-        this.animation.action = this.animation.mixer.clipAction(clip);
-        this.animation.action.setLoop(THREE.LoopOnce, 1);
-        this.animation.action.clampWhenFinished = true;
+      this.animation.action = this.animation.mixer.clipAction(clip);
+      this.animation.action.setLoop(THREE.LoopOnce, 1);
+      this.animation.action.clampWhenFinished = true;
     }
 
     startAnimation() {
-        this.animation.action.play();
+      this.animation.action.play();
     }
 
+    resetDisks() {
+      return new Promise(resolve => {
+        const disksToAnimate = this.model.children.filter(child => child.name.includes('Disk'));
+        let disksAnimated = 0;
+    
+        const animate = (child) => {
+          let currentRotation = child.rotation.y;
+          if (Math.abs(currentRotation - child.initialRotation) > 0.01) {
+            child.rotation.y += (child.initialRotation - currentRotation) * 0.05;
+            requestAnimationFrame(() => animate(child));
+          } else {
+            child.rotation.y = child.initialRotation;
+            disksAnimated++;
+    
+            // Check if all disks have finished animating
+            if (disksAnimated === disksToAnimate.length) {
+              resolve();
+            }
+          }
+        };
+    
+        disksToAnimate.forEach(animate);
+      });
+    }
+  
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({
       title: "Control Panel",

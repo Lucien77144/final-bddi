@@ -66,6 +66,11 @@ export default [
     type: "glb",
     path: "models/Sign/Sign.glb",
   },
+  {
+    name: "stoneModel",
+    type: "glb",
+    path: "models/Rocks/Stone.glb",
+  },
 
   // --------------------
   // Audios :

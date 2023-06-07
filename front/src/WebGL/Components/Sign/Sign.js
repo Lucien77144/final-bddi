@@ -2,6 +2,7 @@ import Experience from "webgl/Experience.js";
 import { Vector3 } from "three";
 import * as SkeletonUtils from "three/examples/jsm/utils/SkeletonUtils.js";
 import Stele from "../Stele/Stele";
+import OutlineModule from "@/WebGL/Utils/OutlineModule";
 
 let instance = null;
 export default class Sign {
@@ -16,6 +17,7 @@ export default class Sign {
     this.resources = this.experience.resources;
     this.debug = this.experience.debug;
     this.time = this.experience.time;
+    this.OutlineModule = new OutlineModule();
 
     this.stele = new Stele();
 
@@ -35,6 +37,11 @@ export default class Sign {
     this.model.position.copy(this.position);
     this.model.scale.set(0.3, 0.3, 0.3);
     this.model.rotation.y = -Math.PI;
+    this.model.type = "sign";
+    this.model.children.forEach((child) => {
+      // child.interactive = true;
+      child.type = "sign";
+    });
     this.model.name = this.name;
     this.world.add(this.model);
   }
@@ -73,8 +80,11 @@ export default class Sign {
   }
 
   update() {
-    if (this.stele.isFirstGameComplete) {
-      this.model.rotation.y = Math.PI * 2;
+    if (
+      this.stele.isFirstGameComplete ||
+      !this.OutlineModule.isSignAnimationFinished
+    ) {.
+      this.model.interactive = true;
     }
   }
 }

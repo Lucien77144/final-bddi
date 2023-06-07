@@ -18,6 +18,7 @@ import Symbol from "../Components/Symbol/Symbol.js";
 import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
 import Sign from "../Components/Sign/Sign.js";
+import Stone from "../Components/Stone/Stone.js";
 
 export default class Intro {
   constructor() {
@@ -49,6 +50,10 @@ export default class Intro {
 
     this.sign = new Sign({
       _position: new Vector3(-6, 2, -32),
+    });
+
+    this.stone = new Stone({
+      _position: new Vector3(5, 0, -5),
     });
 
     this.river = new River({
@@ -230,6 +235,8 @@ export default class Intro {
 
   update() {
     this.sign?.update();
+
+    this.stone?.update();
 
     this.mainTree?.update();
     this.bigTrees?.forEach((tree) => {

@@ -5,14 +5,11 @@ import cloneGltf from "@/WebGL/Utils/GltfClone";
 
 let instance = null;
 export default class Stele {
-  constructor({
-    _position = new Vector3(-6, 2.7, 8),
-    _rotation = new Vector3(0, 0, 0),
-  } = {}) {
-    if (instance) {
-      return instance;
-    }
-    instance = this;
+    constructor ({
+        _position = new Vector3(-6, 2.7, 8),
+        _rotation = new Vector3(0, 0, 0),
+        _symbols = {}
+    } = {}) {
 
     this.experience = new Experience();
     this.scene = this.experience.scene;
@@ -32,12 +29,22 @@ export default class Stele {
     this.setModel();
     this.setAnimation();
     this.debug.active && this.setDebug();
-
-    this.correctSections = {
-      Disk_2005: 0, // Replace these values with the correct angles for your disks
-      Disk_1004: 0,
-      Disk_0004: 0,
-    };
+        // console.log(_symbols);
+        // Check if _symbols is empty
+        if (_symbols.length > 0) {
+            this.correctSections = {
+                'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
+                'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
+                'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
+            }
+            console.log(this.correctSections);
+        } else {
+            this.correctSections = {
+                'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+                'Disk_1004': 0,
+                'Disk_0004': 0
+            };        
+        }
 
     this.raycaster = new Raycaster();
     this.mouse = new Vector2();
@@ -152,28 +159,31 @@ export default class Stele {
 
     checkGameWon() {
         // Iterate backwards through children
+        const tolerance = 5; // Set your desired tolerance in degrees here
+
         for (let i = this.model.children.length - 1; i >= 0; i--) {
             const child = this.model.children[i];
             
             if(child.name.includes('Disk')) {
                 const euler = new THREE.Euler();
-    
+
                 // Set the rotation order to 'YXZ' or 'YZX'
                 euler.setFromQuaternion(child.quaternion, 'YXZ');
-    
+
                 const angleInDegrees = euler.y * (180 / Math.PI);
-    
+
                 // Normalize the angle to be in range [0, 360)
                 const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
                 // Determine the current section of the disk
-                const currentSection = Math.floor(normalizedAngle / 45);
+                // console.log(normalizedAngle);
+                const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
                 // Check if the disk's current section is the correct one
+                // console.log(child.name, currentSection, this.correctSections[child.name]);
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
                 }
             }
         }
-    
         // If all disks are showing the correct section, the game is won
         return true;
     }

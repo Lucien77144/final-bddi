@@ -110,10 +110,7 @@ export default class Intro {
     this.environment = new Environment();
     this.clouds = new Cloud(new Vector3(200, 15, 50));
     this.dialogueBox = new DialogueBox();
-    this.stele = new Stele({
-      _position: new Vector3(-5, 2.4, 6),
-      _rotation: new Vector3(-0.1, -Math.PI / 6, -0.125),
-    });
+    
     // Setting Urma :
     this.urma = new Urma(new Vector3(0, 5, 8));
     this.bushs = [
@@ -187,20 +184,63 @@ export default class Intro {
         _scale: 2,
       }),
     ];
-    this.symbols = [
-      new Symbol({
-        _symbolName: "symbol14",
-        _position: new Vector3(-18, 4, 15),
-      }),
-      new Symbol({
-        _symbolName: "symbol2",
-        _position: new Vector3(-10, 5, -30.25),
-      }),
-      new Symbol({
-        _symbolName: "symbol21",
-        _position: new Vector3(-1, 3.5, -21.5),
-      }),
-    ];
+
+    this.symbolsNames = [];
+    const disks = ['Disk_2005', 'Disk_1004', 'Disk_0004'];
+
+    for (let i = 0; i < disks.length; i++) {
+      for (let j = 0; j < 8; j++) {
+        this.symbolsNames.push({
+          name : `s${i + 1}-${j + 1}`,
+          disk : disks[i],
+          diskPosition : j,
+        });
+      }
+    }
+
+    this.symbolPosition = [
+      new Vector3(-10, 5, -21.630),
+      new Vector3(-21, 5, -21.63),
+      new Vector3(-9.02, 4.565, -30.109),
+      new Vector3(-0, 3.152, -22.337),
+      new Vector3(-4.20, 3.804, -11.043),
+      new Vector3(-13.97, 3.696, -1.848),
+      new Vector3(-13.26, 3.696, 17.228),
+    ]
+
+    this.symbols = [];
+    const prefixes = ['s1-', 's2-', 's3-'];
+
+    for (const prefix of prefixes) {
+      // Filter the symbolsNames array based on the prefix
+      const filteredSymbolsNames = this.symbolsNames.filter(symbol => symbol.name.startsWith(prefix));
+
+      // Select a random symbol from the filtered array
+      const randomSymbolIndex = Math.floor(Math.random() * filteredSymbolsNames.length);
+      const randomSymbolName = filteredSymbolsNames[randomSymbolIndex];
+
+      // Remove the selected symbol from the original array to prevent it from being selected again
+      this.symbolsNames = this.symbolsNames.filter(symbol => symbol.name !== randomSymbolName.name);
+
+      // Select a random position and remove it from the array to prevent it from being selected again
+      const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
+      const randomPosition = this.symbolPosition[randomPositionIndex];
+      this.symbolPosition.splice(randomPositionIndex, 1);
+      
+      // Push the new Symbol to the symbols array
+      this.symbols.push(new Symbol({
+        _symbolName: randomSymbolName,
+        _position: randomPosition,
+      }));
+    }
+    // ROOM.symbolSelectionEvent(this.symbols.map(symbol => symbol.symbolObject));
+    // console.log(this.symbols);
+    
+    this.controPanel = new Stele({
+      _position: new Vector3(-5, 2.4, 6),
+      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+      _symbols: this.symbols.map(symbol => symbol.symbolName),
+    });
 
     this.destroyed = [
       (this.entrance = new Entrance({
@@ -218,10 +258,10 @@ export default class Intro {
     // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
-    // this.debugPath = new Cube({
-    //   _pos: new Vector3(-6.2, 2.304, -29.891),
-    //   _size: new Vector3(0.1, 0.1, 0.1),
-    // });
+    this.debugPath = new Cube({
+      _pos: new Vector3(-6.2, 2.304, -29.891),
+      _size: new Vector3(0.1, 0.1, 0.1),
+    });
 
     // Setting Fairy :
     this.fairy = new Fairy();

@@ -58,7 +58,7 @@ export default class Cube {
       });
       this.debugFolder.addInput(this.mesh.position, "y", {
         min: 0,
-        max: 4,
+        max: 10,
         step: 0.001,
       });
       this.debugFolder.addInput(this.mesh.position, "z", {

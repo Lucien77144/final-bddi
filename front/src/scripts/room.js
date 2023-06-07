@@ -3,6 +3,7 @@ import { socket } from './socket.js';
 import Stele from '@/WebGL/Components/Stele/Stele.js';
 import { Vector3 } from 'three';
 import OutlineModule from '@/WebGL/Utils/OutlineModule.js';
+import RoleSelection from '@/WebGL/RoleSelection.js';
 
 /**
  * @todo 
@@ -123,6 +124,7 @@ function showRoleSelection() {
     // console.log('Select role');
     waitingRoom.classList.add('hidden');
     roleSelection.classList.remove('hidden');
+    const roleSelectionCanvas = new RoleSelection(document.querySelector('#roleSelectionCanvas'));
 }
 
 

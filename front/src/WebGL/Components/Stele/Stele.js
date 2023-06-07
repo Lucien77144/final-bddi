@@ -56,12 +56,12 @@ export default class Stele {
           'Disk_1004': 0,
           'Disk_0004': 0
         };        
-        this.correctSections = {
-          'Disk_2005': 0,  // Replace these values with the correct angles for your disks
-          'Disk_1004': 0,
-          'Disk_0004': 0
-        };        
       }
+      this.correctSections = {
+        'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+        'Disk_1004': 0,
+        'Disk_0004': 0
+      };        
 
     this.raycaster = new Raycaster();
     this.mouse = new Vector2();
@@ -168,6 +168,7 @@ export default class Stele {
 
         if (this.checkGameWon()) {
           this.isFirstGameComplete = true;
+          console.log(this.experience.activeScene.sign)
           this.resetDisks().then(() => {
             // The animation starts only when all disks have finished resetting
             this.startAnimation();

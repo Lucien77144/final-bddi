@@ -242,5 +242,13 @@ export function fragmentClicked() {
 socket.on('fragmentClicked', () => {
     // console.log('Fragment clicked received');
     experience.outlineModule.handleFragmentClick();
+});
+
+export function signClicked() {
+    socket.emit('signClicked', {roomId: room.id});
 }
-);
+
+socket.on('signClicked', () => {
+    // console.log('Fragment clicked received');
+    experience.outlineModule.handleSignClick();
+});

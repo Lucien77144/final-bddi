@@ -39,7 +39,7 @@ export default class Sign {
     this.model.rotation.y = -Math.PI;
     this.model.type = "sign";
     this.model.children.forEach((child) => {
-      // child.interactive = true;
+      child.interactive = true;
       child.type = "sign";
     });
     this.model.name = this.name;

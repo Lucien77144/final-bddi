@@ -102,6 +102,8 @@ export default class OutlineModule {
             break;
 
           case "sign":
+            console.log("sign");
+            ROOM.signClicked();
             this.handleSignClick();
             break;
 
@@ -155,7 +157,8 @@ export default class OutlineModule {
   }
 
   handleSignClick() {
-    this.sign = this.activeObject;
+    console.log(this.experience.activeScene.sign);
+    this.sign = this.experience.activeScene.sign.model;
     gsap.to(this.sign.rotation, {
       duration: 2, // durée de l'animation en secondes
       x: 0,
@@ -164,7 +167,7 @@ export default class OutlineModule {
       ease: "power1.out",
       onComplete: () => {
         this.sign.children.forEach((child) => {
-          // child.interactive = true;
+          child.interactive = false;
           child.type = "sign-used";
         });
         this.sign.type = "sign-used"
@@ -628,10 +631,13 @@ export default class OutlineModule {
               }
             });
             const obj = intersects[0]?.object;
-          if (obj.interactive === true) {
-            const object = obj;
-            if (object?.name === "controlPanel") {
-              this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
+            
+            if (obj.interactive === true) {
+              const object = obj;
+              if (object?.name === "controlPanel") {
+                this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
+              } else if (object?.parent.name === "sign" && this.experience.activeScene.stele && this.experience.activeScene.stele.isFirstGameComplete) {
+                this.outlinePass.selectedObjects = [obj.parent];
             } else {
               this.outlinePass.selectedObjects = [object];
             }

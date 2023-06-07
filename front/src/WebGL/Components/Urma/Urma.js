@@ -56,6 +56,7 @@ export default class Urma {
     this.ponchoResource = this.resources.items.ponchoModel;
 
     this.triggerRockDialog = false;
+    this.gameIsCompleted = false;
 
     this.position = _position;
 
@@ -223,11 +224,13 @@ export default class Urma {
         : data.move.delta * 0.95;
 
       modelPos.copy(this.path.position);
-      console.log(modelPos.z);
       if (Math.floor(modelPos.z) <= -28) {
-        if (!this.triggerRockDialog) {
-          this.triggerRockEvent("Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment");
+        if (!this.triggerRockDialog && !this.gameIsCompleted) {
+          this.rockDialog = "Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment";
+          this.triggerRockEvent(this.rockDialog);
           this.triggerRockDialog = true;
+        } else if (!this.triggerRockDialog && this.gameIsCompleted) {
+          this.winDialog();
         }
       } else if (Math.floor(modelPos.z) >= 1.5 && Math.floor(modelPos.z) <= 5) {
         if (!this.triggerRockDialog) {
@@ -294,6 +297,27 @@ export default class Urma {
       gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
 
       console.log('Event triggered once when modelPos.z < -28');
+  }
+
+  winDialog() {
+    
+    if (this.triggerRockDialog && this.dialogBox) {
+      // Hide dialog box with GSAP
+      gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+        // Remove dialog box from DOM
+        this.dialogBox.parentNode.removeChild(this.dialogBox);
+        this.dialogBox = null; // Nullify reference
+        this.rockDialog = "Le rocher a disparu, le chemin est libre";
+        this.triggerRockEvent(this.rockDialog);
+        this.triggerRockDialog = true;
+        this.winDialogCompletedOnce = true;
+      }});
+      this.triggerRockDialog = false;
+    } else if (!this.triggerRockDialog && this.winDialogCompletedOnce) {
+      this.rockDialog = "Le rocher a disparu, le chemin est libre";
+      this.triggerRockEvent(this.rockDialog);
+      this.triggerRockDialog = true;
+    }
   }
 
   updateCameraX(cameraPos, modelPos) {

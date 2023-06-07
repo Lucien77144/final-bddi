@@ -27,6 +27,11 @@ export default [
     path: "models/Urma/Urma.glb",
   },
   {
+    name: "ponchoModel",
+    type: "glb",
+    path: "models/Poncho/Poncho.glb",
+  },
+  {
     name: "bridgeModel",
     type: "glb",
     path: "models/Bridge/Bridge.glb",

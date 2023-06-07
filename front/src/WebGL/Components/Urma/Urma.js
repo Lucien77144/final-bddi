@@ -55,6 +55,8 @@ export default class Urma {
     this.resource = this.resources.items.urmaModel;
     this.ponchoResource = this.resources.items.ponchoModel;
 
+    this.triggerRockDialog = false;
+
     this.position = _position;
 
     this.sound = new AudioManager({
@@ -222,6 +224,12 @@ export default class Urma {
 
       modelPos.copy(this.path.position);
 
+      if (!this.triggerRockDialog && modelPos.z < -28) {
+        this.triggerRockEvent();
+        this.triggerRockDialog = true;
+      }
+
+
       cameraPos.z = modelPos.z - data.move.delta * 5;
       const rdmCamera =
         Math.abs(data.move.delta) * 2 +
@@ -239,6 +247,10 @@ export default class Urma {
       this.animation.mixer.update(this.time.delta * 0.001);
       this.animation.ponchoMixer.update(this.time.delta * 0.001); // Poncho update
     }
+  }
+
+  triggerRockEvent() {
+    console.log('Event triggered once when modelPos.z < -28');
   }
 
   updateCameraX(cameraPos, modelPos) {

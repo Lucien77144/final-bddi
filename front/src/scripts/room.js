@@ -52,7 +52,7 @@ const continueButton = document.querySelector('.continue-button');
 const waitingPlayerText = document.querySelector('.waiting-player-text');
 
 createRoomButton.addEventListener('click', () => {
-    // console.log('Create room');
+    console.log('Create room');
     socket.emit('createRoom');
 });
 

@@ -41,7 +41,6 @@ export default class Stone {
   }
 
   update() {
-    console.log(this.OutlineModule.isSignAnimationFinished);
     if (
       this.OutlineModule.isSignAnimationFinished &&
       !this.isAnimationPlayed // Vérifier si l'animation n'a pas encore été jouée

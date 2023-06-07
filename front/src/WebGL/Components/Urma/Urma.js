@@ -53,6 +53,7 @@ export default class Urma {
     this.fairy = new Fairy();
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
+    this.ponchoResource = this.resources.items.ponchoModel;
 
     this.position = _position;
 
@@ -76,9 +77,20 @@ export default class Urma {
     this.model.name = "urma";
     this.model.position.copy(this.position);
     this.model.castShadow = true;
-    this.scene.add(this.model);
-    this.camera.position.z = this.model.position.z;
     this.model.scale.set(1.5, 1.5, 1.5);
+
+    // PONCHO
+    this.poncho = cloneGltf(this.ponchoResource).scene;
+    this.poncho.name = "poncho";
+    this.poncho.position.set(0, -0.2, 0); // Position relative to the model
+    this.poncho.castShadow = true;
+    this.poncho.scale.set(1.2, 1.2, 1.2);
+    this.model.add(this.poncho); // Attach poncho to the model
+
+    this.scene.add(this.model); // Add model (with poncho) to the scene
+
+    this.camera.position.z = this.model.position.z;
+
     const traverseModel = (object) => {
       object.traverse((child) => {
         if (child.isMesh) {
@@ -92,17 +104,32 @@ export default class Urma {
     traverseModel(this.model);
   }
 
+
   setAnimation() {
     const idleClip = this.resource.animations.find(
       (animation) => animation.name === "Idle"
     );
     const runClip = this.resource.animations.find(
-      (animation) => animation.name === "Run"
+      (animation) => animation.name === "run"
+    );
+
+    // Poncho
+    const ponchoIdleClip = this.ponchoResource.animations.find(
+      (animation) => animation.name === "Main_idle"
+    );
+
+    const ponchoRunClip = this.ponchoResource.animations.find(
+      (animation) => animation.name === "run"
     );
 
     this.animation = {
       mixer: new AnimationMixer(this.model),
+      ponchoMixer: new AnimationMixer(this.poncho), // Poncho mixer
       actions: {
+        idle: null,
+        run: null,
+      },
+      ponchoActions: { // Poncho actions
         idle: null,
         run: null,
       },
@@ -111,7 +138,13 @@ export default class Urma {
     this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
     this.animation.actions.run = this.animation.mixer.clipAction(runClip);
     this.animation.actions.current = this.animation.actions.idle;
+
+    this.animation.ponchoActions.idle = this.animation.ponchoMixer.clipAction(ponchoIdleClip); // Poncho animation
+    this.animation.ponchoActions.run = this.animation.ponchoMixer.clipAction(ponchoRunClip); // Poncho animation
+    this.animation.ponchoActions.current = this.animation.ponchoActions.idle; // Set poncho current action
+
     this.animation.actions.current.play();
+    this.animation.ponchoActions.current.play(); // Play poncho animation
 
     this.animation.play = (name) => {
       const nextAction = this.animation.actions[name];
@@ -123,7 +156,19 @@ export default class Urma {
 
       this.animation.actions.current = nextAction;
     };
+
+    this.animation.ponchoPlay = (name) => { // Poncho play
+      const nextAction = this.animation.ponchoActions[name];
+      const oldAction = this.animation.ponchoActions.current;
+
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.ponchoActions.current = nextAction;
+    };
   }
+
 
   setInputs() {
     ["right", "left"].forEach((dir) => {
@@ -144,12 +189,14 @@ export default class Urma {
 
         if (val && !data.status[dir].start) {
           this.animation.play("run");
+          this.animation.ponchoPlay("run"); // Poncho play
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir; // Ajoutez cette ligne
           this.orientateBody(); // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
           this.animation.play("idle");
+          this.animation.ponchoPlay("idle"); // Poncho play
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
@@ -190,6 +237,7 @@ export default class Urma {
       this.updateCameraX(cameraPos, modelPos);
 
       this.animation.mixer.update(this.time.delta * 0.001);
+      this.animation.ponchoMixer.update(this.time.delta * 0.001); // Poncho update
     }
   }
 
@@ -253,6 +301,7 @@ export default class Urma {
     this.path.update(data.move.delta);
     this.updatePosition();
     this.orientateBody();
-    this.animation.mixer.update(this.time.delta * 0.00025);
+    // this.animation.mixer.update(this.time.delta * 0.00025);
+    // this.animation.ponchoMixer.update(this.time.delta * 0.00025); // Poncho update
   }
 }

@@ -15,7 +15,7 @@ export default class Stele {
 
     // Singleton
     if (instance) {
-        return instance;
+      return instance;
     }
     instance = this;
 
@@ -249,9 +249,6 @@ export default class Stele {
 
     startAnimation() {
       this.animation.action.play();
-
-      // Fragment
-
     }
 
     resetDisks() {

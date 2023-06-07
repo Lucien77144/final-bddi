@@ -7,6 +7,19 @@
   padding: 0;
 }
 
+.loader {
+  z-index: 100000;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #071E2D;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 html,
 body {
   overflow-x: hidden;

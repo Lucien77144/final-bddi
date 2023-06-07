@@ -23,8 +23,9 @@ export default class Stele {
     this.rotation = _rotation;
     this.name = "Stele Panel";
 
-    this.resource = this.resources.items.steleModel;
-    this.selectedObject = null;
+        this.resource = this.resources.items.steleModel;
+        this.animations = this.resource.animations;
+        this.selectedObject = null;
 
     this.isFirstGameComplete = true;
 
@@ -149,74 +150,73 @@ export default class Stele {
     );
   }
 
-  checkGameWon() {
-    // Iterate backwards through children
-    for (let i = this.model.children.length - 1; i >= 0; i--) {
-      const child = this.model.children[i];
-
-      if (child.name.includes("Disk")) {
-        const euler = new THREE.Euler();
-
-        // Set the rotation order to 'YXZ' or 'YZX'
-        euler.setFromQuaternion(child.quaternion, "YXZ");
-
-        const angleInDegrees = euler.y * (180 / Math.PI);
-
-        // Normalize the angle to be in range [0, 360)
-        const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
-        // Determine the current section of the disk
-        const currentSection = Math.floor(normalizedAngle / 45);
-        // Check if the disk's current section is the correct one
-        if (currentSection !== this.correctSections[child.name]) {
-          return false; // If not, the game is not won yet
+    checkGameWon() {
+        // Iterate backwards through children
+        for (let i = this.model.children.length - 1; i >= 0; i--) {
+            const child = this.model.children[i];
+            
+            if(child.name.includes('Disk')) {
+                const euler = new THREE.Euler();
+    
+                // Set the rotation order to 'YXZ' or 'YZX'
+                euler.setFromQuaternion(child.quaternion, 'YXZ');
+    
+                const angleInDegrees = euler.y * (180 / Math.PI);
+    
+                // Normalize the angle to be in range [0, 360)
+                const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
+                // Determine the current section of the disk
+                const currentSection = Math.floor(normalizedAngle / 45);
+                // Check if the disk's current section is the correct one
+                if (currentSection !== this.correctSections[child.name]) {
+                    return false; // If not, the game is not won yet
+                }
+            }
         }
-      }
+    
+        // If all disks are showing the correct section, the game is won
+        return true;
+    }
+    
+    setModel() {
+        this.model = cloneGltf(this.resource).scene;
+        this.model.position.copy(this.position);
+        this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
+        this.model.scale.set(1.5, 1.5, 1.5);
+        this.model.name = this.name;
+        this.model.interactive = true;
+        this.model.children.forEach((child) => {
+            if(child.name.includes('Disk')) {
+                child.disk = true;
+                // child.interactive = true;
+            } else if(child.name.includes('Cylinder') || child.name.includes('Cube')) {
+                child.interactive = true;
+                child.base = true;
+                child.name = "controlPanel";
+            }
+        });
+        this.scene.add(this.model);
+
+        this.sphere = this.model.children[3];
     }
 
-    // If all disks are showing the correct section, the game is won
-    return true;
-  }
+    setAnimation() {
+        const clip = this.animations[0];
+              clip.tracks = clip.tracks.filter((e) => e.name.includes('Sphere'));
 
-  setModel() {
-    this.model = cloneGltf(this.resource).scene;
-    this.model.position.copy(this.position);
-    this.model.rotation.set(this.rotation.x, this.rotation.y, this.rotation.z);
-    this.model.scale.set(1.5, 1.5, 1.5);
-    this.model.name = this.name;
-    this.model.interactive = true;
-    this.model.children.forEach((child) => {
-      if (child.name.includes("Disk")) {
-        child.disk = true;
-        // child.interactive = true;
-      } else if (
-        child.name.includes("Cylinder") ||
-        child.name.includes("Cube")
-      ) {
-        child.interactive = true;
-        child.base = true;
-        child.name = "controlPanel";
-      }
-    });
-    this.scene.add(this.model);
-  }
+        this.animation = {
+          mixer: new THREE.AnimationMixer(this.sphere),
+          action: null,
+        };
 
-  setAnimation() {
-    const clip = this.resource.animations[0];
+        this.animation.action = this.animation.mixer.clipAction(clip);
+        this.animation.action.setLoop(THREE.LoopOnce, 1);
+        this.animation.action.clampWhenFinished = true;
+    }
 
-    this.animation = {
-      mixer: new THREE.AnimationMixer(this.model.children[3]),
-      action: null,
-    };
-
-    this.animation.action = this.animation.mixer.clipAction(clip);
-    this.animation.action.setLoop(THREE.LoopOnce);
-    this.animation.action.clampWhenFinished = true;
-  }
-
-  startAnimation() {
-    this.animation.action.stop();
-    this.animation.action.play();
-  }
+    startAnimation() {
+        this.animation.action.play();
+    }
 
   setDebug() {
     this.debugFolder = this.debug.ui.addFolder({

@@ -209,10 +209,10 @@ export default class Intro {
     // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
-    this.debugPath = new Cube({
-      _pos: new Vector3(-5.9, 2.913, -7.065),
-      _size: new Vector3(2, 2, 2),
-    });
+    // this.debugCube = new Cube({
+    //   _pos: new Vector3(-5.9, 2.913, -7.065),
+    //   _size: new Vector3(2, 2, 2),
+    // });
 
     // Setting Fairy :
     this.fairy = new Fairy();

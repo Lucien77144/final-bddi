@@ -38,6 +38,7 @@ export default class Experience {
     this.outlineModule = new OutlineModule();
     this.forestSound = new AudioManager({
       _path: "forestAudio",
+      _loop: true,
     });
 
     // Resize event

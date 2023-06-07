@@ -66,6 +66,7 @@ export default class Urma {
     this.sound = new AudioManager({
       _path: "runUrmaAudio",
       _status: false,
+      _loop: true,
     });
 
     this.keyState = {

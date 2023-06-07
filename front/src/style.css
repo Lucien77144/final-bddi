@@ -74,6 +74,16 @@ body {
   opacity: 0;
 }
 
+.place {
+  font-family: 'Amatic SC';
+  font-size: 1.5rem;
+  color : white;
+  position: absolute;
+  bottom: 5vh;
+  left : 5vh;
+  z-index : 100;
+}
+
 .inventory {
   display: flex;
   flex-direction: column;
@@ -108,7 +118,6 @@ body {
 .letter-icon {
   display: none;
   /* transform scale & translate to center the icon */
-
 }
 
 .letter-container {
@@ -129,4 +138,30 @@ body {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+#dialog-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 6px 24px;
+  font-family: 'Amatic SC', cursive;
+  color : white;
+  font-size: 1.5rem;
+
+  position : absolute;
+  bottom : 3%;
+  left : 50%;
+  transform : translate(-50%, -50%);
+  z-index : 100;
+
+  background: rgba(255, 255, 255, 0.3);
+  /* Palette de gris/100 */
+
+  border: 1px solid #E6E8EA;
+  backdrop-filter: blur(4px);
+  /* Note: backdrop-filter has minimal browser support */
+
+  border-radius: 2px;
 }

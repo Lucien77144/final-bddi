@@ -151,6 +151,9 @@ export default class OutlineModule {
         });
         this.sign.type = "sign-used"
         this.isSignAnimationFinished = true;
+        console.log(this.experience.activeScene.urma.gameIsCompleted);
+        this.experience.activeScene.urma.gameIsCompleted = true;
+        this.experience.activeScene.urma.winDialog();
       }, // easing function for the animation
     });
   }

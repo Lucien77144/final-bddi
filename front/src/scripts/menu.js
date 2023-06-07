@@ -1,6 +1,5 @@
 const optionsButton = document.getElementById("options-button");
 const helpButton = document.getElementById("help-button");
-const aboutButton = document.getElementById("about-button");
 const closeButton = document.getElementsByClassName("close-button");
 
 const backButton = document.querySelector("#back-button");

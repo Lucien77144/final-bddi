@@ -121,6 +121,11 @@ body {
   /* transform scale & translate to center the icon */
 }
 
+.fragment-icon {
+  display: none;
+  /* transform scale & translate to center the icon */
+}
+
 .letter-container {
   font-size: 16pt;
   font-weight: bold;
@@ -167,10 +172,12 @@ body {
   width: fit-content;
 }
 
-.menu-button p {
+.menu-button p,
+a {
   font-family: 'Amatic SC';
   font-size: 1.5rem;
   color: white;
+  text-decoration: none;
 }
 
 .popup-overlay {

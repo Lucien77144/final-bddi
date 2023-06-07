@@ -2,6 +2,7 @@ import { Vector2, Raycaster, Vector3 } from "three";
 import * as THREE from "three";
 import Experience from "@/WebGL/Experience";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
+import { gsap } from "gsap";
 
 let instance = null;
 export default class Stele {
@@ -30,6 +31,10 @@ export default class Stele {
     this.animations = this.resource.animations;
     this.selectedObject = null;
 
+    console.log(this.experience.activeScene.fragment);
+    this.fragmentModel = this.experience.activeScene.fragment.model
+    // this.experience.activeScene.fragment.model.position.y = 4;
+    console.log(this.fragmentModel);
     this.isFirstGameComplete = true;
 
     this.setModel();
@@ -43,7 +48,7 @@ export default class Stele {
           'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
           'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
         }
-        // console.log(this.correctSections);
+        console.log(this.correctSections);
       } else {
         this.correctSections = {
           'Disk_2005': 0,  // Replace these values with the correct angles for your disks
@@ -160,6 +165,11 @@ export default class Stele {
           this.resetDisks().then(() => {
             // The animation starts only when all disks have finished resetting
             this.startAnimation();
+            gsap.to(this.fragmentModel.position, {
+              duration: 2,
+              y: 4,
+              ease :  "power1.out",
+            })
           });
         }
       }
@@ -187,7 +197,7 @@ export default class Stele {
               // console.log(normalizedAngle);
               const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
               // Check if the disk's current section is the correct one
-              // console.log(child.name, currentSection, this.correctSections[child.name]);
+              console.log(child.name, currentSection, this.correctSections[child.name]);
               if (currentSection !== this.correctSections[child.name]) {
                   return false; // If not, the game is not won yet
               }
@@ -236,6 +246,9 @@ export default class Stele {
 
     startAnimation() {
       this.animation.action.play();
+
+      // Fragment
+
     }
 
     resetDisks() {

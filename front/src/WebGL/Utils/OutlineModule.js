@@ -98,6 +98,10 @@ export default class OutlineModule {
           case "sign":
             this.handleSignClick();
             break;
+
+          case "fragment": 
+            this.handleFragmentClick();
+            break;
         }
       }
     });
@@ -105,6 +109,9 @@ export default class OutlineModule {
     window.addEventListener("keydown", (event) => {
       if (this.onGame) {
         if (event.code === "Space" || event.code === "Escape") {
+          if (this.onFragment) {
+              this.returnFragment();
+          }
           this.returnCamera();
 
           this.outlinePass.selectedObjects = [];
@@ -122,6 +129,10 @@ export default class OutlineModule {
       } else if (this.onLetter) {
         if (event.code === "Space" || event.code === "Escape") {
           this.returnLetter();
+        }
+      } else if (this.onFragment) {
+        if (event.code === "Space" || event.code === "Escape") {
+          this.returnFragment();
         }
       }
     });
@@ -214,6 +225,56 @@ export default class OutlineModule {
     // });
   }
 
+  handleFragmentClick() {
+    this.onFragment = true;
+    console.log(this.experience.activeScene);
+    this.fragment = this.experience.activeScene.fragment.model;
+    this.fragment.interactive = false;
+    // Define how far in front of the camera the object should appear
+    const distanceInFrontOfCamera = 1.5;
+
+    // Get a new position in front of the camera
+    const direction = new THREE.Vector3();
+    this.camera.getWorldDirection(direction);
+    const newPosition = new THREE.Vector3();
+    newPosition
+      .copy(this.camera.position)
+      .add(direction.multiplyScalar(distanceInFrontOfCamera));
+
+    // Define the new scale you want for the object
+    const newScale = new THREE.Vector3(1, 1, 1); // Scale up by 3
+
+    const newRotation = new THREE.Vector3(Math.PI / 2, Math.PI / 2, Math.PI / 4);
+    // Use GSAP to animate the letter's scale and position
+    gsap.to(this.fragment.scale, {
+      duration: 1, // duration of the animation in seconds
+      x: newScale.x,
+      y: newScale.y,
+      z: newScale.z,
+      ease: "power1.out",
+    });
+
+    gsap.to(this.fragment.position, {
+      duration: 1, // duration of the animation in seconds
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      ease: "power1.out", // easing function for the animation
+    });
+
+    gsap.to(this.fragment.rotation, {
+      duration: 1, // durée de l'animation en secondes
+      x: newRotation.x,
+      y: newRotation.y,
+      z: newRotation.z,
+      ease: "power1.out", // fonction d'interpolation pour l'animation
+      onComplete: () => {
+        this.isFragmentAnimationFinished = true;
+      }
+    });
+
+  }
+
   returnLetter() {
     this.onLetter = false;
 
@@ -268,6 +329,45 @@ export default class OutlineModule {
     //gsap from to
     gsap.fromTo(
       letterIcon.style,
+      {
+        left: "-40px", // replace with original x position
+        top: "-25px", // replace with original y position
+        scale: 2, // replace with original scale
+      },
+      {
+        duration: 1, // duration of the animation in seconds
+        left: "0px", // replace with original x position
+        top: "0px", // replace with original y position
+        scale: 1, // replace with original scale
+        ease: "power1.out", // easing function for the animation
+      }
+    );
+  }
+
+  returnFragment() {
+    this.onFragment = false;
+
+    // Hide activeObject
+    this.fragment.visible = false;
+
+    // Get the SVG element
+    const fragmentIcon = document.querySelector(".fragment-icon");
+
+    // Make the SVG visible
+    fragmentIcon.style.display = "block";
+
+    // letterIcon.style.transform = 'scale(2.5)';
+    // gsap.to(letterIcon.style, {
+    //     duration: 1, // duration of the animation in seconds
+    //     left: '0px', // replace with original x position
+    //     top: '0px', // replace with original y position
+    //     scale: 1, // replace with original scale
+    //     ease: "power1.out" // easing function for the animation
+    // });
+
+    //gsap from to
+    gsap.fromTo(
+      fragmentIcon.style,
       {
         left: "-40px", // replace with original x position
         top: "-25px", // replace with original y position
@@ -460,7 +560,7 @@ export default class OutlineModule {
         this.baseInteractive = true;
       }
     });
-
+    
     this.getInteractiveObjects(); // Refresh interactive objects
     this.activeObject = null;
 

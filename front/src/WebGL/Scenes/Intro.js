@@ -185,57 +185,8 @@ export default class Intro {
       }),
     ];
 
-    this.symbolsNames = [];
-    const disks = ['Disk_2005', 'Disk_1004', 'Disk_0004'];
+    this.makeSymbols();
 
-    for (let i = 0; i < disks.length; i++) {
-      for (let j = 0; j < 8; j++) {
-        this.symbolsNames.push({
-          name : `s${i + 1}-${j + 1}`,
-          disk : disks[i],
-          diskPosition : j,
-        });
-      }
-    }
-
-    this.symbolPosition = [
-      new Vector3(-10, 5, -21.630),
-      new Vector3(-21, 5, -21.63),
-      new Vector3(-9.02, 4.565, -30.109),
-      new Vector3(-0, 3.152, -22.337),
-      new Vector3(-4.20, 3.804, -11.043),
-      new Vector3(-13.97, 3.696, -1.848),
-      new Vector3(-13.26, 3.696, 17.228),
-    ]
-
-    this.symbols = [];
-    const prefixes = ['s1-', 's2-', 's3-'];
-
-    for (const prefix of prefixes) {
-      // Filter the symbolsNames array based on the prefix
-      const filteredSymbolsNames = this.symbolsNames.filter(symbol => symbol.name.startsWith(prefix));
-
-      // Select a random symbol from the filtered array
-      const randomSymbolIndex = Math.floor(Math.random() * filteredSymbolsNames.length);
-      const randomSymbolName = filteredSymbolsNames[randomSymbolIndex];
-
-      // Remove the selected symbol from the original array to prevent it from being selected again
-      this.symbolsNames = this.symbolsNames.filter(symbol => symbol.name !== randomSymbolName.name);
-
-      // Select a random position and remove it from the array to prevent it from being selected again
-      const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
-      const randomPosition = this.symbolPosition[randomPositionIndex];
-      this.symbolPosition.splice(randomPositionIndex, 1);
-      console.log(randomSymbolName);
-      // Push the new Symbol to the symbols array
-      this.symbols.push(new Symbol({
-        _symbolName: randomSymbolName,
-        _position: randomPosition,
-      }));
-    }
-    // ROOM.symbolSelectionEvent(this.symbols.map(symbol => symbol.symbolObject));
-    // console.log(this.symbols);
-    
     this.controPanel = new Stele({
       _position: new Vector3(-5, 2.4, 6),
       _rotation: new Vector3(-.1, -Math.PI/6, -.125),
@@ -272,6 +223,63 @@ export default class Intro {
     this.world.rotation.z = _rotation;
     this.scene.add(this.world);
   }
+
+    makeSymbols() {
+      this.symbolsNames = [];
+      const disks = ['Disk_2005', 'Disk_1004', 'Disk_0004'];
+  
+      for (let i = 0; i < disks.length; i++) {
+        for (let j = 0; j < 8; j++) {
+          this.symbolsNames.push({
+            name : `s${i + 1}-${j + 1}`,
+            disk : disks[i],
+            diskPosition : j,
+          });
+        }
+      }
+  
+      this.symbolPosition = [
+        new Vector3(-10, 5, -21.630),
+        new Vector3(-21, 5, -21.63),
+        new Vector3(-9.02, 4.565, -30.109),
+        new Vector3(-0, 3.152, -22.337),
+        new Vector3(-4.20, 3.804, -11.043),
+        new Vector3(-13.97, 3.696, -1.848),
+        new Vector3(-13.26, 3.696, 17.228),
+      ]
+  
+      this.symbols = [];
+      const prefixes = ['s1-', 's2-', 's3-'];
+  
+      for (const prefix of prefixes) {
+        let randomSymbolName;
+        
+        // Keep selecting a random symbol until it's not 's1-1'
+        do {
+          // Filter the symbolsNames array based on the prefix
+          const filteredSymbolsNames = this.symbolsNames.filter(symbol => symbol.name.startsWith(prefix));
+  
+          // Select a random symbol from the filtered array
+          const randomSymbolIndex = Math.floor(Math.random() * filteredSymbolsNames.length);
+          randomSymbolName = filteredSymbolsNames[randomSymbolIndex];
+        } while (randomSymbolName.name === 's1-1');
+  
+        // Remove the selected symbol from the original array to prevent it from being selected again
+        this.symbolsNames = this.symbolsNames.filter(symbol => symbol.name !== randomSymbolName.name);
+  
+        // Select a random position and remove it from the array to prevent it from being selected again
+        const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
+        const randomPosition = this.symbolPosition[randomPositionIndex];
+        this.symbolPosition.splice(randomPositionIndex, 1);
+        console.log(randomSymbolName);
+        
+        // Push the new Symbol to the symbols array
+        this.symbols.push(new Symbol({
+          _symbolName: randomSymbolName,
+          _position: randomPosition,
+        }));
+      }
+    }
 
   update() {
     this.sign?.update();

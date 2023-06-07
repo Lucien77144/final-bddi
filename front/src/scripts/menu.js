@@ -10,7 +10,7 @@ const optionsPopup = document.querySelector(".options-popup");
 const helpPopup = document.querySelector(".help-popup");
 const cluePopup = document.querySelector(".clue-popup");
 
-console.log(closeButton);
+console.log("cc");
 
 function showPopup(popup) {
   popup.classList.add("show");

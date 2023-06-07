@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import sources from './sources';
 import { gsap } from "gsap";
+import { roleSelectionEvent } from '@/scripts/room';
 
 export default class RoleSelection {
   constructor(_canvas) {
@@ -25,6 +26,8 @@ export default class RoleSelection {
     this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
+
+    this.selectionRoleContinue = document.querySelector('#selectionRoleContinue');
   
     // Adjust canvas and camera aspect ratio on resize
     window.addEventListener('resize', () => {
@@ -50,9 +53,12 @@ export default class RoleSelection {
 
     // Define a property to keep track of which model is active
     this.activeModel = 'urmaModel';
+    this.role = 'urma';
 
     // Add event listener to the button
     this.swipeButton.addEventListener('click', () => this.handleSwipeButton());
+
+    this.selectionRoleContinue.addEventListener('click', () => this.handleContinueButton());
   }
   
 
@@ -92,8 +98,8 @@ export default class RoleSelection {
         this.fairyModel.rotation.y = Math.PI / 2;
         this.scene.add(this.fairyModel); // Add model to scene
         
-        // Set model position
-        this.fairyModel.position.set(3, 1, 1); // To the right of urmaModel
+        // Set model positionà
+        this.fairyModel.position.set(3, 0, 3); // To the right of urmaModel
         this.fairyModel.scale.set(0.2, 0.2, 0.2); // Scale down
         // Store animation mixer and fly animation
         this.fairyMixer = new THREE.AnimationMixer(this.fairyModel);
@@ -112,6 +118,7 @@ export default class RoleSelection {
   handleSwipeButton() {
     // Toggle active model
     this.activeModel = this.activeModel === 'urmaModel' ? 'fairyModel' : 'urmaModel';
+    this.role = this.role === 'urma' ? 'heda' : 'urma';
     
     // Determine the target position
     const targetPosition = this.activeModel === 'urmaModel'
@@ -127,6 +134,13 @@ export default class RoleSelection {
       ease: 'power2.inOut', // easing function for the transition
       onUpdate: () => this.camera.updateProjectionMatrix() // update the camera's matrix each frame
     });
+
+    const roleDescription = document.querySelector('.roleDescription');
+    roleDescription.innerHTML = this.activeModel === 'urmaModel' ? 'Tu vas jouer Urma' : 'Tu vas jouer Hada';
+  }
+
+  handleContinueButton() {
+    roleSelectionEvent(this.role);
   }
 
   animate() {

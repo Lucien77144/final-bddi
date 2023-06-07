@@ -489,32 +489,34 @@ export default class OutlineModule {
       const intersects = this.raycaster?.intersectObjects(
         this.interactiveObjects,
         true
-      );
-      if (intersects?.length > 0) {
-        intersects.forEach((i) => {
-          if (i.object.type === "Points") {
-            intersects.splice(intersects.indexOf(i), 1);
+        );
+        if (currentPlayer.role === "urma") {
+          if (intersects?.length > 0) {
+            intersects.forEach((i) => {
+              if (i.object.type === "Points") {
+                intersects.splice(intersects.indexOf(i), 1);
+              }
+            });
+            const obj = intersects[0]?.object;
+          if (obj.interactive === true) {
+            const object = obj;
+            if (object?.name === "controlPanel") {
+              this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
+            } else {
+              this.outlinePass.selectedObjects = [object];
+            }
+  
+            const screenPosition = object.position.clone();
+            screenPosition.project(this.camera);
+            screenPosition.x = ((screenPosition.x + 1) * window.innerWidth) / 2;
+            screenPosition.y = (-(screenPosition.y - 1) * window.innerHeight) / 2;
           }
-        });
-        const obj = intersects[0]?.object;
-        if (obj.interactive === true) {
-          const object = obj;
-          if (object?.name === "controlPanel") {
-            this.outlinePass.selectedObjects = this.interactiveObjects.filter((e) => e.name.includes("controlPanel") && this.baseInteractive);
-          } else {
-            this.outlinePass.selectedObjects = [object];
-          }
-
-          const screenPosition = object.position.clone();
-          screenPosition.project(this.camera);
-          screenPosition.x = ((screenPosition.x + 1) * window.innerWidth) / 2;
-          screenPosition.y = (-(screenPosition.y - 1) * window.innerHeight) / 2;
+        } else {
+          this.outlinePass &&
+            this.outlinePass?.selectedObjects != [] &&
+            (this.outlinePass.selectedObjects = []);
         }
-      } else {
-        this.outlinePass &&
-          this.outlinePass?.selectedObjects != [] &&
-          (this.outlinePass.selectedObjects = []);
-      }
+        }
     }
     this.composer?.render();
   }

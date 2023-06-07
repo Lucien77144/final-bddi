@@ -140,15 +140,17 @@ socket.on('role', (playerRole) => {
     currentPlayer.role = playerRole;
     // console.log('player', currentPlayer);
     roleSelection.classList.add('hidden');
+    joinRoomSection.classList.add('hidden');
     roomInfo.innerHTML = `
         <p>Room ID : ${room.id}</p>
         <p>Player 1 : ${room.players[0].id}</p>
         <p>Player 2 : ${room.players[1].id}</p>
         <p>Vous incarnez : ${currentPlayer.role}</p>
     `
+    scene.classList.remove('hidden');
     experience = new Experience(document.querySelector("canvas#webgl"));
     experience.setUp();
-    scene.classList.remove('hidden');
+    
 });
 
 // Symbols

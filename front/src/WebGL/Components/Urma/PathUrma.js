@@ -6,9 +6,10 @@ const SPEED = 0.4;
 let instance = null;
 export default class PathUrma {
   constructor({
-    _position = new Vector3(0, 0, 0),
-    _factor = .25,
-  } = {}) {
+      _position = new Vector3(0, 0, 0),
+      _factor = .35
+    } = {}) {
+      
     // Singleton
     if (instance) {
       return instance;

@@ -39,6 +39,7 @@ export default class Fairy extends EventEmitter {
       _path: "runWingsAudio",
       _status: false,
       _loop: true,
+      _volume: 3,
     });
 
     this.mouseMove = new MouseMove();
@@ -111,11 +112,11 @@ export default class Fairy extends EventEmitter {
     // Check if the fairy is moving
     if (this.isFairyMoving()) {
       if (!this.sound.isPlaying) {
-        this.sound.play();  // If the fairy is moving, play the sound
+        this.sound.play(); // If the fairy is moving, play the sound
       }
     } else {
       if (this.sound.isPlaying) {
-        this.sound.stop();  // If the fairy is not moving, stop the sound
+        this.sound.stop(); // If the fairy is not moving, stop the sound
       }
     }
   }
@@ -152,9 +153,10 @@ export default class Fairy extends EventEmitter {
       );
     });
 
-    this.minY = Math.max(
-      ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
-    ) * 1.5;
+    this.minY =
+      Math.max(
+        ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
+      ) * 1.5;
   }
 
   update() {

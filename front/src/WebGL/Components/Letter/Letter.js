@@ -45,15 +45,14 @@ export default class Letter {
     contentDiv.innerHTML = `
       <p style="opacity: 0;">
       Urma,
-      <br><br>
+      <br><br><br>
       Tu te demandes certainement où je suis en ce moment, n’est-ce pas ?
-      <br>
-      Ne t’inquiètes pas, tu vas bientôt pouvoir me revoir.
-      <br>
-      Pour cela, il faut que tu réussisses à traverser cette forêt. Je t’attends au bout de celle-ci, mais pour la traverser tu vas avoir besoin de Hada pour résoudre des énigmes. Soyez bien attentifs à ce qui vous entoure, et surtout éveillez tous vos sens pour comprendre et apprécier l’art. Je t’en ai déjà parlé quand tu étais petit, mais tu auras sûrement plus de réponses au cours de ta quête.
       <br><br>
-      Ta maman 
-      
+      Ne t’inquiètes pas, tu vas bientôt pouvoir me revoir.
+      <br><br>
+      Pour cela, il faut que tu réussisses à traverser cette forêt. Je t’attends au bout de celle-ci, mais pour la traverser tu vas avoir besoin de Hada pour résoudre des énigmes. Soyez bien attentifs à ce qui vous entoure, et surtout éveillez tous vos sens pour comprendre et apprécier l’art. Je t’en ai déjà parlé quand tu étais petit, mais tu auras sûrement plus de réponses au cours de ta quête.
+      <br><br><br>
+      Ta maman
       </p>
     `;
 

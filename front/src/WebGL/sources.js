@@ -61,6 +61,16 @@ export default [
     type: "glb",
     path: "models/Tree/Tree.glb",
   },
+  {
+    name: "signModel",
+    type: "glb",
+    path: "models/Sign/Sign.glb",
+  },
+  {
+    name: "stoneModel",
+    type: "glb",
+    path: "models/Rocks/Stone.glb",
+  },
 
   // --------------------
   // Audios :
@@ -79,7 +89,7 @@ export default [
   {
     name: "runWingsAudio",
     type: "audio",
-    path: "/sounds/wings.wav",
+    path: "/sounds/wings.mp3",
   },
 
   // --------------------

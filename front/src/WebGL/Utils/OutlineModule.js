@@ -47,6 +47,7 @@ export default class OutlineModule {
     }
 
     this.isLetterAnimationFinished = false;
+    this.isSignAnimationFinished = false;
 
     this.outlinePass = new OutlinePass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -75,23 +76,37 @@ export default class OutlineModule {
         this.getInteractiveObjects();  // refresh interactive objects
     });
 
-        window.addEventListener('click', (event) => {
-            if ( currentPlayer.role === "heda" ) return;
-            if (this.outlinePass.selectedObjects[0]?.interactive === true) {
-                this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "controlPanel") {
-          this.controlPanelChildren = this.activeObject.parent.children;
-          this.controlPanelChildren.forEach((child) => {
-            if (child.name.includes("Disk")) {
-              child.interactive = true;
+    window.addEventListener("click", (event) => {
+    if ( currentPlayer.role === "heda" ) return;
+      console.log(1);
+      if (this.outlinePass.selectedObjects[0]?.interactive === true) {
+        this.activeObject = this.outlinePass.selectedObjects[0];
+        console.log(this.activeObject.type);
+        console.log(this.activeObject.name);
+        switch (this.activeObject.type) {
+          case "controlPanel":
+            console.log(this.outlinePass.selectedObjects[0]);
+            if (this.activeObject.name == "controlPanel") {
+              this.controlPanelChildren = this.activeObject.parent.children;
+              this.controlPanelChildren.forEach((child) => {
+                if (child.name.includes("Disk")) {
+                  child.interactive = true;
+                }
+              });
+              if (this.activeObject.base) {
+                this.base.push(this.activeObject);
+                this.handleBaseClick();
+              }
             }
-          })
-          if (this.activeObject.base) {
-            this.base.push(this.activeObject);
-            this.handleBaseClick();
-          }
-        } else if (this.activeObject.type === "letter") {
-          this.handleLetterClick();
+            break;
+
+          case "letter":
+            this.handleLetterClick();
+            break;
+
+          case "sign":
+            this.handleSignClick();
+            break;
         }
       }
     });
@@ -109,7 +124,7 @@ export default class OutlineModule {
           this.baseInteractive = true;
 
           this.interactiveObjects.forEach((object) => {
-            if(object.name.includes("Disk")) {
+            if (object.name.includes("Disk")) {
               object.interactive = false;
             }
           });
@@ -133,6 +148,25 @@ export default class OutlineModule {
     }
   }
 
+  handleSignClick() {
+    this.sign = this.activeObject;
+    gsap.to(this.sign.rotation, {
+      duration: 2, // durée de l'animation en secondes
+      x: 0,
+      y: Math.PI / 6,
+      z: 0,
+      ease: "power1.out",
+      onComplete: () => {
+        this.sign.children.forEach((child) => {
+          // child.interactive = true;
+          child.type = "sign-used";
+        });
+        this.sign.type = "sign-used"
+        this.isSignAnimationFinished = true;
+      }, // easing function for the animation
+    });
+  }
+
   handleLetterClick() {
     if ( currentPlayer.role === "urma" ) {
       this.letter  = this.activeObject.parent
@@ -147,6 +181,8 @@ export default class OutlineModule {
     this.onLetter = true;
     // Define how far in front of the camera the object should appear
     const distanceInFrontOfCamera = 5;
+
+    this.letter.children[0].interactive = false;
     // Get a new position in front of the camera
     const direction = new THREE.Vector3();
     this.camera.getWorldDirection(direction);
@@ -165,7 +201,7 @@ export default class OutlineModule {
       x: newScale.x,
       y: newScale.y,
       z: newScale.z,
-      ease: "power1.out", // easing function for the animation
+      ease: "power1.out",
     });
 
     gsap.to(this.letter.position, {
@@ -405,6 +441,9 @@ export default class OutlineModule {
   getInteractiveObjects() {
     this.interactiveObjects = [];
     this.scene.children.filter((object) => {
+      if (object.name === "sign") {
+        // console.log(object);
+      }
       if (object.isGroup) {
         object.children.forEach((child) => {
           child.interactive === true && this.interactiveObjects.push(child);
@@ -469,7 +508,7 @@ export default class OutlineModule {
   }
 
   update() {
-    if(this.shaderPath) {
+    if (this.shaderPath) {
       this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
       this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
       this.shaderPath.uniforms.isLetterOpen.value = this.onLetter;

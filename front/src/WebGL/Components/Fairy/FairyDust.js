@@ -13,9 +13,9 @@ import Experience from "../../Experience";
 
 import Fairy from "./Fairy.js";
 
-import fairyDustVertexShader from "./shaders/vertexShader.glsl";
-import fairyDustFragmentShader from "./shaders/fragmentShader.glsl";
-import fragmentSimulation from "./shaders/fragmentSimulation.glsl";
+import fairyDustVertexShader from "./shaders/dust/vertexShader.glsl";
+import fairyDustFragmentShader from "./shaders/dust/fragmentShader.glsl";
+import fragmentSimulation from "./shaders/dust/fragmentSimulation.glsl";
 
 export default class FairyDust {
   constructor() {

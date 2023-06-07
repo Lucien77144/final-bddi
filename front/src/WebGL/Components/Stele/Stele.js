@@ -39,16 +39,16 @@ export default class Stele {
         // Check if _symbols is empty
         if (_symbols.length > 0) {
             this.correctSections = {
-                'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
-                'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
-                'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
+              'Disk_2005': _symbols.find(symbol => symbol.disk === 'Disk_2005').diskPosition,
+              'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
+              'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
             }
-            console.log(this.correctSections);
+            // console.log(this.correctSections);
         } else {
             this.correctSections = {
-                'Disk_2005': 0,  // Replace these values with the correct angles for your disks
-                'Disk_1004': 0,
-                'Disk_0004': 0
+              'Disk_2005': 0,  // Replace these values with the correct angles for your disks
+              'Disk_1004': 0,
+              'Disk_0004': 0
             };        
         }
 
@@ -184,9 +184,9 @@ export default class Stele {
                 // console.log(normalizedAngle);
                 const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
                 // Check if the disk's current section is the correct one
-                console.log(child.name, currentSection, this.correctSections[child.name]);
+                // console.log(child.name, currentSection, this.correctSections[child.name]);
                 if (currentSection !== this.correctSections[child.name]) {
-                    return false; // If not, the game is not won yet
+                  return false; // If not, the game is not won yet
                 }
             }
         }
@@ -211,7 +211,7 @@ export default class Stele {
                 child.name = "controlPanel";
             }
         });
-        console.log(this.model.children);
+        // console.log(this.model.children);
         this.scene.add(this.model);
 
         this.sphere = this.model.children[3];

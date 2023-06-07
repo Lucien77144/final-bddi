@@ -73,14 +73,10 @@ export default class OutlineModule {
     });
 
     window.addEventListener("click", (event) => {
-      console.log(1);
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        console.log(this.activeObject.type);
-        console.log(this.activeObject.name);
         switch (this.activeObject.name) {
           case "controlPanel":
-            console.log(this.outlinePass.selectedObjects[0]);
             if (this.activeObject.name == "controlPanel") {
               this.controlPanelChildren = this.activeObject.parent.children;
               this.controlPanelChildren.forEach((child) => {

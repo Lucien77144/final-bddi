@@ -215,7 +215,7 @@ export default class Intro {
       const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
       const randomPosition = this.symbolPosition[randomPositionIndex];
       this.symbolPosition.splice(randomPositionIndex, 1);
-      
+      console.log(randomSymbolName);
       // Push the new Symbol to the symbols array
       this.symbols.push(new Symbol({
         _symbolName: randomSymbolName,

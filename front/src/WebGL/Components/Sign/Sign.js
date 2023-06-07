@@ -19,7 +19,7 @@ export default class Sign {
     this.time = this.experience.time;
     this.OutlineModule = new OutlineModule();
 
-    this.stele = new Stele();
+    this.stele = this.experience.activeScene.stele;
 
     this.position = _position;
 
@@ -81,7 +81,7 @@ export default class Sign {
 
   update() {
     if (
-      this.stele.isFirstGameComplete ||
+      this.stele?.isFirstGameComplete ||
       !this.OutlineModule.isSignAnimationFinished
     ) {
       this.model.interactive = true;

@@ -120,6 +120,11 @@ body {
   /* transform scale & translate to center the icon */
 }
 
+.fragment-icon {
+  display: none;
+  /* transform scale & translate to center the icon */
+}
+
 .letter-container {
   font-size: 16pt;
   font-weight: bold;

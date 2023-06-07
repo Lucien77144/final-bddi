@@ -8,7 +8,7 @@ export default class Symbol {
         this.scene = this.experience.scene;
         
         this.symbolName = _symbolName;
-        this.resource = this.resources.items[_symbolName];
+        this.resource = this.resources.items[_symbolName.name];
         this.position = _position;
         this.model = null;
         this.setSymbol();

@@ -98,6 +98,13 @@ io.on('connection', (socket) => {
     io.to(heda.id).emit('letterClicked');
   })
 
+  socket.on('fragmentClicked', (data) => {
+    // send fragment to urma
+    let room = rooms.find(room => room.id === data.roomId);
+    let heda = room.players.find(player => player.role === 'heda');
+    io.to(heda.id).emit('fragmentClicked');
+  })
+
 });
 
 function generateRandomId() {

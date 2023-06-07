@@ -205,6 +205,7 @@ export function symbolSelectionEvent(symbol) {
 }
 
 export let symbolsForUrma = [];
+export let stele;
 
 socket.on('symbolSelect', (data) => {
     // console.log('Symbol select', data);
@@ -213,7 +214,7 @@ socket.on('symbolSelect', (data) => {
     } else {        // landingPage.classList.add('hidden');
         // console.log('Symbol select received', data);
         symbolsForUrma = data;
-        let stele = new Stele({
+        stele = new Stele({
             _position: new Vector3(-5, 2.4, 6),
             _rotation: new Vector3(-.1, -Math.PI/6, -.125),
             _symbols: symbolsForUrma,
@@ -233,3 +234,13 @@ socket.on('letterClicked', () => {
         // console.log('Letter clicked received');
         experience.outlineModule.handleLetterClick();
 });
+
+export function fragmentClicked() {
+    socket.emit('fragmentClicked', {roomId: room.id});
+}
+
+socket.on('fragmentClicked', () => {
+    // console.log('Fragment clicked received');
+    experience.outlineModule.handleFragmentClick();
+}
+);

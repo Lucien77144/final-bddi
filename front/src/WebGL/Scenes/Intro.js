@@ -19,6 +19,7 @@ import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
 import Sign from "../Components/Sign/Sign.js";
 import Stone from "../Components/Stone/Stone.js";
+import Fragment from "../Components/Fragment/Fragment.js";
 import { currentPlayer } from "@/scripts/room.js";
 import * as ROOM from "@/scripts/room.js";
 
@@ -186,15 +187,17 @@ export default class Intro {
         _scale: 2,
       }),
     ];
-
+    this.fragment = new Fragment(new Vector3(-5, 1, 6));
     if ( currentPlayer.role === 'heda') {
       this.makeSymbols();
-      console.log(this.symbols);
       this.stele = new Stele({
           _position: new Vector3(-5, 2.4, 6),
         _rotation: new Vector3(-.1, -Math.PI/6, -.125),
         _symbols: this.symbols.map(symbol => symbol.symbolObject),
           })
+    } else {
+      console.log('ROOM.stele', ROOM.stele);
+      this.stele = ROOM.stele;
     }
 
     
@@ -215,6 +218,7 @@ export default class Intro {
 
     // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
+
     // debug path :
     // this.debugCube = new Cube({
     //   _pos: new Vector3(-5.9, 2.913, -7.065),

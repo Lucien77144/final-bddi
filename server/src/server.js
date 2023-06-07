@@ -137,7 +137,7 @@ function createRoom(clientSocket) {
   rooms.push(newRoom);
   // console.log(rooms);
 
-  io.emit('createRoom', roomId);
+  io.to(player1Id).emit('createRoom', roomId);
 }
 
 function joinRoom(clientSocket, roomId) {

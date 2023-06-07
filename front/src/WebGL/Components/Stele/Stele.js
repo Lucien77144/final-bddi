@@ -18,6 +18,7 @@ export default class Stele {
         this.name = "Stele Panel";
 
         this.resource = this.resources.items.steleModel;
+        this.animations = this.resource.animations;
         this.selectedObject = null;
 
         this.setModel();
@@ -160,22 +161,27 @@ export default class Stele {
             }
         });
         this.scene.add(this.model);
+
+        this.sphere = this.model.children[3];
     }
 
     setAnimation() {
-        const clip = this.resource.animations[0];
+        const clip = this.animations[0];
+              clip.tracks = clip.tracks.filter((e) => e.name.includes('Sphere'));
 
         this.animation = {
-          mixer: new THREE.AnimationMixer(this.model.children[3]),
+          mixer: new THREE.AnimationMixer(this.sphere),
           action: null,
         };
-    
+
         this.animation.action = this.animation.mixer.clipAction(clip);
-        this.animation.action.setLoop(THREE.LoopOnce);
+        this.animation.action.setLoop(THREE.LoopOnce, 1);
         this.animation.action.clampWhenFinished = true;
     }
 
     startAnimation() {
+        console.log("played");
+        console.log(this.sphere);
         this.animation.action.stop();
         this.animation.action.play();
     }

@@ -209,10 +209,10 @@ export default class Intro {
     // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
-    this.debugPath = new Cube({
-      _pos: new Vector3(-6.2, 2.304, -29.891),
-      _size: new Vector3(0.1, 0.1, 0.1),
-    });
+    // this.debugCube = new Cube({
+    //   _pos: new Vector3(-5.9, 2.913, -7.065),
+    //   _size: new Vector3(2, 2, 2),
+    // });
 
     // Setting Fairy :
     this.fairy = new Fairy();
@@ -271,7 +271,6 @@ export default class Intro {
         const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
         const randomPosition = this.symbolPosition[randomPositionIndex];
         this.symbolPosition.splice(randomPositionIndex, 1);
-        console.log(randomSymbolName);
         
         // Push the new Symbol to the symbols array
         this.symbols.push(new Symbol({

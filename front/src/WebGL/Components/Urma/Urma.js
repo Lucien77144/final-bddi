@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { AnimationMixer, Box3, LoopRepeat, Vector3 } from "three";
+import { AnimationMixer, Box3, Group, LoopRepeat, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
@@ -79,19 +79,20 @@ export default class Urma {
   }
 
   setModel() {
-    this.model = cloneGltf(this.resource).scene;
-    this.model.name = "urma";
+    this.model = new Group();
     this.model.position.copy(this.position);
-    this.model.castShadow = true;
     this.model.scale.set(1.5, 1.5, 1.5);
+
+    this.urma = cloneGltf(this.resource).scene;
+    this.urma.name = "urma";
+    this.urma.castShadow = true;
+    this.model.add(this.urma);
 
     // PONCHO
     this.poncho = cloneGltf(this.ponchoResource).scene;
     this.poncho.name = "poncho";
-    this.poncho.position.set(0, -0.2, 0); // Position relative to the model
     this.poncho.castShadow = true;
-    this.poncho.scale.set(1.2, 1.2, 1.2);
-    this.model.add(this.poncho); // Attach poncho to the model
+    this.model.add(this.poncho);
 
     this.scene.add(this.model); // Add model (with poncho) to the scene
 
@@ -121,7 +122,7 @@ export default class Urma {
 
     // Poncho
     const ponchoIdleClip = this.ponchoResource.animations.find(
-      (animation) => animation.name === "Main_idle"
+      (animation) => animation.name === "Idle.poncho"
     );
 
     const ponchoRunClip = this.ponchoResource.animations.find(
@@ -292,7 +293,7 @@ export default class Urma {
       this.updateCameraX(cameraPos, modelPos);
 
       this.animation.mixer.update(this.time.delta * 0.001);
-      this.animation.ponchoMixer.update(this.time.delta * 0.001); // Poncho update
+      this.animation.ponchoMixer.update(this.time.delta * 0.001);
     }
   }
 
@@ -403,7 +404,5 @@ export default class Urma {
     this.path.update(data.move.delta);
     this.updatePosition();
     this.orientateBody();
-    // this.animation.mixer.update(this.time.delta * 0.00025);
-    // this.animation.ponchoMixer.update(this.time.delta * 0.00025); // Poncho update
   }
 }

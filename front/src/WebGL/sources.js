@@ -107,6 +107,11 @@ export default [
     type: "texture",
     path: "textures/tree/mask.png",
   },
+  {
+    name: "fairyTexture",
+    type: "texture",
+    path: "textures/fairy/baseTexture.png",
+  },
 
   // jpg :
   {

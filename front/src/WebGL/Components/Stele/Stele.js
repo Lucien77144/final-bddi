@@ -43,7 +43,7 @@ export default class Stele {
           'Disk_1004': _symbols.find(symbol => symbol.disk === 'Disk_1004').diskPosition,
           'Disk_0004': _symbols.find(symbol => symbol.disk === 'Disk_0004').diskPosition,
         }
-        console.log(this.correctSections);
+        // console.log(this.correctSections);
       } else {
         this.correctSections = {
           'Disk_2005': 0,  // Replace these values with the correct angles for your disks
@@ -187,7 +187,7 @@ export default class Stele {
               // console.log(normalizedAngle);
               const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
               // Check if the disk's current section is the correct one
-              console.log(child.name, currentSection, this.correctSections[child.name]);
+              // console.log(child.name, currentSection, this.correctSections[child.name]);
               if (currentSection !== this.correctSections[child.name]) {
                   return false; // If not, the game is not won yet
               }

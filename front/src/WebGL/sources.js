@@ -47,6 +47,11 @@ export default [
     path: "models/Letter/Letter.glb",
   },
   {
+    name: "fragmentModel",
+    type: "glb",
+    path: "models/Fragment/Fragment.glb",
+  },
+  {
     name: "stairsModel",
     type: "glb",
     path: "models/Stairs/Stairs.glb",

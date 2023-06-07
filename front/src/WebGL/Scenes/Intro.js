@@ -19,6 +19,7 @@ import Stairs from "../Components/Stairs/Stairs.js";
 import Entrance from "../Components/Entrance/Entrance.js";
 import Sign from "../Components/Sign/Sign.js";
 import Stone from "../Components/Stone/Stone.js";
+import Fragment from "../Components/Fragment/Fragment.js";
 
 export default class Intro {
   constructor() {
@@ -184,7 +185,7 @@ export default class Intro {
         _scale: 2,
       }),
     ];
-
+    this.fragment = new Fragment(new Vector3(-5, 1, 6));
     this.makeSymbols();
 
     this.stele = new Stele({
@@ -208,6 +209,7 @@ export default class Intro {
 
     // Setting letter :
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
+
     // debug path :
     // this.debugCube = new Cube({
     //   _pos: new Vector3(-5.9, 2.913, -7.065),

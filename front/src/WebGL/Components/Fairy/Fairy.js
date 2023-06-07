@@ -188,8 +188,8 @@ export default class Fairy extends EventEmitter {
 
   update() {
     this.moveFairy();
-    this.fairyDust?.update();
     this.getYLimit();
+    this.fairyDust?.update(Math.floor(this.model.position.y * 1000) != Math.floor(this.minY * 1000));
     if (this.distFairyToMouse) {
       this.animation.mixer.update(
         this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)

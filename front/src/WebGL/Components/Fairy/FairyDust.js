@@ -126,10 +126,8 @@ export default class FairyDust {
     };
 
     this.fairy.on("moveFairy", (x, y, z) => {
-      this.positionVariable.material.uniforms.uFairyPosition.value =
-        new Vector3(x, y, z);
-        this._material.uniforms.uFairyPosition.value =
-        new Vector3(x, y, z);
+      this.positionVariable.material.uniforms.uFairyPosition.value = this.build ? new Vector3(0, 0, 0) : new Vector3(x, y, z);
+      this._material.uniforms.uFairyPosition.value = this.build ? new Vector3(0, 0, 0) : new Vector3(x, y, z);
     });
 
     this.positionVariable.wrapS = this.positionVariable.wrapT = RepeatWrapping;
@@ -143,13 +141,16 @@ export default class FairyDust {
     }
   }
 
-  update() {
+  update(build = true) {
     this.positionVariable.material.uniforms.uTime.value += this.time.delta;
     this._material.uniforms.uTime.value += this.time.delta;
 
     this.gpuCompute.compute();
-    this._material.uniforms.positionTexture.value =
-      this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
+    
+    this.build = !build;
+    // !build && (this._material.uniforms.uFairyDistance.value = 0);
+
+    this._material.uniforms.positionTexture.value = this.gpuCompute.getCurrentRenderTarget(this.positionVariable).texture;
 
     if (this.fairy.distFairyToMouse > 0.5 != this.fairyParams.status) {
       this.fairyParams.status = this.fairy.distFairyToMouse > 0.5;
@@ -158,15 +159,11 @@ export default class FairyDust {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    if (
-      this.fairy.distFairyToMouse > 0.5 &&
-      this.time.elapsed - this.fairyParams.time
-    ) {
+    if (this.fairy.distFairyToMouse > 0.5 && this.time.elapsed - this.fairyParams.time) {
       this.fairyParams.time = this.time.elapsed;
     }
 
-    const time =
-      1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
+    const time = 1 - Math.min(this.time.elapsed - this.fairyParams.time, 1000) / 1000;
     this.positionVariable.material.uniforms.uFairyDistance.value = time;
     this._material.uniforms.uFairyDistance.value = time;
   }

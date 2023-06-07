@@ -198,30 +198,38 @@ export default class Intro {
     ]
 
     this.symbols = [];
+    const prefixes = ['s1-', 's2-', 's3-'];
 
-    for (let i = 0; i < 3; i++) {
-      const randomSymbolName = this.symbolsNames[Math.floor(Math.random() * this.symbolsNames.length)].name;
-      const randomPosition = this.symbolPosition[Math.floor(Math.random() * this.symbolPosition.length)];
+    for (const prefix of prefixes) {
+      // Filter the symbolsNames array based on the prefix
+      const filteredSymbolsNames = this.symbolsNames.filter(symbol => symbol.name.startsWith(prefix));
+
+      // Select a random symbol from the filtered array
+      const randomSymbolIndex = Math.floor(Math.random() * filteredSymbolsNames.length);
+      const randomSymbolName = filteredSymbolsNames[randomSymbolIndex];
+
+      // Remove the selected symbol from the original array to prevent it from being selected again
+      this.symbolsNames = this.symbolsNames.filter(symbol => symbol.name !== randomSymbolName.name);
+
+      // Select a random position and remove it from the array to prevent it from being selected again
+      const randomPositionIndex = Math.floor(Math.random() * this.symbolPosition.length);
+      const randomPosition = this.symbolPosition[randomPositionIndex];
+      this.symbolPosition.splice(randomPositionIndex, 1);
       
+      // Push the new Symbol to the symbols array
       this.symbols.push(new Symbol({
         _symbolName: randomSymbolName,
         _position: randomPosition,
       }));
-
-      // ROOM.symbolSelectionEvent(this.symbols.map(symbol => symbol.symbolObject));
+    }
+    // ROOM.symbolSelectionEvent(this.symbols.map(symbol => symbol.symbolObject));
     console.log(this.symbols);
     
-      this.controPanel = new Stele({
-        _position: new Vector3(-5, 2.4, 6),
-        _rotation: new Vector3(-.1, -Math.PI/6, -.125),
-        _symbols: this.symbols.map(symbol => symbol.symbolObject),
-      });
-    }
-    // console.log(this.symbols);
-    // this.controPanel = new Stele({
-    //   _position: new Vector3(-5, 2.4, 6),
-    //   _rotation: new Vector3(-.1, -Math.PI/6, -.125),
-    // });
+    this.controPanel = new Stele({
+      _position: new Vector3(-5, 2.4, 6),
+      _rotation: new Vector3(-.1, -Math.PI/6, -.125),
+      _symbols: this.symbols.map(symbol => symbol.symbolName),
+    });
 
     this.destroyed = [
       this.entrance = new Entrance({

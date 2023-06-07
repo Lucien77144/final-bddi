@@ -78,7 +78,7 @@ export default class OutlineModule {
         this.activeObject = this.outlinePass.selectedObjects[0];
         console.log(this.activeObject.type);
         console.log(this.activeObject.name);
-        switch (this.activeObject.name) {
+        switch (this.activeObject.type) {
           case "controlPanel":
             console.log(this.outlinePass.selectedObjects[0]);
             if (this.activeObject.name == "controlPanel") {

@@ -212,6 +212,7 @@ export default class Stele {
           child.interactive = true;
           child.base = true;
           child.name = "controlPanel";
+          child.type = "controlPanel";
         }
       });      
       this.scene.add(this.model);

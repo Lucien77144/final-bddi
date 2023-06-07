@@ -162,7 +162,6 @@ export default class OutlineModule {
         });
         this.sign.type = "sign-used"
         this.isSignAnimationFinished = true;
-        console.log(this.experience.activeScene.urma.gameIsCompleted);
         this.experience.activeScene.urma.gameIsCompleted = true;
         this.experience.activeScene.urma.winDialog();
       }, // easing function for the animation
@@ -227,7 +226,6 @@ export default class OutlineModule {
 
   handleFragmentClick() {
     this.onFragment = true;
-    console.log(this.experience.activeScene);
     this.fragment = this.experience.activeScene.fragment.model;
     this.fragment.interactive = false;
     // Define how far in front of the camera the object should appear

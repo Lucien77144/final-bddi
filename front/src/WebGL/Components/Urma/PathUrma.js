@@ -6,9 +6,10 @@ const SPEED = 0.4;
 let instance = null;
 export default class PathUrma {
   constructor({
-    _position = new Vector3(0, 0, 0),
-    _factor = .25,
-  } = {}) {
+      _position = new Vector3(0, 0, 0),
+      _factor = .35
+    } = {}) {
+      
     // Singleton
     if (instance) {
       return instance;
@@ -35,11 +36,11 @@ export default class PathUrma {
       new Vector3(-6.2, 2.321, -1.13),
       new Vector3(-5.49, 2.351, -2.826),
       new Vector3(-5.49, 2.478, -3.478),
-      new Vector3(-5.9, 2.709, -6.522),
-      new Vector3(-5.9, 2.913, -7.065),
-      new Vector3(-5.9, 3.217, -7.935),
-      new Vector3(-5.9, 3.478, -8.913),
-      new Vector3(-5.9, 3.522, -9.348),
+      new Vector3(-8, 2.709, -6.522),
+      new Vector3(-7.5, 2.913, -7.065),
+      new Vector3(-7, 3.217, -7.935),
+      new Vector3(-6.5, 3.478, -8.913),
+      new Vector3(-6, 3.522, -9.348),
       new Vector3(-5.9, 3.609, -10.0),
       new Vector3(-5.9, 3.652, -10.326),
       new Vector3(-5.9, 3.7, -10.815),

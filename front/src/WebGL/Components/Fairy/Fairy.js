@@ -6,6 +6,8 @@ import {
   AnimationMixer,
   Quaternion,
   MathUtils,
+  Color,
+  RepeatWrapping,
 } from "three";
 import EventEmitter from "utils/EventEmitter.js";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
@@ -31,12 +33,14 @@ export default class Fairy extends EventEmitter {
     this.position = _position || new PathUrma().getPositionAt();
     this.fairyModel = this.resources.items.fairyModel;
     this.floors = activeScene.floors;
+    this.environmentMap = activeScene.environment.environmentMap;
     this.fairyDust = new FairyDust();
 
     this.sound = new AudioManager({
       _path: "runWingsAudio",
       _status: false,
       _loop: true,
+      _volume: 3,
     });
 
     this.mouseMove = new MouseMove();
@@ -48,7 +52,7 @@ export default class Fairy extends EventEmitter {
 
   setModel() {
     this.model = cloneGltf(this.fairyModel).scene;
-    this.model.scale.set(0.2, 0.2, 0.2);
+    this.model.scale.set(.2, .2, .2);
     this.model.position.copy(this.position);
     this.model.name = "fairy";
     this.scene.add(this.model);
@@ -58,6 +62,31 @@ export default class Fairy extends EventEmitter {
         child.castShadow = true;
       }
     }
+    this.rebuildMaterials();
+  }
+
+  rebuildMaterials() {
+    this.model.traverse((child) => {
+      if (child.name.toLowerCase().includes("wing")) {
+        const newEmisiveMap = this.resources.items.fairyTexture;
+
+        newEmisiveMap.wrapS = newEmisiveMap.wrapT = RepeatWrapping;
+        newEmisiveMap.repeat.set(1, 1);
+
+        child.material.map = newEmisiveMap;
+        child.material.emissiveMap = null;
+
+        child.material.transparent = true;
+        child.material.opacity = 0.35;
+      } else if (child.name.toLowerCase().includes("sphere")) {
+        child.material.color = new Color("#ff9d00");
+        child.material.emissive = new Color("#ffee8e");
+        
+        child.material.envMap = this.environmentMap.texture;
+        child.material.needsUpdate = true;
+        child.material.envMapIntensity = this.environmentMap.intensity;
+      }
+    })
   }
 
   moveFairy() {
@@ -110,11 +139,11 @@ export default class Fairy extends EventEmitter {
     // Check if the fairy is moving
     if (this.isFairyMoving()) {
       if (!this.sound.isPlaying) {
-        this.sound.play();  // If the fairy is moving, play the sound
+        this.sound.play(); // If the fairy is moving, play the sound
       }
     } else {
       if (this.sound.isPlaying) {
-        this.sound.stop();  // If the fairy is not moving, stop the sound
+        this.sound.stop(); // If the fairy is not moving, stop the sound
       }
     }
   }
@@ -151,15 +180,16 @@ export default class Fairy extends EventEmitter {
       );
     });
 
-    this.minY = Math.max(
-      ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
-    ) * 1.5;
+    this.minY =
+      Math.max(
+        ...filteredFloors.map((floor) => floor.position.y + floor.size.y)
+      ) * 1.5;
   }
 
   update() {
     this.moveFairy();
-    this.fairyDust?.update();
     this.getYLimit();
+    this.fairyDust?.update(Math.floor(this.model.position.y * 1000) != Math.floor(this.minY * 1000));
     if (this.distFairyToMouse) {
       this.animation.mixer.update(
         this.time.delta * (0.0005 + this.distFairyToMouse * 0.0005)

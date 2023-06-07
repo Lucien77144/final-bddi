@@ -74,6 +74,16 @@ body {
   opacity: 0;
 }
 
+.place {
+  font-family: 'Amatic SC';
+  font-size: 1.5rem;
+  color : white;
+  position: absolute;
+  bottom: 5vh;
+  left : 5vh;
+  z-index : 100;
+}
+
 .inventory {
   display: flex;
   flex-direction: column;

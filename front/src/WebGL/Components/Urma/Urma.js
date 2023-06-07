@@ -60,6 +60,9 @@ export default class Urma {
 
     this.position = _position;
 
+    this.place = document.querySelector(".place");
+    this.place.innerHTML = "Les ruines sacrées"
+
     this.sound = new AudioManager({
       _path: "runUrmaAudio",
       _status: false,
@@ -224,6 +227,26 @@ export default class Urma {
         : data.move.delta * 0.95;
 
       modelPos.copy(this.path.position);
+
+      let tl = gsap.timeline();
+      let currentState = this.place.innerHTML;
+
+      if (Math.floor(modelPos.z) >= -11.5 && currentState !== "Les ruines sacrées") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "Les ruines sacrées"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      } else if (Math.floor(modelPos.z) < -11.5 && currentState !== "La forêt ensorboisée") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "La forêt ensorboisée"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      }
+
       if (Math.floor(modelPos.z) <= -28) {
         if (!this.triggerRockDialog && !this.gameIsCompleted) {
           this.rockDialog = "Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment";

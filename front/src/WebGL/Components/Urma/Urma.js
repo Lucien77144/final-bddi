@@ -299,33 +299,20 @@ export default class Urma {
   }
 
   triggerRockEvent(message) {
-    // Your logic here...
+    this.dialogBox = document.createElement("div");
+    this.dialogBox.id = "dialog-box";
 
-  // Create new dialog box
-      this.dialogBox = document.createElement("div");
-      this.dialogBox.id = "dialog-box";
+    let dialogContent = document.createElement("p");
+    dialogContent.textContent = message;
 
-      // Create the content of the dialog box
-      let dialogContent = document.createElement("p");
-      dialogContent.textContent = message;
+    this.dialogBox.appendChild(dialogContent);
+    document.body.appendChild(this.dialogBox);
 
-      // Append the content to the dialog box
-      this.dialogBox.appendChild(dialogContent);
-
-      // Append the dialog box to the body
-      document.body.appendChild(this.dialogBox);
-
-      // Set initial state
-      gsap.set(this.dialogBox, { autoAlpha: 0 });
-
-      // Create animation
-      gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
-
-      console.log('Event triggered once when modelPos.z < -28');
+    gsap.set(this.dialogBox, { autoAlpha: 0 });
+    gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
   }
 
   winDialog() {
-    
     if (this.triggerRockDialog && this.dialogBox) {
       // Hide dialog box with GSAP
       gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
@@ -359,12 +346,6 @@ export default class Urma {
     if (dist > 10) {
       x -= (dist - baseDist) * 0.75;
     }
-
-    // gsap.to(cameraPos, {
-    //   duration: .5,
-    //   ease: "power2.out",
-    //   x,
-    // });
   }
 
   orientateBody() {

@@ -14,7 +14,7 @@ export default class Stele {
 
     // Singleton
     if (instance) {
-        return instance;
+      return instance;
     }
     instance = this;
 
@@ -31,10 +31,8 @@ export default class Stele {
     this.animations = this.resource.animations;
     this.selectedObject = null;
 
-    console.log(this.experience.activeScene.fragment);
     this.fragmentModel = this.experience.activeScene.fragment.model
     // this.experience.activeScene.fragment.model.position.y = 4;
-    console.log(this.fragmentModel);
     this.isFirstGameComplete = true;
 
     this.setModel();
@@ -197,7 +195,7 @@ export default class Stele {
               // console.log(normalizedAngle);
               const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
               // Check if the disk's current section is the correct one
-              console.log(child.name, currentSection, this.correctSections[child.name]);
+              // console.log(child.name, currentSection, this.correctSections[child.name]);
               if (currentSection !== this.correctSections[child.name]) {
                   return false; // If not, the game is not won yet
               }
@@ -246,9 +244,6 @@ export default class Stele {
 
     startAnimation() {
       this.animation.action.play();
-
-      // Fragment
-
     }
 
     resetDisks() {

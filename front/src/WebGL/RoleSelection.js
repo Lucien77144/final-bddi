@@ -135,7 +135,7 @@ export default class RoleSelection {
         this.scene.add(this.fairyModel); // Add model to scene
         
         // Set model positionà
-        this.fairyModel.position.set(3, 0, 3); // To the right of urmaModel
+        this.fairyModel.position.set(4, 0, 3); // To the right of urmaModel
         this.fairyModel.scale.set(0.2, 0.2, 0.2); // Scale down
         // Store animation mixer and fly animation
         this.fairyMixer = new THREE.AnimationMixer(this.fairyModel);
@@ -155,11 +155,11 @@ export default class RoleSelection {
     // Toggle active model
     this.activeModel = this.activeModel === 'urmaModel' ? 'fairyModel' : 'urmaModel';
     this.role = this.role === 'urma' ? 'heda' : 'urma';
-    
+ 
     // Determine the target position
     const targetPosition = this.activeModel === 'urmaModel'
       ? { x: 0, y: 0, z: 5 }  // Adjust position as needed
-      : { x: 3, y: 0, z: 5 }; // Adjust position as needed
+      : { x: 4, y: 0, z: 5 }; // Adjust position as needed
     
     // Use GSAP to animate the camera movement
     gsap.to(this.camera.position, { 
@@ -170,10 +170,27 @@ export default class RoleSelection {
       ease: 'power2.inOut', // easing function for the transition
       onUpdate: () => this.camera.updateProjectionMatrix() // update the camera's matrix each frame
     });
-
+  
     const roleDescription = document.querySelector('.roleDescription');
     roleDescription.innerHTML = this.activeModel === 'urmaModel' ? 'Tu vas jouer Urma' : 'Tu vas jouer Hada';
+  
+    // Move the swipe button to the correct side
+    const swipeButton = document.querySelector('#swipeButton');
+    const rightArrow = document.querySelector('#rightArrow');
+
+    if (this.activeModel === 'urmaModel') {
+      swipeButton.style.right = '5%';
+      swipeButton.style.left = 'auto';
+      rightArrow.style.transform = 'scaleX(1)'; // Original orientation
+      swipeButton.classList.remove('flipArrow');
+    } else {
+      swipeButton.style.right = 'auto';
+      swipeButton.style.left = '5%';
+      rightArrow.style.transform = 'scaleX(-1)'; // Flip horizontally
+      swipeButton.classList.add('flipArrow');
+    }
   }
+  
 
   handleContinueButton() {
     roleSelectionEvent(this.role);

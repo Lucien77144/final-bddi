@@ -322,10 +322,43 @@ section:not(#scene) {
   transform : translateY(-50%);
 }
 
+#rightArrow {
+  transform-origin: center;
+}
+
 #swipeButton:hover #rightArrow {
   cursor: pointer;
   animation: swipeRight infinite 0.5s ease-in-out;
 }
+
+#swipeButton.flipArrow:hover #rightArrow {
+  animation: swipeLeft infinite 0.5s ease-in-out;
+}
+
+@keyframes swipeRight {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(2px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes swipeLeft {
+  0% {
+    transform: scaleX(-1) translateX(0);
+  }
+  50% {
+    transform: scaleX(-1) translateX(2px);
+  }
+  100% {
+    transform: scaleX(-1) translateX(0);
+  }
+}
+
 
 #swipeButton:hover #secondPath {
   animation: infiniteRotation infinite 1.5s linear;
@@ -342,15 +375,6 @@ section:not(#scene) {
   }
   to {
     transform: rotate(360deg);
-  }
-}
-
-@keyframes swipeRight {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(10%);
   }
 }
 

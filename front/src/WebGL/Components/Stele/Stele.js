@@ -118,9 +118,8 @@ export default class Stele {
             mouseDown = false;
             this.previousAngle = null;
             this.selectedObject = null;
-
             if (this.checkGameWon()) {
-                // console.log("You won the game!");
+                console.log("You won the game!");
                 this.startAnimation();
             }
         });
@@ -129,28 +128,31 @@ export default class Stele {
 
     checkGameWon() {
         // Iterate backwards through children
+        const tolerance = 5; // Set your desired tolerance in degrees here
+
         for (let i = this.model.children.length - 1; i >= 0; i--) {
             const child = this.model.children[i];
             
             if(child.name.includes('Disk')) {
                 const euler = new THREE.Euler();
-    
+
                 // Set the rotation order to 'YXZ' or 'YZX'
                 euler.setFromQuaternion(child.quaternion, 'YXZ');
-    
+
                 const angleInDegrees = euler.y * (180 / Math.PI);
-    
+
                 // Normalize the angle to be in range [0, 360)
                 const normalizedAngle = ((angleInDegrees % 360) + 360) % 360;
                 // Determine the current section of the disk
-                const currentSection = Math.floor(normalizedAngle / 45);
+                console.log(normalizedAngle);
+                const currentSection = Math.floor((normalizedAngle + tolerance) / 45);
                 // Check if the disk's current section is the correct one
+                console.log(child.name, currentSection, this.correctSections[child.name]);
                 if (currentSection !== this.correctSections[child.name]) {
                     return false; // If not, the game is not won yet
                 }
             }
         }
-    
         // If all disks are showing the correct section, the game is won
         return true;
     }

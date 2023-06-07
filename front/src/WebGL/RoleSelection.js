@@ -39,9 +39,15 @@ export default class RoleSelection {
     
     this.clock = new THREE.Clock();
     // Add lighting
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(1, 1, 1).normalize();
-    this.scene.add(light);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9); // soft white light
+    this.scene.add(ambientLight);
+
+    this.sunLight = new THREE.DirectionalLight( 0xffffff, 0.4 );
+    this.sunLight.position.set(0, 10, 0);
+    this.sunLight.name = "sunLight";
+    this.sunLight.castShadow = true;
+    this.scene.add(this.sunLight);
+ 
   
     // Load models
     this.loaders = {};
@@ -65,18 +71,45 @@ export default class RoleSelection {
   loadModels() {
     // Find URMA and Fairy models
     const urmaModel = this.sources.find((source) => source.name === 'urmaModel');
+    const ponchoModel = this.sources.find((source) => source.name === 'ponchoModel');
     const fairyModel = this.sources.find((source) => source.name === 'fairyModel');
+
   
     // URMA Model
     this.loaders.gltfLoader.load(
       urmaModel.path,
       (gltf) => {
         this.urmaModel = gltf.scene;
-        this.scene.add(this.urmaModel); // Add model to scene
   
         // Set model position
         this.urmaModel.position.set(0, -1, 3); // In front
         this.urmaModel.scale.set(1.5, 1.5, 1.5); // Scale down
+        this.urmaModel.castShadow = true; // Enable shadow
+
+        this.loaders.gltfLoader.load(
+          ponchoModel.path,
+          (gltf) => {
+            this.ponchoModel = gltf.scene;
+            this.scene.add(this.ponchoModel); // Add model to scene
+            this.ponchoModel.position.set(0, -0.2, 0); // In front
+            this.ponchoModel.scale.set(1.2, 1.2, 1.2); // Scale down
+            this.ponchoModel.castShadow = true; // Enable shadow
+            // this.ponchoModel.rotation.y = Math.PI / 4;
+            this.urmaModel.add(this.ponchoModel);
+
+            this.scene.add(this.urmaModel); // Add model to scene
+
+            this.ponchoMixer = new THREE.AnimationMixer(this.ponchoModel);
+            const idleAnimation = gltf.animations.find((animation) => animation.name === 'Main_idle');
+            this.ponchoAction = this.ponchoMixer.clipAction(idleAnimation);
+            this.ponchoAction.play();
+
+          },
+          undefined,
+          (error) => {
+            console.error(error);
+          }
+        );
   
         // Store animation mixer and idle animation
         this.urmaMixer = new THREE.AnimationMixer(this.urmaModel);
@@ -89,6 +122,9 @@ export default class RoleSelection {
         console.error(error);
       }
     );
+
+    // Poncho Model
+    
   
     // Fairy Model
     this.loaders.gltfLoader.load(
@@ -151,6 +187,7 @@ export default class RoleSelection {
   
     // Update mixers
     if (this.urmaMixer) this.urmaMixer.update(delta);
+    if (this.ponchoMixer) this.ponchoMixer.update(delta);
     if (this.fairyMixer) this.fairyMixer.update(delta);
   
     this.renderer.render(this.scene, this.camera);

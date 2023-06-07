@@ -223,11 +223,32 @@ export default class Urma {
         : data.move.delta * 0.95;
 
       modelPos.copy(this.path.position);
-
-      if (!this.triggerRockDialog && modelPos.z < -28) {
-        this.triggerRockEvent();
-        this.triggerRockDialog = true;
-      }
+      console.log(modelPos.z);
+      if (Math.floor(modelPos.z) <= -28) {
+        if (!this.triggerRockDialog) {
+          this.triggerRockEvent("Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment");
+          this.triggerRockDialog = true;
+        }
+      } else if (Math.floor(modelPos.z) >= 1.5 && Math.floor(modelPos.z) <= 5) {
+        if (!this.triggerRockDialog) {
+          this.triggerRockEvent("Tiens, il semble y avoir des inscriptions qu'on peut manipuler sur cette stèle.");
+          this.triggerRockDialog = true;
+        }
+      } else {
+      switch (Math.floor(modelPos.z)) {
+        // Add more cases as needed...
+        default:
+          if (this.triggerRockDialog && this.dialogBox) {
+            // Hide dialog box with GSAP
+            gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+              // Remove dialog box from DOM
+              this.dialogBox.parentNode.removeChild(this.dialogBox);
+              this.dialogBox = null; // Nullify reference
+            }});
+            this.triggerRockDialog = false;
+          }
+          break;
+      }}
 
 
       cameraPos.z = modelPos.z - data.move.delta * 5;
@@ -249,8 +270,30 @@ export default class Urma {
     }
   }
 
-  triggerRockEvent() {
-    console.log('Event triggered once when modelPos.z < -28');
+  triggerRockEvent(message) {
+    // Your logic here...
+
+  // Create new dialog box
+      this.dialogBox = document.createElement("div");
+      this.dialogBox.id = "dialog-box";
+
+      // Create the content of the dialog box
+      let dialogContent = document.createElement("p");
+      dialogContent.textContent = message;
+
+      // Append the content to the dialog box
+      this.dialogBox.appendChild(dialogContent);
+
+      // Append the dialog box to the body
+      document.body.appendChild(this.dialogBox);
+
+      // Set initial state
+      gsap.set(this.dialogBox, { autoAlpha: 0 });
+
+      // Create animation
+      gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
+
+      console.log('Event triggered once when modelPos.z < -28');
   }
 
   updateCameraX(cameraPos, modelPos) {

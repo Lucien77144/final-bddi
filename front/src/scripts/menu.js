@@ -8,6 +8,7 @@ const clueButton = document.querySelector("#clue-button");
 
 const optionsPopup = document.querySelector(".options-popup");
 const helpPopup = document.querySelector(".help-popup");
+const cluePopup = document.querySelector(".clue-popup");
 
 function showPopup(popup) {
   popup.classList.add("show");
@@ -35,6 +36,11 @@ backButton.addEventListener("click", () => {
 
 leaveButton.addEventListener("click", () => {
   location.reload();
+});
+
+clueButton.addEventListener("click", () => {
+  helpPopup.classList.remove("show");
+  showPopup(cluePopup);
 });
 
 for (let i = 0; i < closeButton.length; i++) {

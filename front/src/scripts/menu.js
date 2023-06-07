@@ -1,6 +1,5 @@
 const optionsButton = document.getElementById("options-button");
 const helpButton = document.getElementById("help-button");
-const aboutButton = document.getElementById("about-button");
 const closeButton = document.getElementsByClassName("close-button");
 
 const backButton = document.querySelector("#back-button");
@@ -36,10 +35,6 @@ backButton.addEventListener("click", () => {
 
 leaveButton.addEventListener("click", () => {
   location.reload();
-});
-
-clueButton.addEventListener("click", () => {
-  window.location.href = "about.html";
 });
 
 for (let i = 0; i < closeButton.length; i++) {

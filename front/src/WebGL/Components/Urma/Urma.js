@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { AnimationMixer, Box3, LoopRepeat, Vector3 } from "three";
+import { AnimationMixer, Box3, Group, LoopRepeat, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import * as MOVE from "@/scripts/movement"
@@ -57,7 +57,13 @@ export default class Urma {
     this.resource = this.resources.items.urmaModel;
     this.ponchoResource = this.resources.items.ponchoModel;
 
+    this.triggerRockDialog = false;
+    this.gameIsCompleted = false;
+
     this.position = _position;
+
+    this.place = document.querySelector(".place");
+    this.place.innerHTML = "Les ruines sacrées"
 
     this.sound = new AudioManager({
       _path: "runUrmaAudio",
@@ -75,19 +81,20 @@ export default class Urma {
   }
 
   setModel() {
-    this.model = cloneGltf(this.resource).scene;
-    this.model.name = "urma";
+    this.model = new Group();
     this.model.position.copy(this.position);
-    this.model.castShadow = true;
     this.model.scale.set(1.5, 1.5, 1.5);
+
+    this.urma = cloneGltf(this.resource).scene;
+    this.urma.name = "urma";
+    this.urma.castShadow = true;
+    this.model.add(this.urma);
 
     // PONCHO
     this.poncho = cloneGltf(this.ponchoResource).scene;
     this.poncho.name = "poncho";
-    this.poncho.position.set(0, -0.2, 0); // Position relative to the model
     this.poncho.castShadow = true;
-    this.poncho.scale.set(1.2, 1.2, 1.2);
-    this.model.add(this.poncho); // Attach poncho to the model
+    this.model.add(this.poncho);
 
     this.scene.add(this.model); // Add model (with poncho) to the scene
 
@@ -117,7 +124,7 @@ export default class Urma {
 
     // Poncho
     const ponchoIdleClip = this.ponchoResource.animations.find(
-      (animation) => animation.name === "Main_idle"
+      (animation) => animation.name === "Idle.poncho"
     );
 
     const ponchoRunClip = this.ponchoResource.animations.find(
@@ -264,6 +271,55 @@ export default class Urma {
 
       modelPos.copy(this.path.position);
 
+      let tl = gsap.timeline();
+      let currentState = this.place.innerHTML;
+
+      if (Math.floor(modelPos.z) >= -11.5 && currentState !== "Les ruines sacrées") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "Les ruines sacrées"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      } else if (Math.floor(modelPos.z) < -11.5 && currentState !== "La forêt ensorboisée") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "La forêt ensorboisée"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      }
+
+      if (Math.floor(modelPos.z) <= -28) {
+        if (!this.triggerRockDialog && !this.gameIsCompleted) {
+          this.rockDialog = "Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment";
+          this.triggerRockEvent(this.rockDialog);
+          this.triggerRockDialog = true;
+        } else if (!this.triggerRockDialog && this.gameIsCompleted) {
+          this.winDialog();
+        }
+      } else if (Math.floor(modelPos.z) >= 1.5 && Math.floor(modelPos.z) <= 5) {
+        if (!this.triggerRockDialog) {
+          this.triggerRockEvent("Tiens, il semble y avoir des inscriptions qu'on peut manipuler sur cette stèle.");
+          this.triggerRockDialog = true;
+        }
+      } else {
+      switch (Math.floor(modelPos.z)) {
+        // Add more cases as needed...
+        default:
+          if (this.triggerRockDialog && this.dialogBox) {
+            // Hide dialog box with GSAP
+            gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+              // Remove dialog box from DOM
+              this.dialogBox.parentNode.removeChild(this.dialogBox);
+              this.dialogBox = null; // Nullify reference
+            }});
+            this.triggerRockDialog = false;
+          }
+          break;
+      }}
+
+
       cameraPos.z = modelPos.z - data.move.delta * 5;
       const rdmCamera =
         Math.abs(data.move.delta) * 2 +
@@ -298,6 +354,54 @@ export default class Urma {
 
         modelPos.copy(MOVE.urmaPosition);
 
+        let tl = gsap.timeline();
+      let currentState = this.place.innerHTML;
+
+      if (Math.floor(modelPos.z) >= -11.5 && currentState !== "Les ruines sacrées") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "Les ruines sacrées"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      } else if (Math.floor(modelPos.z) < -11.5 && currentState !== "La forêt ensorboisée") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "La forêt ensorboisée"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      }
+
+      if (Math.floor(modelPos.z) <= -28) {
+        if (!this.triggerRockDialog && !this.gameIsCompleted) {
+          this.rockDialog = "Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment";
+          this.triggerRockEvent(this.rockDialog);
+          this.triggerRockDialog = true;
+        } else if (!this.triggerRockDialog && this.gameIsCompleted) {
+          this.winDialog();
+        }
+      } else if (Math.floor(modelPos.z) >= 1.5 && Math.floor(modelPos.z) <= 5) {
+        if (!this.triggerRockDialog) {
+          this.triggerRockEvent("Tiens, il semble y avoir des inscriptions qu'on peut manipuler sur cette stèle.");
+          this.triggerRockDialog = true;
+        }
+      } else {
+      switch (Math.floor(modelPos.z)) {
+        // Add more cases as needed...
+        default:
+          if (this.triggerRockDialog && this.dialogBox) {
+            // Hide dialog box with GSAP
+            gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+              // Remove dialog box from DOM
+              this.dialogBox.parentNode.removeChild(this.dialogBox);
+              this.dialogBox = null; // Nullify reference
+            }});
+            this.triggerRockDialog = false;
+          }
+          break;
+      }}
+
         cameraPos.z = modelPos.z - data.move.delta * 5;
         const rdmCamera =
           Math.abs(data.move.delta) * 2 +
@@ -317,6 +421,53 @@ export default class Urma {
 
     }
   }
+  }
+
+  triggerRockEvent(message) {
+    // Your logic here...
+
+  // Create new dialog box
+      this.dialogBox = document.createElement("div");
+      this.dialogBox.id = "dialog-box";
+
+      // Create the content of the dialog box
+      let dialogContent = document.createElement("p");
+      dialogContent.textContent = message;
+
+      // Append the content to the dialog box
+      this.dialogBox.appendChild(dialogContent);
+
+      // Append the dialog box to the body
+      document.body.appendChild(this.dialogBox);
+
+      // Set initial state
+      gsap.set(this.dialogBox, { autoAlpha: 0 });
+
+      // Create animation
+      gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
+
+      console.log('Event triggered once when modelPos.z < -28');
+  }
+
+  winDialog() {
+    
+    if (this.triggerRockDialog && this.dialogBox) {
+      // Hide dialog box with GSAP
+      gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+        // Remove dialog box from DOM
+        this.dialogBox.parentNode.removeChild(this.dialogBox);
+        this.dialogBox = null; // Nullify reference
+        this.rockDialog = "Le rocher a disparu, le chemin est libre";
+        this.triggerRockEvent(this.rockDialog);
+        this.triggerRockDialog = true;
+        this.winDialogCompletedOnce = true;
+      }});
+      this.triggerRockDialog = false;
+    } else if (!this.triggerRockDialog && this.winDialogCompletedOnce) {
+      this.rockDialog = "Le rocher a disparu, le chemin est libre";
+      this.triggerRockEvent(this.rockDialog);
+      this.triggerRockDialog = true;
+    }
   }
 
   updateCameraX(cameraPos, modelPos) {

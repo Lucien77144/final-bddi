@@ -210,8 +210,8 @@ export default class Intro {
     this.letter = new Letter(new Vector3(-8.5, 2.6, -28.5));
     // debug path :
     this.debugPath = new Cube({
-      _pos: new Vector3(-6.2, 2.304, -29.891),
-      _size: new Vector3(0.1, 0.1, 0.1),
+      _pos: new Vector3(-5.9, 2.913, -7.065),
+      _size: new Vector3(2, 2, 2),
     });
 
     // Setting Fairy :

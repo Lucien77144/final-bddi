@@ -9,8 +9,15 @@ import { ShaderPass } from "three/examples/jsm/postprocessing/ShaderPass";
 import vertexShader from "../Components/WorldShaders/vertexShader.glsl";
 import fragmentShader from "../Components/WorldShaders/fragmentShader.glsl";
 
+let instance = null;
 export default class OutlineModule {
   constructor() {
+    // Singleton
+    if (instance) {
+      return instance;
+    }
+    instance = this;
+
     this.experience = new Experience();
     this.sizes = this.experience.sizes;
     this.scene = this.experience.scene;
@@ -25,7 +32,7 @@ export default class OutlineModule {
     this.onLetter = false;
     this.debug = this.experience.debug;
     this.activeObject = null;
-    this.base = null;
+    this.base = [];
     this.mouseDown = false;
     this.isInForest = false;
 
@@ -37,11 +44,23 @@ export default class OutlineModule {
       });
     }
 
+    this.isLetterAnimationFinished = false;
+    this.isSignAnimationFinished = false;
+
     this.outlinePass = new OutlinePass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
       this.scene,
       this.camera
     );
+    this.backupCamPosition = this.camera.position.clone();
+
+    this.activeObject = null;
+    this.base = [];
+    this.baseInteractive = true;
+
+    this.mouseDown = false;
+
+    this.handleLetterClick = this.handleLetterClick.bind(this);
 
     window.addEventListener("mousedown", (event) => {
       this.mouseDown = true;
@@ -56,21 +75,33 @@ export default class OutlineModule {
     window.addEventListener("click", (event) => {
       if (this.outlinePass.selectedObjects[0]?.interactive === true) {
         this.activeObject = this.outlinePass.selectedObjects[0];
-        if (this.activeObject.name === "steleBase") {
-          this.steleChildren = this.activeObject.parent.children;
-          this.steleChildren.forEach((child) => {
-            if (child.name.includes("Disk")) {
-              child.interactive = true;
+        switch (this.activeObject.type) {
+          case "controlPanel":
+            if (this.activeObject.name == "controlPanel") {
+              this.controlPanelChildren = this.activeObject.parent.children;
+              this.controlPanelChildren.forEach((child) => {
+                if (child.name.includes("Disk")) {
+                  child.interactive = true;
+                }
+              });
+              if (this.activeObject.base) {
+                this.base.push(this.activeObject);
+                this.handleBaseClick();
+              }
             }
-          });
-          if (this.activeObject.base) {
-            this.base = this.activeObject;
-            this.handleBaseClick();
-          } else if (this.activeObject.disk) {
-            this.handleDiskClick();
-          }
-        } else if (this.activeObject.type === "letter") {
-          this.handleLetterClick();
+            break;
+
+          case "letter":
+            this.handleLetterClick();
+            break;
+
+          case "sign":
+            this.handleSignClick();
+            break;
+
+          case "fragment": 
+            this.handleFragmentClick();
+            break;
         }
       }
     });
@@ -78,26 +109,30 @@ export default class OutlineModule {
     window.addEventListener("keydown", (event) => {
       if (this.onGame) {
         if (event.code === "Space" || event.code === "Escape") {
+          if (this.onFragment) {
+              this.returnFragment();
+          }
           this.returnCamera();
 
-          // Reset outlined object
           this.outlinePass.selectedObjects = [];
 
-          // Reset active object
           this.activeObject = null;
 
-          // If any objects have been modified during the interaction, reset them
-          // For example, you might reset any objects that have been moved or changed color
+          this.baseInteractive = true;
+
           this.interactiveObjects.forEach((object) => {
-            // Add code here to reset each object to its original state
-            object.interactive = false;
+            if (object.name.includes("Disk")) {
+              object.interactive = false;
+            }
           });
-          this.base.interactive = true;
         }
       } else if (this.onLetter) {
-        if (event.code === "Space") {
+        if (event.code === "Space" || event.code === "Escape") {
           this.returnLetter();
-          // ... rest of your event listener ...
+        }
+      } else if (this.onFragment) {
+        if (event.code === "Space" || event.code === "Escape") {
+          this.returnFragment();
         }
       }
     });
@@ -112,10 +147,89 @@ export default class OutlineModule {
     }
   }
 
+  handleSignClick() {
+    this.sign = this.activeObject;
+    gsap.to(this.sign.rotation, {
+      duration: 2, // durée de l'animation en secondes
+      x: 0,
+      y: Math.PI / 6,
+      z: 0,
+      ease: "power1.out",
+      onComplete: () => {
+        this.sign.children.forEach((child) => {
+          // child.interactive = true;
+          child.type = "sign-used";
+        });
+        this.sign.type = "sign-used"
+        this.isSignAnimationFinished = true;
+        this.experience.activeScene.urma.gameIsCompleted = true;
+        this.experience.activeScene.urma.winDialog();
+      }, // easing function for the animation
+    });
+  }
+
   handleLetterClick() {
     this.onLetter = true;
     // Define how far in front of the camera the object should appear
     const distanceInFrontOfCamera = 5;
+    this.activeObject.interactive = false;
+    this.letter = this.activeObject.parent;
+    // Get a new position in front of the camera
+    const direction = new THREE.Vector3();
+    this.camera.getWorldDirection(direction);
+    const newPosition = new THREE.Vector3();
+    newPosition
+      .copy(this.camera.position)
+      .add(direction.multiplyScalar(distanceInFrontOfCamera));
+
+    // Define the new scale you want for the object
+    const newScale = new THREE.Vector3(1, 1, 1); // Scale up by 3
+
+    const newRotation = new THREE.Vector3(-Math.PI / 2, 0, -Math.PI / 2);
+    // Use GSAP to animate the letter's scale and position
+    gsap.to(this.letter.scale, {
+      duration: 1, // duration of the animation in seconds
+      x: newScale.x,
+      y: newScale.y,
+      z: newScale.z,
+      ease: "power1.out",
+    });
+
+    gsap.to(this.letter.position, {
+      duration: 1, // duration of the animation in seconds
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      ease: "power1.out", // easing function for the animation
+    });
+
+    gsap.to(this.letter.rotation, {
+      duration: 1, // durée de l'animation en secondes
+      x: newRotation.x,
+      y: newRotation.y,
+      z: newRotation.z,
+      ease: "power1.out", // fonction d'interpolation pour l'animation
+      onComplete: () => {
+        this.isLetterAnimationFinished = true;
+      },
+    });
+
+    // const dialogBox = document.getElementById("dialogBox");
+    // gsap.to(dialogBox.style, {
+    //   duration: 0.5,
+    //   width: "500px", // The final width of the dialog box
+    //   height: "300px", // The final height of the dialog box
+    //   opacity: "1",
+    //   ease: "power1.out", // easing function for the animation
+    // });
+  }
+
+  handleFragmentClick() {
+    this.onFragment = true;
+    this.fragment = this.experience.activeScene.fragment.model;
+    this.fragment.interactive = false;
+    // Define how far in front of the camera the object should appear
+    const distanceInFrontOfCamera = 1.5;
 
     // Get a new position in front of the camera
     const direction = new THREE.Vector3();
@@ -128,17 +242,17 @@ export default class OutlineModule {
     // Define the new scale you want for the object
     const newScale = new THREE.Vector3(1, 1, 1); // Scale up by 3
 
-    const newRotation = new THREE.Vector3(0, Math.PI / 2, 0);
+    const newRotation = new THREE.Vector3(Math.PI / 2, Math.PI / 2, Math.PI / 4);
     // Use GSAP to animate the letter's scale and position
-    gsap.to(this.activeObject.parent.scale, {
+    gsap.to(this.fragment.scale, {
       duration: 1, // duration of the animation in seconds
       x: newScale.x,
       y: newScale.y,
       z: newScale.z,
-      ease: "power1.out", // easing function for the animation
+      ease: "power1.out",
     });
 
-    gsap.to(this.activeObject.parent.position, {
+    gsap.to(this.fragment.position, {
       duration: 1, // duration of the animation in seconds
       x: newPosition.x,
       y: newPosition.y,
@@ -146,14 +260,39 @@ export default class OutlineModule {
       ease: "power1.out", // easing function for the animation
     });
 
-    gsap.to(this.activeObject.parent.rotation, {
-      duration: 1, // duration of the animation in seconds
+    gsap.to(this.fragment.rotation, {
+      duration: 1, // durée de l'animation en secondes
       x: newRotation.x,
       y: newRotation.y,
       z: newRotation.z,
-      ease: "power1.out", // easing function for the animation
+      ease: "power1.out", // fonction d'interpolation pour l'animation
+      onComplete: () => {
+        this.isFragmentAnimationFinished = true;
+      }
     });
 
+  }
+
+  returnLetter() {
+    this.onLetter = false;
+
+    // Hide activeObject
+    this.activeObject.parent.visible = false;
+
+    // Get the SVG element
+    const letterIcon = document.querySelector(".letter-icon");
+
+    // Make the SVG visible
+    letterIcon.style.display = "block";
+
+    // letterIcon.style.transform = 'scale(2.5)';
+    // gsap.to(letterIcon.style, {
+    //     duration: 1, // duration of the animation in seconds
+    //     left: '0px', // replace with original x position
+    //     top: '0px', // replace with original y position
+    //     scale: 1, // replace with original scale
+    //     ease: "power1.out" // easing function for the animation
+    // });
     const dialogBox = document.getElementById("dialogBox");
     gsap.to(dialogBox.style, {
       duration: 0.5,
@@ -168,7 +307,7 @@ export default class OutlineModule {
     this.onLetter = false;
 
     // Hide activeObject
-    this.activeObject.parent.visible = false;
+    this.letter.visible = false;
 
     // Get the SVG element
     const letterIcon = document.querySelector(".letter-icon");
@@ -203,31 +342,72 @@ export default class OutlineModule {
     );
   }
 
+  returnFragment() {
+    this.onFragment = false;
+
+    // Hide activeObject
+    this.fragment.visible = false;
+
+    // Get the SVG element
+    const fragmentIcon = document.querySelector(".fragment-icon");
+
+    // Make the SVG visible
+    fragmentIcon.style.display = "block";
+
+    // letterIcon.style.transform = 'scale(2.5)';
+    // gsap.to(letterIcon.style, {
+    //     duration: 1, // duration of the animation in seconds
+    //     left: '0px', // replace with original x position
+    //     top: '0px', // replace with original y position
+    //     scale: 1, // replace with original scale
+    //     ease: "power1.out" // easing function for the animation
+    // });
+
+    //gsap from to
+    gsap.fromTo(
+      fragmentIcon.style,
+      {
+        left: "-40px", // replace with original x position
+        top: "-25px", // replace with original y position
+        scale: 2, // replace with original scale
+      },
+      {
+        duration: 1, // duration of the animation in seconds
+        left: "0px", // replace with original x position
+        top: "0px", // replace with original y position
+        scale: 1, // replace with original scale
+        ease: "power1.out", // easing function for the animation
+      }
+    );
+  }
+
   forestFilter(factor) {
-    if(factor > .7 && !this.isInForest) { // entering forest
+    if (factor > 0.7 && !this.isInForest) {
+      // entering forest
       this.isInForest = true;
       gsap.to(this.shaderPath.uniforms.vignette, {
         duration: 2,
-        value: .75,
+        value: 0.75,
         ease: "power1.out",
       });
 
       gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
         duration: 2,
-        ...(new THREE.Color("#43795a")),
+        ...new THREE.Color("#43795a"),
         ease: "power1.out",
       });
-    } else if (factor <= .7 && this.isInForest) { // leaving forest
+    } else if (factor <= 0.7 && this.isInForest) {
+      // leaving forest
       this.isInForest = false;
       gsap.to(this.shaderPath.uniforms.vignette, {
         duration: 2,
-        value: .5,
+        value: 0.5,
         ease: "power1.out",
       });
 
       gsap.to(this.grassScene.clouds.material.uniforms.uFogColor.value, {
         duration: 2,
-        ...(new THREE.Color("#d8d8d8")),
+        ...new THREE.Color("#d8d8d8"),
         ease: "power1.out",
       });
     }
@@ -236,18 +416,18 @@ export default class OutlineModule {
   moveCamera() {
     this.grassScene.onGame = true;
 
-        const targetPosition = new THREE.Vector3();
-    
-        // Copy the intersected object's position
-        this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
-    
-        // Move the target position a bit to the left (negative x) and up (positive y)
-        targetPosition.x -= -3;
-        targetPosition.y += 0;
-        targetPosition.z += 10;
-    
-        const newPosition = {x: -6, y: 6, z: 5};
-        const newUp = {x: 0, y: 6, z: 0};
+    const targetPosition = new THREE.Vector3();
+
+    // Copy the intersected object's position
+    this.stelePosition = this.outlinePass.selectedObjects[0].position.clone();
+
+    // Move the target position a bit to the left (negative x) and up (positive y)
+    targetPosition.x -= -3;
+    targetPosition.y += 0;
+    targetPosition.z += 10;
+
+    const newPosition = { x: -5, y: 6, z: 3 };
+    const newUp = { x: 0, y: 6, z: 0 };
 
     this.originalPosition = this.camera.position.clone();
     this.originalUp = this.camera.up.clone();
@@ -257,23 +437,23 @@ export default class OutlineModule {
     this.originalTarget = new THREE.Vector3();
     this.originalTarget.copy(this.camera.position).add(direction);
 
-        // Use GSAP to animate the camera's movement
-        gsap.to(this.camera.position, {
-            duration: 1, // duration of the animation in seconds
-            x: newPosition.x,
-            y: newPosition.y,
-            z: newPosition.z,
-            onUpdate: () => {
-              // Ensure the camera's up vector is set to signify the y-axis as up
-              this.camera.up.set(newUp.x, newUp.y, newUp.z);
-              this.camera.lookAt(-6, 2.7, 8);
-            },
-            onComplete: () => {
-              this.onGame = this.grassScene.onGame;
-            },
-            ease: "power1.out", // easing function for the animation
-        });
-    }
+    // Use GSAP to animate the camera's movement
+    gsap.to(this.camera.position, {
+      duration: 1, // duration of the animation in seconds
+      x: newPosition.x,
+      y: newPosition.y,
+      z: newPosition.z,
+      onUpdate: () => {
+        // Ensure the camera's up vector is set to signify the y-axis as up
+        this.camera.up.set(newUp.x, newUp.y, newUp.z);
+        this.camera.lookAt(-5, 2.4, 6);
+      },
+      onComplete: () => {
+        this.onGame = this.grassScene.onGame;
+      },
+      ease: "power1.out", // easing function for the animation
+    });
+  }
 
   returnCamera() {
     if (this.originalPosition && this.originalUp) {
@@ -313,6 +493,7 @@ export default class OutlineModule {
     this.composer.addPass(this.filmPath);
 
     this.shaderPath = this.setShaderPath();
+
     this.composer.addPass(this.shaderPath);
 
     this.composer.renderer.physicallyCorrectLights = false;
@@ -326,8 +507,6 @@ export default class OutlineModule {
         this.handleDiskHover();
       }
     });
-
-    this.setDebug();
   }
 
   setShaderPath() {
@@ -335,23 +514,22 @@ export default class OutlineModule {
       uniforms: {
         tDiffuse: { value: null },
         vignette: { value: 0.5 },
+        uTime: { value: 0 },
+        isLetterOpen: { value: false },
+        uSteamColor: { value: new THREE.Color("#c9c9c9") },
+        uPosZ: { value: 0 },
       },
       vertexShader,
       fragmentShader,
     });
   }
 
-  setDebug() {
-    if (this.debug.active) {
-      // Ajoutez la propriété isVignette à la classe OutlineModule et initialisez-la avec une valeur booléenne
-      this.isVignette = { enabled: true };
-      this.debugFolder.addInput(this.isVignette, "enabled");
-    }
-  }
-
   getInteractiveObjects() {
     this.interactiveObjects = [];
     this.scene.children.filter((object) => {
+      if (object.name === "sign") {
+        // console.log(object);
+      }
       if (object.isGroup) {
         object.children.forEach((child) => {
           child.interactive === true && this.interactiveObjects.push(child);
@@ -374,40 +552,34 @@ export default class OutlineModule {
   handleBaseClick() {
     this.activeObject.traverse((child) => {
       if (child.base) {
-        child.interactive = false;
+        this.baseInteractive = false;
         this.moveCamera();
       } else if (child.disk) {
-        child.interactive = true;
+        this.baseInteractive = true;
       }
     });
-
+    
     this.getInteractiveObjects(); // Refresh interactive objects
     this.activeObject = null;
 
-    // After the letter is clicked, show the dialog box
-    const dialogBox = document.getElementById("dialogBox");
+    // const dialogBox = document.getElementById("dialogBox");
 
-    if (dialogBox) {
-      dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
+    // if (dialogBox) {
+    //   dialogBox.textContent = "Your text here..."; // Set the text before starting the animation
 
-      // Create a GSAP timeline
-      var tl = gsap.timeline();
-      tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
-        .to(dialogBox, {
-          paddingLeft: "20px", // Then animate the padding
-          paddingRight: "20px", // Then animate the padding
-          duration: 0.5,
-          opacity: 1,
-          ease: "power1.out",
-        });
-    } else {
-      console.log("Dialog box element not found");
-    }
-  }
-
-  handleDiskClick() {
-    // You might have additional behavior you want to implement when a disk is clicked.
-    // For example, you could change the color of the disk or move it to a different location.
+    //   // Create a GSAP timeline
+    //   var tl = gsap.timeline();
+    //   tl.from(dialogBox, { opacity: 0, duration: 0.1 }) // First animate the opacity
+    //     .to(dialogBox, {
+    //       paddingLeft: "20px", // Then animate the padding
+    //       paddingRight: "20px", // Then animate the padding
+    //       duration: 0.5,
+    //       opacity: 1,
+    //       ease: "power1.out",
+    //     });
+    // } else {
+    //   console.log("Dialog box element not found");
+    // }
   }
 
   handleDiskHover() {
@@ -422,16 +594,12 @@ export default class OutlineModule {
   }
 
   update() {
-    // if (
-    //   this.shaderPath &&
-    //   this.shaderPath.uniforms &&
-    //   this.shaderPath.uniforms.vignette
-    // ) {
-    //   this.shaderPath.uniforms.vignette.value =
-    //     this.isVignette && this.isVignette.enabled ? 0.5 : 0.0;
-    // }
+    if (this.shaderPath) {
+      this.shaderPath.uniforms.uTime.value = this.experience.time.elapsed;
+      this.shaderPath.uniforms.uPosZ.value = this.camera.position.z;
+      this.shaderPath.uniforms.isLetterOpen.value = this.onLetter;
+    }
 
-    // Only perform raycasting and outlining if mouse is not down, or if it's down and active object is a disk.
     if (!this.mouseDown || (this.mouseDown && this.activeObject?.disk)) {
       const intersects = this.raycaster?.intersectObjects(
         this.interactiveObjects,
@@ -440,20 +608,26 @@ export default class OutlineModule {
       if (intersects?.length > 0) {
         intersects.forEach((i) => {
           if (i.object.type === "Points") {
-            // DELETE object from intersect array
             intersects.splice(intersects.indexOf(i), 1);
           }
         });
         const obj = intersects[0]?.object;
         if (obj.interactive === true) {
           const object = obj;
-          this.outlinePass.selectedObjects = [object];
+          if (object?.name === "controlPanel") {
+            this.outlinePass.selectedObjects = this.interactiveObjects.filter(
+              (e) => e.name.includes("controlPanel") && this.baseInteractive
+            );
+          } else {
+            this.outlinePass.selectedObjects = [object];
+          }
 
-          // Translate interact text on top of object position
           const screenPosition = object.position.clone();
           screenPosition.project(this.camera);
           screenPosition.x = ((screenPosition.x + 1) * window.innerWidth) / 2;
           screenPosition.y = (-(screenPosition.y - 1) * window.innerHeight) / 2;
+        } else if (obj.type === "sign") {
+          this.outlinePass.selectedObjects = [obj.parent];
         }
       } else {
         this.outlinePass &&

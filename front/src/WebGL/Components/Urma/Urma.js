@@ -1,5 +1,5 @@
 import Experience from "webgl/Experience.js";
-import { AnimationMixer, Box3, LoopRepeat, Vector3 } from "three";
+import { AnimationMixer, Box3, Group, LoopRepeat, Vector3 } from "three";
 import InputManager from "utils/InputManager.js";
 import PathUrma from "./PathUrma";
 import cloneGltf from "@/WebGL/Utils/GltfClone";
@@ -54,12 +54,20 @@ export default class Urma {
     this.fairy = new Fairy();
     this.resources = this.experience.resources;
     this.resource = this.resources.items.urmaModel;
+    this.ponchoResource = this.resources.items.ponchoModel;
+
+    this.triggerRockDialog = false;
+    this.gameIsCompleted = false;
 
     this.position = _position;
+
+    this.place = document.querySelector(".place");
+    this.place.innerHTML = "Les ruines sacrées"
 
     this.sound = new AudioManager({
       _path: "runUrmaAudio",
       _status: false,
+      _loop: true,
     });
 
     this.keyState = {
@@ -73,14 +81,25 @@ export default class Urma {
   }
 
   setModel() {
-    this.model = cloneGltf(this.resource).scene;
-    this.model.name = "urma";
+    this.model = new Group();
     this.model.position.copy(this.position);
-    this.model.castShadow = true;
-    this.scene.add(this.model);
-    this.camera.position.z = this.model.position.z;
     this.model.scale.set(1.5, 1.5, 1.5);
-    // console.log(this.model);
+
+    this.urma = cloneGltf(this.resource).scene;
+    this.urma.name = "urma";
+    this.urma.castShadow = true;
+    this.model.add(this.urma);
+
+    // PONCHO
+    this.poncho = cloneGltf(this.ponchoResource).scene;
+    this.poncho.name = "poncho";
+    this.poncho.castShadow = true;
+    this.model.add(this.poncho);
+
+    this.scene.add(this.model); // Add model (with poncho) to the scene
+
+    this.camera.position.z = this.model.position.z;
+
     const traverseModel = (object) => {
       object.traverse((child) => {
         if (child.isMesh) {
@@ -88,24 +107,38 @@ export default class Urma {
           const boundingBox = new Box3();
           boundingBox.setFromObject(child);
           this.height = boundingBox.max.y - boundingBox.min.y;
-          // console.log("Model height:", this.height);
         }
       });
     };
     traverseModel(this.model);
   }
 
+
   setAnimation() {
     const idleClip = this.resource.animations.find(
       (animation) => animation.name === "Idle"
     );
     const runClip = this.resource.animations.find(
-      (animation) => animation.name === "Run"
+      (animation) => animation.name === "run"
+    );
+
+    // Poncho
+    const ponchoIdleClip = this.ponchoResource.animations.find(
+      (animation) => animation.name === "Idle.poncho"
+    );
+
+    const ponchoRunClip = this.ponchoResource.animations.find(
+      (animation) => animation.name === "run"
     );
 
     this.animation = {
       mixer: new AnimationMixer(this.model),
+      ponchoMixer: new AnimationMixer(this.poncho), // Poncho mixer
       actions: {
+        idle: null,
+        run: null,
+      },
+      ponchoActions: { // Poncho actions
         idle: null,
         run: null,
       },
@@ -114,7 +147,13 @@ export default class Urma {
     this.animation.actions.idle = this.animation.mixer.clipAction(idleClip);
     this.animation.actions.run = this.animation.mixer.clipAction(runClip);
     this.animation.actions.current = this.animation.actions.idle;
+
+    this.animation.ponchoActions.idle = this.animation.ponchoMixer.clipAction(ponchoIdleClip); // Poncho animation
+    this.animation.ponchoActions.run = this.animation.ponchoMixer.clipAction(ponchoRunClip); // Poncho animation
+    this.animation.ponchoActions.current = this.animation.ponchoActions.idle; // Set poncho current action
+
     this.animation.actions.current.play();
+    this.animation.ponchoActions.current.play(); // Play poncho animation
 
     this.animation.play = (name) => {
       const nextAction = this.animation.actions[name];
@@ -126,7 +165,19 @@ export default class Urma {
 
       this.animation.actions.current = nextAction;
     };
+
+    this.animation.ponchoPlay = (name) => { // Poncho play
+      const nextAction = this.animation.ponchoActions[name];
+      const oldAction = this.animation.ponchoActions.current;
+
+      nextAction.reset();
+      nextAction.play();
+      nextAction.crossFadeFrom(oldAction, 0.5);
+
+      this.animation.ponchoActions.current = nextAction;
+    };
   }
+
 
   setInputs() {
     ["right", "left"].forEach((dir) => {
@@ -147,12 +198,14 @@ export default class Urma {
 
         if (val && !data.status[dir].start) {
           this.animation.play("run");
+          this.animation.ponchoPlay("run"); // Poncho play
           data.status[dir].start = true;
           data.time.start = this.time.current;
           data.lastDirection = dir; // Ajoutez cette ligne
           this.orientateBody(); // Appel à la méthode orientateBody() lorsque la direction du mouvement change
         } else if (!val && data.status[dir].start && data.move.flag) {
           this.animation.play("idle");
+          this.animation.ponchoPlay("idle"); // Poncho play
           data.move.flag = false;
           data.status[dir].end = true;
           data.time.end = this.time.current;
@@ -178,6 +231,55 @@ export default class Urma {
 
       modelPos.copy(this.path.position);
 
+      let tl = gsap.timeline();
+      let currentState = this.place.innerHTML;
+
+      if (Math.floor(modelPos.z) >= -11.5 && currentState !== "Les ruines sacrées") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "Les ruines sacrées"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      } else if (Math.floor(modelPos.z) < -11.5 && currentState !== "La forêt ensorboisée") {
+        tl.to(this.place, { autoAlpha: 0, duration: 0.5 })
+          .add(() => { 
+            this.place.innerHTML = "La forêt ensorboisée"; 
+            currentState = this.place.innerHTML;
+          })
+          .to(this.place, { autoAlpha: 1, duration: 0.5 });
+      }
+
+      if (Math.floor(modelPos.z) <= -28) {
+        if (!this.triggerRockDialog && !this.gameIsCompleted) {
+          this.rockDialog = "Un rocher semble bloquer le chemin, il n’est pas accessible pour le moment";
+          this.triggerRockEvent(this.rockDialog);
+          this.triggerRockDialog = true;
+        } else if (!this.triggerRockDialog && this.gameIsCompleted) {
+          this.winDialog();
+        }
+      } else if (Math.floor(modelPos.z) >= 1.5 && Math.floor(modelPos.z) <= 5) {
+        if (!this.triggerRockDialog) {
+          this.triggerRockEvent("Tiens, il semble y avoir des inscriptions qu'on peut manipuler sur cette stèle.");
+          this.triggerRockDialog = true;
+        }
+      } else {
+      switch (Math.floor(modelPos.z)) {
+        // Add more cases as needed...
+        default:
+          if (this.triggerRockDialog && this.dialogBox) {
+            // Hide dialog box with GSAP
+            gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+              // Remove dialog box from DOM
+              this.dialogBox.parentNode.removeChild(this.dialogBox);
+              this.dialogBox = null; // Nullify reference
+            }});
+            this.triggerRockDialog = false;
+          }
+          break;
+      }}
+
+
       cameraPos.z = modelPos.z - data.move.delta * 5;
       const rdmCamera =
         Math.abs(data.move.delta) * 2 +
@@ -193,6 +295,41 @@ export default class Urma {
       this.updateCameraX(cameraPos, modelPos);
 
       this.animation.mixer.update(this.time.delta * 0.001);
+      this.animation.ponchoMixer.update(this.time.delta * 0.001);
+    }
+  }
+
+  triggerRockEvent(message) {
+    this.dialogBox = document.createElement("div");
+    this.dialogBox.id = "dialog-box";
+
+    let dialogContent = document.createElement("p");
+    dialogContent.textContent = message;
+
+    this.dialogBox.appendChild(dialogContent);
+    document.body.appendChild(this.dialogBox);
+
+    gsap.set(this.dialogBox, { autoAlpha: 0 });
+    gsap.to(this.dialogBox, { autoAlpha: 1, duration: 1, ease: 'power1.out' });
+  }
+
+  winDialog() {
+    if (this.triggerRockDialog && this.dialogBox) {
+      // Hide dialog box with GSAP
+      gsap.to(this.dialogBox, { autoAlpha: 0, duration: 1, ease: 'power1.in', onComplete: () => {
+        // Remove dialog box from DOM
+        this.dialogBox.parentNode.removeChild(this.dialogBox);
+        this.dialogBox = null; // Nullify reference
+        this.rockDialog = "Le rocher a disparu, le chemin est libre";
+        this.triggerRockEvent(this.rockDialog);
+        this.triggerRockDialog = true;
+        this.winDialogCompletedOnce = true;
+      }});
+      this.triggerRockDialog = false;
+    } else if (!this.triggerRockDialog && this.winDialogCompletedOnce) {
+      this.rockDialog = "Le rocher a disparu, le chemin est libre";
+      this.triggerRockEvent(this.rockDialog);
+      this.triggerRockDialog = true;
     }
   }
 
@@ -210,12 +347,6 @@ export default class Urma {
     if (dist > 10) {
       x -= (dist - baseDist) * 0.75;
     }
-
-    // gsap.to(cameraPos, {
-    //   duration: .5,
-    //   ease: "power2.out",
-    //   x,
-    // });
   }
 
   orientateBody() {
@@ -256,6 +387,5 @@ export default class Urma {
     this.path.update(data.move.delta, 1.40/SIZE_FACTOR);
     this.updatePosition();
     this.orientateBody();
-    this.animation.mixer.update(this.time.delta * 0.00025);
   }
 }

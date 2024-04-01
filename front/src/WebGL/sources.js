@@ -27,6 +27,11 @@ export default [
     path: "models/Urma/Urma.glb",
   },
   {
+    name: "ponchoModel",
+    type: "glb",
+    path: "models/Poncho/Poncho.glb",
+  },
+  {
     name: "bridgeModel",
     type: "glb",
     path: "models/Bridge/Bridge.glb",
@@ -42,6 +47,11 @@ export default [
     path: "models/Letter/Letter.glb",
   },
   {
+    name: "fragmentModel",
+    type: "glb",
+    path: "models/Fragment/Fragment.glb",
+  },
+  {
     name: "stairsModel",
     type: "glb",
     path: "models/Stairs/Stairs.glb",
@@ -55,6 +65,16 @@ export default [
     name: "treeModel",
     type: "glb",
     path: "models/Tree/Tree.glb",
+  },
+  {
+    name: "signModel",
+    type: "glb",
+    path: "models/Sign/Sign.glb",
+  },
+  {
+    name: "stoneModel",
+    type: "glb",
+    path: "models/Rocks/Stone.glb",
   },
 
   // --------------------
@@ -74,7 +94,7 @@ export default [
   {
     name: "runWingsAudio",
     type: "audio",
-    path: "/sounds/wings.wav",
+    path: "/sounds/wings.mp3",
   },
 
   // --------------------
@@ -91,6 +111,11 @@ export default [
     name: "treeMask",
     type: "texture",
     path: "textures/tree/mask.png",
+  },
+  {
+    name: "fairyTexture",
+    type: "texture",
+    path: "textures/fairy/baseTexture.png",
   },
 
   // jpg :
@@ -160,4 +185,130 @@ export default [
       "textures/environmentMap/nz.png",
     ],
   },
+
+  // --------------------
+  // SVG :
+  // --------------------
+
+  {
+    name: "s1-1",
+    type: "svg",
+    path: "svg/Level 1 - 1.svg",
+  },
+  {
+    name: "s1-2",
+    type: "texture",
+    path: "svg/Level 1 - 2.svg",
+  },
+  {
+    name: "s1-3",
+    type: "texture",
+    path: "svg/Level 1 - 3.svg",
+  },
+  {
+    name: "s1-4",
+    type: "texture",
+    path: "svg/Level 1 - 4.svg",
+  },
+  {
+    name: "s1-5",
+    type: "texture",
+    path: "svg/Level 1 - 5.svg",
+  },
+  {
+    name: "s1-6",
+    type: "texture",
+    path: "svg/Level 1 - 6.svg",
+  },
+  {
+    name: "s1-7",
+    type: "texture",
+    path: "svg/Level 1 - 7.svg",
+  },
+  {
+    name: "s1-8",
+    type: "texture",
+    path: "svg/Level 1 - 8.svg",
+  },
+  {
+    name: "s2-1",
+    type: "texture",
+    path: "svg/Level 2 - 1.svg",
+  },
+  {
+    name: "s2-2",
+    type: "texture",
+    path: "svg/Level 2 - 2.svg",
+  },
+  {
+    name: "s2-3",
+    type: "texture",
+    path: "svg/Level 2 - 3.svg",
+  },
+  {
+    name: "s2-4",
+    type: "texture",
+    path: "svg/Level 2 - 4.svg",
+  },
+  {
+    name: "s2-5",
+    type: "texture",
+    path: "svg/Level 2 - 5.svg",
+  },
+  {
+    name: "s2-6",
+    type: "texture",
+    path: "svg/Level 2 - 6.svg",
+  },
+  {
+    name: "s2-7",
+    type: "texture",
+    path: "svg/Level 2 - 7.svg",
+  },
+  {
+    name: "s2-8",
+    type: "texture",
+    path: "svg/Level 2 - 8.svg",
+  },
+  {
+    name: "s3-1",
+    type: "texture",
+    path: "svg/Level 3 - 1.svg",
+  },
+  {
+    name: "s3-2",
+    type: "texture",
+    path: "svg/Level 3 - 2.svg",
+  },
+  {
+    name: "s3-3",
+    type: "texture",
+    path: "svg/Level 3 - 3.svg",
+  },
+  {
+    name: "s3-4",
+    type: "texture",
+    path: "svg/Level 3 - 4.svg",
+  },
+  {
+    name: "s3-5",
+    type: "texture",
+    path: "svg/Level 3 - 5.svg",
+  },
+  {
+    name: "s3-6",
+    type: "texture",
+    path: "svg/Level 3 - 6.svg",
+  },
+  {
+    name: "s3-7",
+    type: "texture",
+    path: "svg/Level 3 - 7.svg",
+  },
+  {
+    name: "s3-8",
+    type: "texture",
+    path: "svg/Level 3 - 8.svg",
+  },
+  
 ];

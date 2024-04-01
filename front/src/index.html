@@ -6,11 +6,15 @@
     <title>Threejs Starter</title>
     <link rel="stylesheet" href="./style.css" />
     <script type="module" src="./script.js" defer></script>
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script> 
   </head>
   <body>
     <noscript>
       <h1>Enable JavaScript to run this app.</h1>
     </noscript>
+    <section class="loader" id="loader">
+      <lottie-player src="https://lottie.host/6d5e3b81-fcfd-48d0-b3f5-98e1d72ead49/oRgRAUEDLJ.json" background="transparent" speed="1" style="width: 150px; height: 150px;" loop autoplay></lottie-player>
+    </section>
     <section class="hidden" id="landingPage">
       <div class="title">
         Bienvenue !
@@ -38,7 +42,9 @@
       <div class="interact-text hidden">
         Intéragir
       </div>
-      <div id="dialogBox" class="dialogBox"></div>
+      <div class="place">
+        
+      </div>
       <div class="inventory">
         <p>Inventaire</p>
         <div class="inventory-box">
@@ -49,6 +55,11 @@
             <path d="M31.3584 16.5496C30.9353 15.915 30.2082 14.4341 28.1984 13.6936C24.6943 12.6358 24.2713 12.5335 22.2749 12.6358C18.1495 12.8474 18.8899 11.155 22.2748 11.0492C24.9827 10.9645 27.3522 12.7769 28.1984 13.6936C30.6313 13.6936 35.7086 15.915 34.5451 17.6074C33.3815 19.2999 31.7815 17.1843 31.3584 16.5496Z" fill="#75A0BB"/>
             <path d="M28.1984 13.6936C30.2082 14.4341 30.9353 15.915 31.3584 16.5496C31.7815 17.1843 33.3815 19.2999 34.5451 17.6074C35.7086 15.915 30.6313 13.6936 28.1984 13.6936ZM28.1984 13.6936C24.6943 12.6358 24.2713 12.5335 22.2749 12.6358C18.1495 12.8474 18.8899 11.155 22.2748 11.0492C24.9827 10.9645 27.3522 12.7769 28.1984 13.6936ZM28.1984 13.6936C29.4677 12.6358 30.1024 11.155 29.4677 10.0972M28.1984 13.6936C30.737 12.8474 34.1219 13.3763 35.3913 14.011" stroke="white" stroke-width="0.846226" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>            
+        </div>
+        <div class="inventory-box">
+          <svg class="fragment-icon" width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24.2187 2.09536C21.3049 2.64304 18.391 1 15.6593 1C12.5634 1.36512 8.01056 3.92096 8.01056 6.84192C8.01056 9.96684 4.55041 9.94544 6.00731 12.8664C6.75819 14.3718 13.2918 20.899 7.09999 23.6374C0.908143 26.3758 0.543944 27.4712 1.2724 29.2968C2.00085 31.1224 -0.184509 33.3131 2.00085 34.2259C8.92115 35.869 7.46425 38.6074 11.1065 39.3376C14.7488 40.0678 16.752 38.2422 18.9374 39.7027C25.6756 41.5283 23.3081 34.4085 28.4073 32.948C33.5064 31.4875 25.4935 26.0107 29.1357 26.741C32.778 27.4712 30.7747 24.5502 34.417 23.6374C38.0593 22.7246 36.056 18.7083 38.9698 16.335C41.8837 13.9618 37.8772 11.771 36.056 10.3106C34.2349 8.85008 34.417 6.65936 30.4105 5.564C26.404 4.46864 27.1325 1.54768 24.2187 2.09536Z" fill="#75A0BB" stroke="white" stroke-width="0.6"/>
+          </svg>
         </div>
         <div class="inventory-box">
 

@@ -1,7 +1,8 @@
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import EventEmitter from "utils/EventEmitter.js";
-import { AudioLoader, Cache, CubeTextureLoader, TextureLoader, VideoTexture } from "three";
+import { AudioLoader, Cache, CubeTextureLoader, DoubleSide, Group, Mesh, MeshBasicMaterial, ShapeGeometry, TextureLoader, VideoTexture } from "three";
 import Experience from "webgl/Experience.js";
+import { SVGLoader } from 'three/examples/jsm/loaders/SVGLoader.js';
 
 export default class Resources extends EventEmitter {
   constructor(sources) {
@@ -58,6 +59,7 @@ export default class Resources extends EventEmitter {
     this.loaders.textureLoader = new TextureLoader();
     this.loaders.cubeTextureLoader = new CubeTextureLoader();
     this.loaders.audioLoader = new AudioLoader();
+    this.loaders.svgLoader = new SVGLoader();
   }
 
   startLoading() {
@@ -92,6 +94,24 @@ export default class Resources extends EventEmitter {
             this.sourceLoaded(source, file);
           });
           break;
+        case 'svg':
+          this.loaders.svgLoader.load(source.path, (data) => {
+              const paths = data.paths;
+              const group = new Group();
+              for (let i = 0; i < paths.length; i++) {
+                  const path = paths[i];
+                  const shapes = path.toShapes(true);
+                  shapes.forEach((shape) => {
+                      const geometry = new ShapeGeometry(shape);
+                      const material = new MeshBasicMaterial({ color: path.color, side: DoubleSide, transparent: true,                      });
+                      const mesh = new Mesh(geometry, material);
+                      group.add(mesh);
+                  });
+              }
+              this.sourceLoaded(source, group);
+          });
+          break;
+      
         default:
           console.error(source.type + " is not a valid source type");
           break;
@@ -117,6 +137,7 @@ export default class Resources extends EventEmitter {
     if (this.loaded === this.toLoad) {
       // if (this.debug.active) console.debug("✅ Resources loaded!");
       if (this.debug.debugParams?.LoadingScreen) this.loadingScreenElement.remove();
+      document.getElementById("loader").remove();
       this.trigger("ready");
     }
   }
